@@ -1,0 +1,339 @@
+﻿<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="تواصل مع فريق توريد للاستفسارات والدعم وطلبات انضمام الموردين والشركات.">
+  <title>تواصل معنا | توريد</title>
+  <link rel="stylesheet" href="./dist/output.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="bg-[#fbfcfb] text-slate-800 antialiased" x-data="app()" @notify.window="showToast($event.detail)">
+
+  <!-- Header -->
+  <header class="relative z-40 border-b border-slate-200 bg-white shadow-sm">
+
+    <!-- Top Bar -->
+    <div class="bg-[linear-gradient(90deg,#012c26_0%,#014236_50%,#012c26_100%)] text-white">
+      <div class="mx-auto flex h-10 max-w-[1500px] items-center justify-between px-4 text-[11px] sm:px-6 lg:px-8">
+        <div class="flex items-center gap-4">
+          <span class="inline-flex items-center gap-2">
+            <span class="h-1.5 w-1.5 rounded-full bg-gold-300"></span>
+            المملكة العربية السعودية
+          </span>
+          <span class="hidden text-white/60 sm:inline">|</span>
+          <span dir="ltr" class="hidden sm:inline">9200 123 45</span>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <a href="contact.html" class="font-bold transition hover:text-gold-300" aria-current="page">تواصل معنا</a>
+          <span class="text-white/60">|</span>
+          <span class="font-bold text-gold-300">العربية</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Header -->
+    <div class="bg-white">
+      <div
+        class="mx-auto grid max-w-[1500px] gap-4 px-4 py-4 sm:px-6 lg:grid-cols-[280px_1fr_230px] lg:items-center lg:px-8">
+
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center gap-4 text-right" aria-label="العودة للرئيسية">
+          <span
+            class="relative grid h-[58px] w-[58px] place-items-center overflow-hidden rounded-2xl bg-gov-800 text-white shadow-xl shadow-gov-900/20">
+            <span class="absolute inset-1.5 rounded-xl border border-gold-300/50"></span>
+            <svg class="relative h-7 w-7 text-gold-300" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="1.7">
+              <path
+                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+              <path d="M3.3 7 12 12l8.7-5M12 22V12" />
+            </svg>
+          </span>
+
+          <span>
+            <strong class="block text-2xl font-extrabold text-gov-950">توريدات</strong>
+            <small class="mt-1 block text-[11px] font-medium text-slate-500">دليل مصانع مواد البناء</small>
+          </span>
+        </a>
+
+        <!-- Header Ad Image -->
+        <a href="contact.html"
+          class="order-3 block overflow-hidden rounded-[28px] border border-slate-200 bg-slate-50 shadow-sm transition hover:border-gold-300 hover:shadow-md lg:order-none"
+          aria-label="انتقل للتواصل بخصوص الإعلان">
+          <img src="./assets/images/header-ad-1-960.jpg"
+            srcset="./assets/images/header-ad-1-640.jpg 640w, ./assets/images/header-ad-1-960.jpg 960w"
+            sizes="(min-width: 1024px) 100vw, 100vw" width="960" height="154" alt="مساحة إعلانية في توريدات"
+            decoding="async" fetchpriority="high" class="h-[90px] w-full object-cover">
+        </a>
+
+        <!-- CTA / Mobile Menu -->
+        <div class="flex items-center justify-between gap-3 lg:justify-end">
+          <a href="plans.html"
+            class="inline-flex items-center gap-2 rounded-2xl border border-gold-400 bg-[linear-gradient(90deg,#012c26,#014236)] px-5 py-3 text-sm font-bold text-white shadow-xl shadow-gov-900/15 transition hover:-translate-y-0.5 hover:shadow-2xl">
+            <span class="grid h-5 w-5 place-items-center rounded-full bg-gold-400 text-[13px] text-gov-950">+</span>
+            سجّل شركتك
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </header>
+
+  <!-- Navigation -->
+  <nav id="site-sticky-nav" class="sticky top-0 z-50 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur">
+    <div class="mx-auto grid min-h-14 max-w-[1500px] grid-cols-[1fr_auto] items-center gap-4 px-4 py-2 sm:px-6 lg:min-h-16 lg:grid-cols-[auto_1fr_auto] lg:gap-6 lg:px-8">
+      <a href="index.html"
+        class="flex h-12 items-center gap-3 justify-self-start text-right transition duration-200"
+        :class="navStuck ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-1 opacity-0'"
+        :tabindex="navStuck ? null : -1"
+        :aria-hidden="(!navStuck).toString()"
+        aria-label="العودة للرئيسية">
+        <span class="relative grid h-10 w-10 place-items-center overflow-hidden rounded-xl bg-gov-800 text-white shadow-sm shadow-gov-900/15">
+          <span class="absolute inset-1 rounded-lg border border-gold-300/50"></span>
+          <svg class="relative h-5 w-5 text-gold-300" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.7">
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+            <path d="M3.3 7 12 12l8.7-5M12 22V12" />
+          </svg>
+        </span>
+        <span>
+          <strong class="block text-base font-extrabold leading-5 text-gov-950">توريدات</strong>
+          <small class="block text-[10px] font-medium leading-4 text-slate-500">دليل مصانع مواد البناء</small>
+        </span>
+      </a>
+
+      <div class="hidden items-center justify-center gap-10 lg:flex">
+        <template x-for="item in nav" :key="item.id">
+          <a href="index.html" :href="item.href"
+            class="relative px-1 py-2 text-[15px] font-semibold transition after:absolute after:bottom-0 after:right-1/2 after:h-[2px] after:w-0 after:translate-x-1/2 after:rounded-full after:bg-gold-500 after:transition-all"
+            :class="route===item.id ? 'text-gold-600 after:w-8' : 'text-slate-700 hover:text-gov-900'"
+            :aria-current="route === item.id ? 'page' : null"
+            x-text="item.label"></a>
+        </template>
+      </div>
+
+      <a href="contact.html"
+        class="hidden h-10 items-center justify-center gap-2 justify-self-end rounded-xl border border-gold-400 bg-[linear-gradient(90deg,#012c26,#014236)] px-4 text-xs font-bold text-white shadow-sm shadow-gov-900/10 transition duration-200 hover:-translate-y-0.5 hover:shadow-md lg:inline-flex"
+        :class="navStuck ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-1 opacity-0'"
+        :tabindex="navStuck ? null : -1"
+        :aria-hidden="(!navStuck).toString()">
+        <span class="grid h-5 w-5 place-items-center rounded-full bg-gold-400 text-[13px] text-gov-950">+</span>
+        سجل شركتك
+      </a>
+
+      <button class="grid h-11 w-11 place-items-center rounded-xl border border-slate-200 lg:hidden"
+        @click="mobile=!mobile" aria-label="القائمة" aria-controls="mobile-menu" :aria-expanded="mobile.toString()">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+      </button>
+    </div>
+
+    <div id="mobile-menu" x-show="mobile" x-cloak x-transition class="border-t bg-white px-4 py-3 lg:hidden">
+      <template x-for="item in nav" :key="item.id">
+        <a href="index.html" :href="item.href" @click="mobile=false"
+          class="block w-full rounded-xl px-4 py-3 text-right text-sm font-semibold"
+          :class="route===item.id ? 'bg-gov-50 text-gov-800' : 'text-slate-600 hover:bg-slate-50'"
+          :aria-current="route === item.id ? 'page' : null"
+          x-text="item.label"></a>
+      </template>
+    </div>
+  </nav>
+
+  <main>
+    <section class="relative flex min-h-[320px] items-center overflow-hidden bg-gov-950 py-14 text-white sm:py-16">
+      <img src="./assets/images/hero-construction-1200.jpg"
+        srcset="./assets/images/hero-construction-768.jpg 768w, ./assets/images/hero-construction-1200.jpg 1200w, ./assets/images/hero-construction.jpg 1600w"
+        sizes="100vw" alt="" width="1600" height="900" decoding="async" fetchpriority="high"
+        class="absolute inset-0 h-full w-full object-cover opacity-25">
+      <div class="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,50,42,.95),rgba(0,58,48,.88),rgba(0,50,42,.95))]"></div>
+      <div class="relative mx-auto w-full max-w-[1500px] px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl">
+          <div class="flex items-center gap-2 text-xs font-bold text-gold-200">
+            <a href="index.html" class="transition hover:text-white">الرئيسية</a>
+            <span class="text-white/40">/</span>
+            <span>تواصل معنا</span>
+          </div>
+          <h1 class="mt-5 text-3xl font-extrabold leading-tight sm:text-5xl">تواصل معنا</h1>
+          <p class="mt-4 max-w-3xl text-sm leading-8 text-slate-100 sm:text-base">يسعدنا استقبال طلبات الشركات والموردين والجهات الباحثة عن موردين، وتوجيه كل طلب إلى المسار المناسب داخل منصة توريدات.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-14 sm:py-16">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="mb-8 flex flex-wrap gap-6 text-sm font-semibold text-gov-900">
+          <span class="inline-flex items-center gap-2"><span class="text-gold-600" aria-hidden="true">✓</span>رد خلال يوم عمل</span>
+          <span class="inline-flex items-center gap-2"><span class="text-gold-600" aria-hidden="true">✓</span>دعم للشركات والموردين</span>
+          <span class="inline-flex items-center gap-2"><span class="text-gold-600" aria-hidden="true">✓</span>قنوات تواصل مباشرة</span>
+        </div>
+        <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-10">
+          <div>
+            <form @submit.prevent="showToast('تم استلام طلبك، وسيتم ربط النموذج بالنظام لاحقاً')" class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+              <div>
+                <h2 class="text-2xl font-bold text-gov-950">نموذج التواصل</h2>
+                <p class="mt-3 text-sm leading-7 text-slate-600">أرسل التفاصيل الأساسية وسيتولى الفريق المختص مراجعة الطلب وتوجيهه.</p>
+                <p class="mt-2 text-xs font-semibold text-slate-600">الحقول المميزة بعلامة <span class="text-gold-600">*</span> مطلوبة.</p>
+              </div>
+
+              <div class="mt-8 grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label for="full-name" class="text-xs font-bold text-gov-950">الاسم الكامل <span class="text-gold-600" aria-hidden="true">*</span></label>
+                  <input id="full-name" name="full_name" autocomplete="name" required class="mt-2 h-12 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none transition focus:border-gold-400" placeholder="الاسم الثلاثي">
+                </div>
+                <div>
+                  <label for="email" class="text-xs font-bold text-gov-950">البريد الإلكتروني <span class="text-gold-600" aria-hidden="true">*</span></label>
+                  <input id="email" name="email" type="email" autocomplete="email" required dir="ltr" class="mt-2 h-12 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none transition focus:border-gold-400" placeholder="name@example.com">
+                </div>
+                <div>
+                  <label for="phone" class="text-xs font-bold text-gov-950">رقم الجوال</label>
+                  <input id="phone" name="phone" type="tel" autocomplete="tel" dir="ltr" class="mt-2 h-12 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none transition focus:border-gold-400" placeholder="05xxxxxxxx">
+                </div>
+                <div>
+                  <label for="request-type" class="text-xs font-bold text-gov-950">نوع الطلب <span class="text-gold-600" aria-hidden="true">*</span></label>
+                  <select id="request-type" name="request_type" required class="mt-2 h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none transition focus:border-gold-400">
+                    <option value="">اختر نوع الطلب</option>
+                    <option>تسجيل شركة أو مورد</option>
+                    <option>استفسار جهة تبحث عن موردين</option>
+                    <option>إعلانات ورعايات</option>
+                    <option>شراكات</option>
+                    <option>دعم فني</option>
+                  </select>
+                </div>
+                <div class="sm:col-span-2">
+                  <label for="organization" class="text-xs font-bold text-gov-950">اسم الشركة / الجهة</label>
+                  <input id="organization" name="organization" autocomplete="organization" class="mt-2 h-12 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none transition focus:border-gold-400" placeholder="اسم المنشأة أو الجهة">
+                </div>
+                <div class="sm:col-span-2">
+                  <label for="message" class="text-xs font-bold text-gov-950">الرسالة <span class="text-gold-600" aria-hidden="true">*</span></label>
+                  <textarea id="message" name="message" required class="mt-2 min-h-36 w-full rounded-xl border border-slate-200 p-4 text-sm leading-7 outline-none transition focus:border-gold-400" placeholder="اكتب تفاصيل الطلب أو الاستفسار"></textarea>
+                </div>
+              </div>
+
+              <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <button type="submit" class="inline-flex h-12 items-center justify-center rounded-xl bg-gov-800 px-6 text-sm font-bold text-white transition hover:bg-gov-700">إرسال الطلب</button>
+                <p class="text-xs leading-6 text-slate-500">هذا النموذج تجريبي حالياً وسيتم ربطه بالنظام لاحقاً.</p>
+              </div>
+            </form>
+          </div>
+
+          <aside class="space-y-5">
+            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+              <a href="tel:920012345" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-gold-300">
+                <p class="text-xs font-bold text-slate-500">الهاتف</p>
+                <b class="mt-2 block text-lg text-gov-950" dir="ltr">9200 123 45</b>
+              </a>
+              <a href="mailto:care@tawreed.sa" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-gold-300">
+                <p class="text-xs font-bold text-slate-500">البريد الإلكتروني</p>
+                <b class="mt-2 block text-base text-gov-950">care@tawreed.sa</b>
+              </a>
+              <a href="contact.html" aria-current="page" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-gold-300">
+                <p class="text-xs font-bold text-slate-500">تواصل معنا</p>
+                <b class="mt-2 block text-base text-gov-950">نموذج الطلبات والاستفسارات</b>
+              </a>
+              <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <p class="text-xs font-bold text-slate-500">ساعات العمل</p>
+                <b class="mt-2 block text-base text-gov-950">الأحد - الخميس، 8:00 صباحاً - 5:00 مساءً</b>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+
+
+    <section class="pb-16">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-8">
+          <div>
+            <h2 class="text-2xl font-bold text-gov-950">هل ترغب في ظهور شركتك ضمن توريدات؟</h2>
+            <p class="mt-2 text-sm text-slate-600">ابدأ بإنشاء حضور مهني يساعد الجهات والمقاولين على الوصول إليك بوضوح.</p>
+          </div>
+          <div class="flex flex-wrap gap-3">
+            <a href="plans.html" class="inline-flex h-11 items-center justify-center rounded-xl bg-gov-800 px-5 text-sm font-bold text-white transition hover:bg-gov-700">سجل شركتك</a>
+            <a href="directory.html" class="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 px-5 text-sm font-bold text-gov-800 transition hover:border-gold-300">استعرض الشركات</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+
+
+  <div x-show="toast" x-cloak x-transition role="status" aria-live="polite" class="fixed bottom-6 right-1/2 z-[70] w-[calc(100%-2rem)] max-w-md translate-x-1/2 rounded-2xl border border-gold-300 bg-gov-950 px-5 py-4 text-center text-xs font-semibold text-white shadow-sm" x-text="toast"></div>
+
+  <footer class="bg-gov-950 text-white"><div class="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8"><div class="lg:col-span-2"><div class="flex items-center gap-3"><span class="grid h-11 w-11 place-items-center rounded-xl border border-gold-300/50 text-gold-300"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="M3.3 7 12 12l8.7-5M12 22V12"/></svg></span><div><b>توريد</b><p class="mt-1 text-[9px] tracking-[.12em] text-slate-500">TAWREED PLATFORM</p></div></div><p class="mt-5 max-w-md text-xs font-light leading-7 text-slate-400">منصة وطنية ترفع كفاءة الوصول إلى الموردين والشركات السعودية المؤهلة، وتدعم بناء شراكات توريد موثوقة لمشروعات ذات أثر مستدام.</p></div><div><h3 class="text-sm font-bold text-gold-300">روابط سريعة</h3><div class="mt-5 space-y-3 text-xs text-slate-400"><a href="directory.html" class="block">دليل الشركات</a><a href="plans.html" class="block">باقات الاشتراك</a><a href="news.html" class="block">الأخبار</a><a href="about.html" class="block">عن المنصة</a><a href="contact.html" class="block" aria-current="page">تواصل معنا</a></div></div><div><h3 class="text-sm font-bold text-gold-300">تواصل معنا</h3><div class="mt-5 space-y-3 text-xs text-slate-400"><p>الرياض، المملكة العربية السعودية</p><a href="tel:920012345" dir="ltr" class="block text-right">9200 123 45</a><a href="mailto:care@tawreed.sa" class="block">care@tawreed.sa</a><a href="https://wa.me/966920012345" class="block">واتساب</a></div></div></div><div class="border-t border-white/10"><div class="mx-auto flex max-w-7xl flex-col justify-between gap-3 px-4 py-6 text-[10px] text-slate-500 sm:flex-row sm:px-6 lg:px-8"><p>© 2026 توريد. جميع الحقوق محفوظة.</p><div class="flex gap-5"><span>سياسة الخصوصية</span><span>الشروط والأحكام</span></div></div></div></footer>
+
+
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('app', () => ({
+        route: 'contact',
+        mobile: false,
+        navStuck: false,
+        toast: '',
+        toastTimer: null,
+        nav: [
+          { id: 'home', label: 'الرئيسية', href: 'index.html' },
+          { id: 'directory', label: 'الشركات', href: 'directory.html' },
+          { id: 'categories', label: 'التصنيفات', href: 'index.html#companies' },
+          { id: 'news', label: 'الأخبار', href: 'news.html' },
+          { id: 'about', label: 'من نحن', href: 'about.html' },
+          { id: 'contact', label: 'تواصل معنا', href: 'contact.html' }
+        ],
+        init() {
+          this.route = this.routeFromPath();
+          this.updateStickyNav();
+          window.addEventListener('scroll', () => this.updateStickyNav(), { passive: true });
+          window.addEventListener('resize', () => this.updateStickyNav());
+        },
+        updateStickyNav() {
+          const nav = document.getElementById('site-sticky-nav');
+          this.navStuck = window.scrollY >= ((nav?.offsetTop || 0) - 1);
+        },
+        routeFromPath() {
+          const file = location.pathname.split('/').pop() || 'index.html';
+          return {
+            'index.html': 'home',
+            'directory.html': 'directory',
+            'profile.html': 'profile',
+            'news.html': 'news',
+            'news-detail.html': 'news',
+            'about.html': 'about',
+            'contact.html': 'contact',
+            'plans.html': 'plans'
+          }[file] || 'home';
+        },
+        pathFor(route) {
+          if (route === 'categories') return 'index.html#companies';
+          return {
+            home: 'index.html',
+            directory: 'directory.html',
+            profile: 'profile.html',
+            news: 'news.html',
+            about: 'about.html',
+            contact: 'contact.html',
+            plans: 'plans.html'
+          }[route] || 'index.html';
+        },
+        go(route) {
+          location.href = this.pathFor(route);
+        },
+        showToast(message) {
+          this.toast = message || 'تم استلام طلبك';
+          clearTimeout(this.toastTimer);
+          this.toastTimer = setTimeout(() => {
+            this.toast = '';
+          }, 3200);
+        }
+      }));
+    });
+  </script>
+</body>
+</html>

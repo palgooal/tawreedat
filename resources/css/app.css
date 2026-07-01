@@ -6,6 +6,89 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    /* Typography — Alexandria is the primary typeface across the platform.
+       Loaded via <link> tags in layouts/app.blade.php (preconnect + stylesheet),
+       not via @import here, to avoid render-blocking double loading. */
+    --font-sans: 'Alexandria', ui-sans-serif, system-ui, 'Segoe UI', Tahoma, Arial, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* Brand — Gov green (primary) */
+    --color-gov-50: #eefbf3;
+    --color-gov-100: #d5f5e1;
+    --color-gov-200: #ade8c8;
+    --color-gov-300: #7ad4a8;
+    --color-gov-400: #4ab884;
+    --color-gov-500: #2b9c68;
+    --color-gov-600: #1d7d52;
+    --color-gov-700: #17643f;
+    --color-gov-800: #144f34;
+    --color-gov-900: #12412b;
+
+    /* Brand — Gold (accent) */
+    --color-gold-50: #fdf8ec;
+    --color-gold-100: #faedc4;
+    --color-gold-200: #f5db8d;
+    --color-gold-300: #eec455;
+    --color-gold-400: #e6ac2e;
+    --color-gold-500: #d99416;
+    --color-gold-600: #b8730f;
+    --color-gold-700: #925810;
+}
+
+@layer base {
+    html {
+        direction: rtl;
+    }
+
+    body {
+        @apply bg-slate-50 text-slate-800 antialiased;
+    }
+
+    a {
+        transition: color 150ms ease, opacity 150ms ease;
+    }
+
+    /* Accessible focus defaults — visible only for keyboard/AT navigation */
+    :focus-visible {
+        outline: 2px solid var(--color-gov-600);
+        outline-offset: 2px;
+        border-radius: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
+}
+
+@layer components {
+    .container-page {
+        @apply mx-auto w-full max-w-[1500px] px-4 sm:px-6 lg:px-8;
+    }
+
+    .card-soft {
+        @apply rounded-2xl border border-slate-200 bg-white shadow-sm;
+    }
+
+    .btn-primary {
+        @apply inline-flex items-center justify-center gap-2 rounded-lg bg-gov-700 px-4 py-2.5
+            text-sm font-medium text-white transition-colors duration-150
+            hover:bg-gov-800 active:bg-gov-900
+            focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gov-600
+            disabled:pointer-events-none disabled:opacity-50;
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5
+            text-sm font-medium text-slate-700 transition-colors duration-150
+            hover:bg-slate-50 active:bg-slate-100
+            focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gov-600
+            disabled:pointer-events-none disabled:opacity-50;
+    }
 }

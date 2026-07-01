@@ -1,0 +1,618 @@
+﻿<!doctype html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="أخبار قطاع البناء وشركات البناء والموردين في المملكة العربية السعودية عبر توريدات.">
+  <title>الأخبار | توريدات</title>
+  <link rel="stylesheet" href="./dist/output.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="image" href="./assets/images/hero-construction-1200.jpg" fetchpriority="high">
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+</head>
+
+<body class="bg-[#fbfcfb] text-slate-800 antialiased" x-data="newsApp()">
+
+  <!-- Header -->
+  <header class="relative z-40 border-b border-slate-200 bg-white shadow-sm">
+
+    <!-- Top Bar -->
+    <div class="bg-[linear-gradient(90deg,#012c26_0%,#014236_50%,#012c26_100%)] text-white">
+      <div class="mx-auto flex h-10 max-w-[1500px] items-center justify-between px-4 text-[11px] sm:px-6 lg:px-8">
+        <div class="flex items-center gap-4">
+          <span class="inline-flex items-center gap-2">
+            <span class="h-1.5 w-1.5 rounded-full bg-gold-300"></span>
+            المملكة العربية السعودية
+          </span>
+          <span class="hidden text-white/60 sm:inline">|</span>
+          <span dir="ltr" class="hidden sm:inline">9200 123 45</span>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <button @click="go('contact')" class="font-bold transition hover:text-gold-300">تواصل معنا</button>
+          <span class="text-white/60">|</span>
+          <span class="font-bold text-gold-300">العربية</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Header -->
+    <div class="bg-white">
+      <div
+        class="mx-auto grid max-w-[1500px] gap-4 px-4 py-4 sm:px-6 lg:grid-cols-[280px_1fr_230px] lg:items-center lg:px-8">
+
+        <!-- Logo -->
+        <button @click="go('home')" class="flex items-center gap-4 text-right" aria-label="العودة للرئيسية">
+          <span
+            class="relative grid h-[58px] w-[58px] place-items-center overflow-hidden rounded-2xl bg-gov-800 text-white shadow-xl shadow-gov-900/20">
+            <span class="absolute inset-1.5 rounded-xl border border-gold-300/50"></span>
+            <svg class="relative h-7 w-7 text-gold-300" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="1.7">
+              <path
+                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+              <path d="M3.3 7 12 12l8.7-5M12 22V12" />
+            </svg>
+          </span>
+
+          <span>
+            <strong class="block text-2xl font-extrabold text-gov-950">توريدات</strong>
+            <small class="mt-1 block text-[11px] font-medium text-slate-500">دليل مصانع مواد البناء</small>
+          </span>
+        </button>
+
+        <!-- Header Ad Image -->
+        <button @click="go('contact')"
+          class="order-3 block overflow-hidden rounded-[28px] border border-slate-200 bg-slate-50 shadow-sm transition hover:border-gold-300 hover:shadow-md lg:order-none"
+          aria-label="مساحة إعلانية">
+          <img src="./assets/images/header-ad-1-960.jpg"
+            srcset="./assets/images/header-ad-1-640.jpg 640w, ./assets/images/header-ad-1-960.jpg 960w"
+            sizes="(min-width: 1024px) 100vw, 100vw" width="960" height="154" alt="مساحة إعلانية في توريدات"
+            decoding="async" fetchpriority="high" class="h-[90px] w-full object-cover">
+        </button>
+
+        <!-- CTA / Mobile Menu -->
+        <div class="flex items-center justify-between gap-3 lg:justify-end">
+          <button @click="go('plans')"
+            class="inline-flex items-center gap-2 rounded-2xl border border-gold-400 bg-[linear-gradient(90deg,#012c26,#014236)] px-5 py-3 text-sm font-bold text-white shadow-xl shadow-gov-900/15 transition hover:-translate-y-0.5 hover:shadow-2xl">
+            <span class="grid h-5 w-5 place-items-center rounded-full bg-gold-400 text-[13px] text-gov-950">+</span>
+            سجّل شركتك
+          </button>
+
+          <button class="hidden h-11 w-11 place-items-center rounded-xl border border-slate-200 lg:hidden"
+            @click="mobile=!mobile" aria-label="القائمة" aria-controls="mobile-menu" :aria-expanded="mobile.toString()">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </header>
+
+  <!-- Navigation -->
+  <nav id="site-sticky-nav" class="sticky top-0 z-50 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur">
+    <div class="mx-auto grid min-h-14 max-w-[1500px] grid-cols-[1fr_auto] items-center gap-4 px-4 py-2 sm:px-6 lg:min-h-16 lg:grid-cols-[auto_1fr_auto] lg:gap-6 lg:px-8">
+      <a href="index.html"
+        class="flex h-12 items-center gap-3 justify-self-start text-right transition duration-200"
+        :class="navStuck ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-1 opacity-0'"
+        :tabindex="navStuck ? null : -1"
+        :aria-hidden="(!navStuck).toString()"
+        aria-label="العودة للرئيسية">
+        <span class="relative grid h-10 w-10 place-items-center overflow-hidden rounded-xl bg-gov-800 text-white shadow-sm shadow-gov-900/15">
+          <span class="absolute inset-1 rounded-lg border border-gold-300/50"></span>
+          <svg class="relative h-5 w-5 text-gold-300" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.7">
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+            <path d="M3.3 7 12 12l8.7-5M12 22V12" />
+          </svg>
+        </span>
+        <span>
+          <strong class="block text-base font-extrabold leading-5 text-gov-950">توريدات</strong>
+          <small class="block text-[10px] font-medium leading-4 text-slate-500">دليل مصانع مواد البناء</small>
+        </span>
+      </a>
+
+      <div class="hidden items-center justify-center gap-10 lg:flex">
+        <template x-for="item in nav" :key="item.id">
+          <button @click="go(item.id)"
+            class="relative px-1 py-2 text-[15px] font-semibold transition after:absolute after:bottom-0 after:right-1/2 after:h-[2px] after:w-0 after:translate-x-1/2 after:rounded-full after:bg-gold-500 after:transition-all"
+            :class="route===item.id ? 'text-gold-600 after:w-8' : 'text-slate-700 hover:text-gov-900'"
+            :aria-current="route === item.id ? 'page' : null"
+            x-text="item.label"></button>
+        </template>
+      </div>
+
+      <a href="contact.html"
+        class="hidden h-10 items-center justify-center gap-2 justify-self-end rounded-xl border border-gold-400 bg-[linear-gradient(90deg,#012c26,#014236)] px-4 text-xs font-bold text-white shadow-sm shadow-gov-900/10 transition duration-200 hover:-translate-y-0.5 hover:shadow-md lg:inline-flex"
+        :class="navStuck ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-1 opacity-0'"
+        :tabindex="navStuck ? null : -1"
+        :aria-hidden="(!navStuck).toString()">
+        <span class="grid h-5 w-5 place-items-center rounded-full bg-gold-400 text-[13px] text-gov-950">+</span>
+        سجل شركتك
+      </a>
+
+      <button class="grid h-11 w-11 place-items-center rounded-xl border border-slate-200 lg:hidden"
+        @click="mobile=!mobile" aria-label="القائمة" aria-controls="mobile-menu" :aria-expanded="mobile.toString()">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+      </button>
+    </div>
+
+    <div id="mobile-menu" x-show="mobile" x-cloak x-transition class="border-t bg-white px-4 py-3 lg:hidden">
+      <template x-for="item in nav" :key="item.id">
+        <button @click="go(item.id);mobile=false"
+          class="block w-full rounded-xl px-4 py-3 text-right text-sm font-semibold"
+          :class="route===item.id ? 'bg-gov-50 text-gov-800' : 'text-slate-600 hover:bg-slate-50'"
+          x-text="item.label"></button>
+      </template>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Page Hero -->
+    <section class="relative flex min-h-[320px] items-center overflow-hidden bg-gov-950 py-14 text-white sm:py-16">
+      <img src="./assets/images/hero-construction-1200.jpg"
+        srcset="./assets/images/hero-construction-768.jpg 768w, ./assets/images/hero-construction-1200.jpg 1200w, ./assets/images/hero-construction.jpg 1600w"
+        sizes="100vw" alt="" width="1600" height="900" decoding="async" fetchpriority="high"
+        class="absolute inset-0 h-full w-full object-cover opacity-25">
+      <div
+        class="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,50,42,.95),rgba(0,58,48,.88),rgba(0,50,42,.95))]">
+      </div>
+      <div class="relative mx-auto w-full max-w-[1500px] px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl">
+          <div class="flex items-center gap-2 text-xs font-bold text-gold-200">
+            <a href="index.html" class="transition hover:text-white">الرئيسية</a>
+            <span class="text-white/40">/</span>
+            <span>الأخبار</span>
+          </div>
+          <h1 class="mt-5 text-3xl font-extrabold leading-tight sm:text-5xl">أخبار قطاع البناء</h1>
+          <p class="mt-4 max-w-3xl text-sm leading-8 text-slate-100 sm:text-base">
+            آخر التحديثات والعروض والأخبار المرتبطة بشركات البناء والموردين في المملكة العربية السعودية.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- All News -->
+    <section class="pb-16 pt-6 [contain-intrinsic-size:900px] [content-visibility:auto]">
+      <div class="mx-auto grid max-w-[1500px] gap-8 px-4 sm:px-6 lg:grid-cols-[300px_1fr] lg:px-8">
+        <div class="lg:col-start-2 lg:row-start-1">
+          <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <h2 class="text-2xl font-extrabold text-gov-950">كل الأخبار</h2>
+            <div
+              class="flex h-12 w-full items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 transition focus-within:border-gold-400 focus-within:ring-2 focus-within:ring-gold-100 sm:w-[320px]">
+              <label for="news-search" class="sr-only">بحث في الأخبار</label>
+              <svg class="h-4 w-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-4-4" />
+              </svg>
+              <input id="news-search" x-model="newsSearch" @input="currentPage=1"
+                class="h-full w-full bg-transparent text-xs outline-none placeholder:text-slate-500" aria-describedby="news-results-status"
+                placeholder="بحث في الأخبار">
+            </div>
+          </div>
+
+          <p id="news-results-status" class="sr-only" aria-live="polite"
+            x-text="newsResultsAnnouncement"></p>
+
+          <div
+            class="mb-5 flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm sm:flex-row sm:items-center sm:justify-between">
+            <p class="leading-7 text-slate-700">
+              <span>عدد الأخبار المطابقة:</span>
+              <span class="font-extrabold text-gov-950" x-text="filteredNews.length"></span>
+              <template x-if="selectedCategory !== 'الكل'">
+                <span>
+                  <span>ضمن</span>
+                  <strong class="font-bold text-gov-900" x-text="selectedCategory"></strong>
+                </span>
+              </template>
+              <template x-if="newsSearch.trim()">
+                <span>
+                  <span>عن</span>
+                  <strong class="font-bold text-gov-900" x-text="`“${newsSearch.trim()}”`"></strong>
+                </span>
+              </template>
+            </p>
+            <button x-show="hasActiveNewsFilter" x-cloak @click="resetNewsFilters()"
+              class="self-start rounded-xl border border-gov-100 bg-gov-50 px-4 py-2 text-xs font-bold text-gov-900 transition hover:border-gov-200 hover:bg-gov-100 sm:self-auto">
+              عرض كل الأخبار
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <template x-for="item in paginatedNews" :key="item.slug">
+              <article
+                class="touch-static overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:border-gov-200 hover:shadow-[0_6px_14px_rgba(7,30,23,0.06)]">
+                <img :src="item.image" :srcset="imageSrcset(item.image)"
+                  sizes="(min-width: 1280px) 25vw, (min-width: 768px) 50vw, 100vw" :alt="item.title" width="640" height="427"
+                  loading="lazy" decoding="async" class="h-40 w-full object-cover">
+                <div class="p-4">
+                  <span class="rounded-full bg-gov-50 px-3 py-1 text-[10px] font-bold text-gov-800"
+                    x-text="item.category"></span>
+                  <h3 class="mt-4 line-clamp-2 text-base font-extrabold leading-6 text-gov-950"
+                    x-text="item.title"></h3>
+                  <p class="mt-3 line-clamp-2 text-xs leading-5 text-slate-500" x-text="item.summary"></p>
+                  <div class="mt-4 flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
+                    <span class="text-[11px] font-medium text-slate-500" x-text="item.date"></span>
+                    <button @click="openNews(item)" :aria-label="`قراءة المزيد: ${item.title}`"
+                      class="text-xs font-bold text-gov-800 hover:text-gold-700">
+                      قراءة المزيد
+                    </button>
+                  </div>
+                </div>
+              </article>
+            </template>
+          </div>
+
+          <div x-show="filteredNews.length===0" x-cloak
+            class="mt-5 rounded-3xl border border-dashed border-slate-300 bg-white px-4 py-14 text-center">
+            <h3 class="font-extrabold text-gov-900">لا توجد أخبار بهذه المعايير</h3>
+            <p class="mx-auto mt-3 max-w-md text-sm leading-7 text-slate-600">
+              جرّب إزالة عبارة البحث أو اختر تصنيف "الكل" لعرض آخر الأخبار المتاحة.
+            </p>
+            <button @click="resetNewsFilters()"
+              class="mt-5 rounded-xl bg-gov-800 px-5 py-3 text-xs font-bold text-white">عرض كل الأخبار</button>
+          </div>
+
+          <nav x-show="totalPages>1" x-cloak class="mt-10 flex flex-wrap items-center justify-center gap-2"
+            aria-label="ترقيم صفحات الأخبار">
+            <button @click="previousPage()" :disabled="currentPage===1"
+              class="h-11 min-w-24 rounded-2xl border border-slate-200 px-5 text-sm font-semibold text-slate-600 transition hover:border-gov-300 hover:text-gov-900 disabled:cursor-not-allowed disabled:opacity-45">السابق</button>
+            <template x-for="page in pageNumbers" :key="page">
+              <button @click="setPage(page)" :aria-current="currentPage===page ? 'page' : null"
+                class="grid h-11 w-11 place-items-center rounded-2xl text-sm font-bold transition"
+                :class="currentPage===page ? 'bg-gov-800 text-white' : 'border border-slate-200 text-slate-600 hover:border-gov-300'">
+                <span x-text="page"></span>
+              </button>
+            </template>
+            <button @click="nextPage()" :disabled="currentPage===totalPages"
+              class="h-11 min-w-24 rounded-2xl border border-slate-200 px-5 text-sm font-semibold text-slate-600 transition hover:border-gov-300 hover:text-gov-900 disabled:cursor-not-allowed disabled:opacity-45">التالي</button>
+          </nav>
+        </div>
+
+        <aside class="space-y-5 lg:col-start-1 lg:row-start-1 lg:sticky lg:top-24">
+          <div class="rounded-3xl border border-slate-200 bg-white p-5">
+            <h3 class="font-extrabold text-gov-950">تصنيفات الأخبار</h3>
+            <div class="mt-5 space-y-2">
+              <template x-for="category in categories" :key="category">
+                <button @click="selectedCategory=category;currentPage=1" :aria-pressed="selectedCategory===category"
+                  :aria-label="categoryFilterLabel(category)"
+                  class="flex w-full items-center justify-between rounded-2xl px-3 py-3 text-right text-xs font-bold transition"
+                  :class="selectedCategory===category ? 'border border-gov-100 bg-gov-50 text-gov-900' : 'text-slate-600 hover:bg-slate-50'">
+                  <span x-text="category"></span>
+                  <span class="text-slate-600" aria-hidden="true" x-text="countByCategory(category)"></span>
+                </button>
+              </template>
+            </div>
+          </div>
+
+          <div class="overflow-hidden rounded-3xl bg-gov-950 p-6 text-white">
+            <p class="text-xs font-bold text-gold-300">أعلن في توريدات</p>
+            <h3 class="mt-3 text-2xl font-extrabold leading-9">اعرض شركتك أمام الباحثين عن شركات البناء</h3>
+            <a href="contact.html"
+              class="mt-6 inline-flex h-12 items-center justify-center rounded-2xl bg-gold-500 px-6 text-xs font-bold text-white transition hover:bg-gold-600">
+              احجز إعلانك
+            </a>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gov-950 bg-[linear-gradient(135deg,#012c26,#014236,#012c26)] text-white">
+    <div class="mx-auto grid max-w-[1500px] gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr] lg:px-8">
+      <div>
+        <button @click="go('home')" class="flex items-center gap-3 text-right">
+          <span class="grid h-12 w-12 place-items-center rounded-2xl border border-gold-300/40 text-gold-300">
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+              <path
+                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+              <path d="M3.3 7 12 12l8.7-5M12 22V12" />
+            </svg>
+          </span>
+          <span>
+            <strong class="block text-2xl font-extrabold">توريدات</strong>
+            <small class="mt-1 block text-[10px] text-slate-400">دليل البناء والموردين</small>
+          </span>
+        </button>
+        <p class="mt-5 max-w-sm text-sm leading-7 text-slate-400">
+          دليل شركات البناء والموردين في المملكة العربية السعودية.
+        </p>
+        <div class="mt-6 flex gap-2">
+          <span aria-label="حساب X قريباً" class="grid h-9 w-9 place-items-center rounded-xl border border-white/10 text-xs text-slate-400">X</span>
+          <span aria-label="حساب لينكدإن قريباً" class="grid h-9 w-9 place-items-center rounded-xl border border-white/10 text-xs text-slate-400">in</span>
+          <span aria-label="حساب إنستغرام قريباً" class="grid h-9 w-9 place-items-center rounded-xl border border-white/10 text-xs text-slate-400">IG</span>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-bold text-gold-300">روابط سريعة</h3>
+        <div class="mt-5 space-y-3 text-sm text-slate-400">
+          <button @click="go('home')" class="block transition hover:text-white">الرئيسية</button>
+          <button @click="go('directory')" class="block transition hover:text-white">الشركات</button>
+          <button @click="go('categories')" class="block transition hover:text-white">التصنيفات</button>
+          <button @click="go('news')" class="block transition hover:text-white">الأخبار</button>
+          <button @click="go('about')" class="block transition hover:text-white">من نحن</button>
+          <button @click="go('contact')" class="block transition hover:text-white">تواصل معنا</button>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-bold text-gold-300">تصنيفات شائعة</h3>
+        <div class="mt-5 space-y-3 text-sm text-slate-400">
+          <button @click="selectCategoryAndGo('مواد بناء')" class="block transition hover:text-white">مواد بناء</button>
+          <button @click="selectCategoryAndGo('خرسانة وأسمنت')" class="block transition hover:text-white">خرسانة وأسمنت</button>
+          <button @click="selectCategoryAndGo('حديد وصلب')" class="block transition hover:text-white">حديد وصلب</button>
+          <button @click="selectCategoryAndGo('كهرباء وإنارة')" class="block transition hover:text-white">كهرباء وإنارة</button>
+          <button @click="selectCategoryAndGo('دهانات وتشطيبات')" class="block transition hover:text-white">دهانات وتشطيبات</button>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-bold text-gold-300">تواصل معنا</h3>
+        <div class="mt-5 space-y-3 text-sm text-slate-400">
+          <p>الرياض، المملكة العربية السعودية</p>
+          <a href="tel:920012345" dir="ltr" class="block text-right transition hover:text-white">9200 123 45</a>
+          <a href="mailto:info@tawreedat.sa" class="block transition hover:text-white">info@tawreedat.sa</a>
+          <a href="contact.html" class="block transition hover:text-white">واتساب</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t border-white/10">
+      <div
+        class="mx-auto flex max-w-[1500px] flex-col justify-between gap-3 px-4 py-6 text-xs text-slate-400 sm:flex-row sm:px-6 lg:px-8">
+        <p>© 2026 توريدات. جميع الحقوق محفوظة.</p>
+        <div class="flex gap-5">
+          <span class="text-slate-500">سياسة الخصوصية</span>
+          <span class="text-slate-500">الشروط والأحكام</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('newsApp', () => ({
+        route: 'news',
+        mobile: false,
+        navStuck: false,
+        selectedCategory: 'الكل',
+        newsSearch: '',
+        currentPage: 1,
+        pageSize: 9,
+        urlSyncReady: false,
+        nav: [
+          { id: 'home', label: 'الرئيسية' },
+          { id: 'directory', label: 'الشركات' },
+          { id: 'categories', label: 'التصنيفات' },
+          { id: 'news', label: 'الأخبار' },
+          { id: 'about', label: 'من نحن' },
+          { id: 'contact', label: 'تواصل معنا' }
+        ],
+        categories: ['الكل', 'أخبار السوق', 'مشاريع', 'عروض الشركات', 'تحديثات توريدات'],
+        news: [
+          {
+            slug: 'materials-prices-update',
+            title: 'تحديث أسعار بعض مواد البناء هذا الأسبوع',
+            category: 'أخبار السوق',
+            date: '26 يونيو 2026',
+            summary: 'متابعة مختصرة لأبرز التغييرات في أسعار مواد البناء لدى عدد من الموردين.',
+            image: './assets/images/news-1.jpg'
+          },
+          {
+            slug: 'ready-mix-demand',
+            title: 'طلب متزايد على موردي الخرسانة في المدن الكبرى',
+            category: 'مشاريع',
+            date: '24 يونيو 2026',
+            summary: 'تشهد المشاريع السكنية والتجارية طلباً متزايداً على الخرسانة الجاهزة وخدمات الصب.',
+            image: './assets/images/news-2.jpg'
+          },
+          {
+            slug: 'finishing-offers',
+            title: 'عروض جديدة من شركات الدهانات والتشطيبات',
+            category: 'عروض الشركات',
+            date: '22 يونيو 2026',
+            summary: 'عدد من الموردين يطلقون عروضاً موسمية على مواد التشطيب والدهانات الداخلية والخارجية.',
+            image: './assets/images/news-3.jpg'
+          },
+          {
+            slug: 'platform-categories-update',
+            title: 'إضافة تصنيفات جديدة داخل دليل توريدات',
+            category: 'تحديثات توريدات',
+            date: '20 يونيو 2026',
+            summary: 'تحديثات جديدة تساعد الزوار على الوصول إلى الشركات حسب الخدمة والمدينة بشكل أسرع.',
+            image: './assets/images/news-4.jpg'
+          },
+          {
+            slug: 'steel-market-note',
+            title: 'ملاحظات سريعة حول سوق الحديد والصلب',
+            category: 'أخبار السوق',
+            date: '18 يونيو 2026',
+            summary: 'قراءة مختصرة لاتجاهات توريد الحديد ومنتجات الصلب في مشاريع البناء.',
+            image: './assets/images/news-5.jpg'
+          },
+          {
+            slug: 'supplier-profile-tips',
+            title: 'كيف تعرض شركتك بشكل أفضل داخل الدليل؟',
+            category: 'تحديثات توريدات',
+            date: '15 يونيو 2026',
+            summary: 'نصائح عملية لتحسين ظهور شركة البناء أو المورد داخل صفحات الدليل.',
+            image: './assets/images/news-6.jpg'
+          },
+          {
+            slug: 'site-safety-supplies',
+            title: 'زيادة الطلب على مستلزمات السلامة في مواقع البناء',
+            category: 'أخبار السوق',
+            date: '12 يونيو 2026',
+            summary: 'موردون يسجلون طلباً أعلى على معدات الوقاية وحلول السلامة مع توسع المشاريع الإنشائية.',
+            image: './assets/images/news-site.jpg'
+          },
+          {
+            slug: 'crane-rental-growth',
+            title: 'نمو خدمات تأجير الرافعات للمشاريع المتوسطة',
+            category: 'مشاريع',
+            date: '10 يونيو 2026',
+            summary: 'شركات تشغيل المعدات الثقيلة توسع خدماتها لتلبية احتياج المقاولين في المدن الرئيسية.',
+            image: './assets/images/news-crane.jpg'
+          },
+          {
+            slug: 'materials-sourcing-guide',
+            title: 'دليل مختصر لاختيار موردي مواد البناء الأساسية',
+            category: 'تحديثات توريدات',
+            date: '8 يونيو 2026',
+            summary: 'إرشادات عملية تساعد الشركات على مقارنة الموردين حسب المدينة والتصنيف ونطاق الخدمة.',
+            image: './assets/images/news-materials.jpg'
+          }
+        ],
+        init() {
+          this.applyUrlState();
+          this.updateStickyNav();
+          window.addEventListener('scroll', () => this.updateStickyNav(), { passive: true });
+          window.addEventListener('resize', () => this.updateStickyNav());
+          this.urlSyncReady = true;
+          this.$watch('selectedCategory', () => {
+            this.currentPage = 1;
+            this.syncUrlState();
+          });
+          this.$watch('newsSearch', () => {
+            this.currentPage = 1;
+            this.syncUrlState();
+          });
+          this.$watch('currentPage', () => {
+            this.syncUrlState();
+          });
+          this.$watch('filteredNews.length', () => {
+            if (this.currentPage > this.totalPages) this.currentPage = this.totalPages;
+          });
+          this.syncUrlState();
+        },
+        updateStickyNav() {
+          const nav = document.getElementById('site-sticky-nav');
+          this.navStuck = window.scrollY >= ((nav?.offsetTop || 0) - 1);
+        },
+        get featuredNews() {
+          return this.news[0];
+        },
+        get sideNews() {
+          return this.news.slice(1, 4);
+        },
+        get filteredNews() {
+          const search = this.newsSearch.trim();
+          return this.news.filter(item => {
+            const byCategory = this.selectedCategory === 'الكل' || item.category === this.selectedCategory;
+            const bySearch = !search || `${item.title} ${item.summary} ${item.category}`.includes(search);
+            return byCategory && bySearch;
+          });
+        },
+        get totalPages() {
+          return Math.max(1, Math.ceil(this.filteredNews.length / this.pageSize));
+        },
+        get pageNumbers() {
+          return Array.from({ length: this.totalPages }, (_, index) => index + 1);
+        },
+        get paginatedNews() {
+          const page = Math.min(this.currentPage, this.totalPages);
+          const start = (page - 1) * this.pageSize;
+          return this.filteredNews.slice(start, start + this.pageSize);
+        },
+        get hasActiveNewsFilter() {
+          return this.selectedCategory !== 'الكل' || this.newsSearch.trim().length > 0;
+        },
+        get newsResultsAnnouncement() {
+          const parts = [`عدد الأخبار المطابقة: ${this.filteredNews.length}`];
+          const search = this.newsSearch.trim();
+          if (this.selectedCategory !== 'الكل') parts.push(`ضمن ${this.selectedCategory}`);
+          if (search) parts.push(`عن ${search}`);
+          return parts.join(' ');
+        },
+        setPage(page) {
+          this.currentPage = Math.min(Math.max(page, 1), this.totalPages);
+        },
+        nextPage() {
+          this.setPage(this.currentPage + 1);
+        },
+        previousPage() {
+          this.setPage(this.currentPage - 1);
+        },
+        resetNewsFilters() {
+          this.selectedCategory = 'الكل';
+          this.newsSearch = '';
+          this.currentPage = 1;
+        },
+        applyUrlState() {
+          const params = new URLSearchParams(location.search);
+          const category = params.get('category');
+          const query = this.cleanSearchQuery(params.get('q') || '');
+          const page = Number.parseInt(params.get('page') || '1', 10);
+          this.selectedCategory = this.categories.includes(category) ? category : 'الكل';
+          this.newsSearch = query;
+          this.currentPage = Number.isFinite(page) ? Math.min(Math.max(page, 1), this.totalPages) : 1;
+          this.syncUrlState();
+        },
+        syncUrlState() {
+          if (!this.urlSyncReady) return;
+          const params = new URLSearchParams();
+          const query = this.cleanSearchQuery(this.newsSearch);
+          if (this.selectedCategory !== 'الكل') params.set('category', this.selectedCategory);
+          if (query) params.set('q', query);
+          if (this.currentPage > 1) params.set('page', String(Math.min(this.currentPage, this.totalPages)));
+          const nextUrl = `${location.pathname}${params.toString() ? `?${params}` : ''}${location.hash}`;
+          try {
+            history.replaceState(null, '', nextUrl);
+          } catch (_error) {
+            // Some embedded browsers block history updates; filtering should still work.
+          }
+        },
+        cleanSearchQuery(value) {
+          return String(value).replace(/[\u0000-\u001F\u007F]/g, '').trim().slice(0, 80);
+        },
+        imageSrcset(image) {
+          const base = image.replace(/\.jpg$/, '');
+          return `${base}-320.jpg 320w, ${base}-640.jpg 640w, ${image} 960w`;
+        },
+        countByCategory(category) {
+          return category === 'الكل' ? this.news.length : this.news.filter(item => item.category === category).length;
+        },
+        categoryFilterLabel(category) {
+          const count = this.countByCategory(category);
+          const selected = this.selectedCategory === category ? 'محدد حالياً' : 'عرض';
+          return `${selected}: ${category}، ${count} خبر`;
+        },
+        go(route) {
+          if (route === 'categories') {
+            location.href = 'index.html#companies';
+            return;
+          }
+          const paths = { home: 'index.html', directory: 'directory.html', news: 'news.html', about: 'about.html', contact: 'contact.html', plans: 'plans.html' };
+          location.href = paths[route] || 'index.html';
+        },
+        openNews(item) {
+          if (!this.news.some(newsItem => newsItem.slug === item.slug)) return;
+          try {
+            sessionStorage.setItem('tawreedat:lastNewsListState', location.href);
+            sessionStorage.setItem('tawreedat:selectedNews', JSON.stringify(item));
+          } catch (_error) {
+            // Navigation still works if storage is unavailable.
+          }
+          const params = new URLSearchParams({ slug: item.slug, from: location.href });
+          location.href = `news-detail.html?${params}`;
+        },
+        selectCategoryAndGo(category) {
+          location.href = `directory.html?sector=${encodeURIComponent(category)}`;
+        }
+      }))
+    })
+  </script>
+</body>
+
+</html>

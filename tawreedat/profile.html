@@ -1,0 +1,212 @@
+﻿<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="توريد - منصة موثوقة تربط الجهات الحكومية بالموردين والشركات الوطنية المؤهلة">
+  <title>ملف الشركة | توريد</title>
+  <link rel="stylesheet" href="./dist/output.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="bg-[#fbfcfb] text-slate-800 antialiased" x-data="app()" @notify.window="showToast($event.detail)">
+
+  <!-- Header -->
+  <header class="relative z-40 border-b border-slate-200 bg-white shadow-sm">
+
+    <!-- Top Bar -->
+    <div class="bg-[linear-gradient(90deg,#012c26_0%,#014236_50%,#012c26_100%)] text-white">
+      <div class="mx-auto flex h-10 max-w-[1500px] items-center justify-between px-4 text-[11px] sm:px-6 lg:px-8">
+        <div class="flex items-center gap-4">
+          <span class="inline-flex items-center gap-2">
+            <span class="h-1.5 w-1.5 rounded-full bg-gold-300"></span>
+            المملكة العربية السعودية
+          </span>
+          <span class="hidden text-white/60 sm:inline">|</span>
+          <span dir="ltr" class="hidden sm:inline">9200 123 45</span>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <button @click="go('contact')" class="font-bold transition hover:text-gold-300">تواصل معنا</button>
+          <span class="text-white/60">|</span>
+          <span class="font-bold text-gold-300">العربية</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Header -->
+    <div class="bg-white">
+      <div
+        class="mx-auto grid max-w-[1500px] gap-4 px-4 py-4 sm:px-6 lg:grid-cols-[280px_1fr_230px] lg:items-center lg:px-8">
+
+        <!-- Logo -->
+        <button @click="go('home')" class="flex items-center gap-4 text-right" aria-label="العودة للرئيسية">
+          <span
+            class="relative grid h-[58px] w-[58px] place-items-center overflow-hidden rounded-2xl bg-gov-800 text-white shadow-xl shadow-gov-900/20">
+            <span class="absolute inset-1.5 rounded-xl border border-gold-300/50"></span>
+            <svg class="relative h-7 w-7 text-gold-300" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="1.7">
+              <path
+                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+              <path d="M3.3 7 12 12l8.7-5M12 22V12" />
+            </svg>
+          </span>
+
+          <span>
+            <strong class="block text-2xl font-extrabold text-gov-950">توريدات</strong>
+            <small class="mt-1 block text-[11px] font-medium text-slate-500">دليل مصانع مواد البناء</small>
+          </span>
+        </button>
+
+        <!-- Header Ad Image -->
+        <button @click="go('contact')"
+          class="order-3 block overflow-hidden rounded-[28px] border border-slate-200 bg-slate-50 shadow-sm transition hover:border-gold-300 hover:shadow-md lg:order-none"
+          aria-label="مساحة إعلانية">
+          <img src="./assets/images/header-ad-1-960.jpg"
+            srcset="./assets/images/header-ad-1-640.jpg 640w, ./assets/images/header-ad-1-960.jpg 960w"
+            sizes="(min-width: 1024px) 100vw, 100vw" width="960" height="154" alt="مساحة إعلانية في توريدات"
+            decoding="async" fetchpriority="high" class="h-[90px] w-full object-cover">
+        </button>
+
+        <!-- CTA / Mobile Menu -->
+        <div class="flex items-center justify-between gap-3 lg:justify-end">
+          <button @click="go('plans')"
+            class="inline-flex items-center gap-2 rounded-2xl border border-gold-400 bg-[linear-gradient(90deg,#012c26,#014236)] px-5 py-3 text-sm font-bold text-white shadow-xl shadow-gov-900/15 transition hover:-translate-y-0.5 hover:shadow-2xl">
+            <span class="grid h-5 w-5 place-items-center rounded-full bg-gold-400 text-[13px] text-gov-950">+</span>
+            سجّل شركتك
+          </button>
+
+          <button class="hidden h-11 w-11 place-items-center rounded-xl border border-slate-200 lg:hidden"
+            @click="mobile=!mobile" aria-label="القائمة" aria-controls="mobile-menu" :aria-expanded="mobile.toString()">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 7h16M4 12h16M4 17h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </header>
+
+  <!-- Navigation -->
+  <nav id="site-sticky-nav" class="sticky top-0 z-50 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur">
+    <div class="mx-auto grid min-h-14 max-w-[1500px] grid-cols-[1fr_auto] items-center gap-4 px-4 py-2 sm:px-6 lg:min-h-16 lg:grid-cols-[auto_1fr_auto] lg:gap-6 lg:px-8">
+      <a href="index.html"
+        class="flex h-12 items-center gap-3 justify-self-start text-right transition duration-200"
+        :class="navStuck ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-1 opacity-0'"
+        :tabindex="navStuck ? null : -1"
+        :aria-hidden="(!navStuck).toString()"
+        aria-label="العودة للرئيسية">
+        <span class="relative grid h-10 w-10 place-items-center overflow-hidden rounded-xl bg-gov-800 text-white shadow-sm shadow-gov-900/15">
+          <span class="absolute inset-1 rounded-lg border border-gold-300/50"></span>
+          <svg class="relative h-5 w-5 text-gold-300" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="1.7">
+            <path
+              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+            <path d="M3.3 7 12 12l8.7-5M12 22V12" />
+          </svg>
+        </span>
+        <span>
+          <strong class="block text-base font-extrabold leading-5 text-gov-950">توريدات</strong>
+          <small class="block text-[10px] font-medium leading-4 text-slate-500">دليل مصانع مواد البناء</small>
+        </span>
+      </a>
+
+      <div class="hidden items-center justify-center gap-10 lg:flex">
+        <template x-for="item in nav" :key="item.id">
+          <button @click="go(item.id)"
+            class="relative px-1 py-2 text-[15px] font-semibold transition after:absolute after:bottom-0 after:right-1/2 after:h-[2px] after:w-0 after:translate-x-1/2 after:rounded-full after:bg-gold-500 after:transition-all"
+            :class="route===item.id ? 'text-gold-600 after:w-8' : 'text-slate-700 hover:text-gov-900'"
+            :aria-current="route === item.id ? 'page' : null"
+            x-text="item.label"></button>
+        </template>
+      </div>
+
+      <a href="contact.html"
+        class="hidden h-10 items-center justify-center gap-2 justify-self-end rounded-xl border border-gold-400 bg-[linear-gradient(90deg,#012c26,#014236)] px-4 text-xs font-bold text-white shadow-sm shadow-gov-900/10 transition duration-200 hover:-translate-y-0.5 hover:shadow-md lg:inline-flex"
+        :class="navStuck ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-1 opacity-0'"
+        :tabindex="navStuck ? null : -1"
+        :aria-hidden="(!navStuck).toString()">
+        <span class="grid h-5 w-5 place-items-center rounded-full bg-gold-400 text-[13px] text-gov-950">+</span>
+        سجل شركتك
+      </a>
+
+      <button class="grid h-11 w-11 place-items-center rounded-xl border border-slate-200 lg:hidden"
+        @click="mobile=!mobile" aria-label="القائمة" aria-controls="mobile-menu" :aria-expanded="mobile.toString()">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+      </button>
+    </div>
+
+    <div id="mobile-menu" x-show="mobile" x-cloak x-transition class="border-t bg-white px-4 py-3 lg:hidden">
+      <template x-for="item in nav" :key="item.id">
+        <button @click="go(item.id);mobile=false"
+          class="block w-full rounded-xl px-4 py-3 text-right text-sm font-semibold"
+          :class="route===item.id ? 'bg-gov-50 text-gov-800' : 'text-slate-600 hover:bg-slate-50'"
+          x-text="item.label"></button>
+      </template>
+    </div>
+  </nav>
+
+  <main>
+    <!-- PROFILE -->
+    <div x-show="route==='profile'" x-cloak class="fade-in">
+      <section class="relative flex min-h-[320px] items-center overflow-hidden bg-gov-950 py-14 text-white sm:py-16"><img src="./assets/images/hero-construction-1200.jpg" srcset="./assets/images/hero-construction-768.jpg 768w, ./assets/images/hero-construction-1200.jpg 1200w, ./assets/images/hero-construction.jpg 1600w" sizes="100vw" alt="" width="1600" height="900" decoding="async" fetchpriority="high" class="absolute inset-0 h-full w-full object-cover opacity-25"><div class="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,50,42,.95),rgba(0,58,48,.88),rgba(0,50,42,.95))]"></div><div class="relative mx-auto w-full max-w-[1500px] px-4 sm:px-6 lg:px-8"><div class="max-w-3xl"><div class="flex items-center gap-2 text-xs font-bold text-gold-200"><a href="index.html" class="transition hover:text-white">الرئيسية</a><span class="text-white/40">/</span><span x-text="selectedCompany.name"></span></div><h1 class="mt-5 text-3xl font-extrabold leading-tight sm:text-5xl" x-text="selectedCompany.name"></h1><p class="mt-4 max-w-3xl text-sm leading-8 text-slate-100 sm:text-base" x-text="selectedCompany.desc"></p></div></div></section>
+      <section class="py-12"><div class="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[1fr_330px] lg:px-8"><div class="space-y-6"><article class="rounded-2xl border border-slate-200 bg-white p-7"><h2 class="gold-line text-xl font-bold text-gov-950">نبذة عن الشركة</h2><p class="mt-5 text-sm leading-8 text-slate-600" x-text="selectedCompany.longDesc"></p><div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4"><div class="rounded-xl bg-gov-50 p-4"><b class="text-xl text-gov-800">+25</b><p class="mt-1 text-[10px] text-slate-500">عامًا من الخبرة</p></div><div class="rounded-xl bg-gov-50 p-4"><b class="text-xl text-gov-800">+180</b><p class="mt-1 text-[10px] text-slate-500">مشروعًا منجزًا</p></div><div class="rounded-xl bg-gov-50 p-4"><b class="text-xl text-gov-800">420</b><p class="mt-1 text-[10px] text-slate-500">متخصصًا</p></div><div class="rounded-xl bg-gov-50 p-4"><b class="text-xl text-gov-800">8</b><p class="mt-1 text-[10px] text-slate-500">مناطق عمل</p></div></div></article><article class="rounded-2xl border border-slate-200 bg-white p-7"><h2 class="gold-line text-xl font-bold text-gov-950">الخدمات والتخصصات</h2><div class="mt-5 grid gap-3 sm:grid-cols-2"><template x-for="service in selectedCompany.services"><div class="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50 p-4 text-sm"><span class="grid h-8 w-8 place-items-center rounded-lg bg-white text-gov-700">✓</span><span x-text="service"></span></div></template></div></article><article class="rounded-2xl border border-slate-200 bg-white p-7"><h2 class="gold-line text-xl font-bold text-gov-950">الشهادات والاعتمادات</h2><div class="mt-5 grid gap-3 sm:grid-cols-3"><div class="rounded-xl border p-4"><b class="text-sm text-gov-900">ISO 9001:2015</b><p class="mt-2 text-[10px] text-slate-400">نظام إدارة الجودة</p></div><div class="rounded-xl border p-4"><b class="text-sm text-gov-900">ISO 45001:2018</b><p class="mt-2 text-[10px] text-slate-400">السلامة والصحة المهنية</p></div><div class="rounded-xl border p-4"><b class="text-sm text-gov-900">تصنيف أول</b><p class="mt-2 text-[10px] text-slate-400">الهيئة السعودية للمقاولين</p></div></div></article></div><aside class="space-y-5"><div class="rounded-2xl border border-slate-200 bg-white p-6"><h3 class="font-bold text-gov-950">معلومات التواصل</h3><div class="mt-5 space-y-5 text-xs"><div><p class="text-slate-400">الهاتف</p><p class="mt-1 font-semibold" dir="ltr">+966 11 245 8800</p></div><div><p class="text-slate-400">البريد الإلكتروني</p><p class="mt-1 font-semibold">info@nationalco.sa</p></div><div><p class="text-slate-400">المقر الرئيسي</p><p class="mt-1 font-semibold">طريق الملك فهد، الرياض</p></div><div><p class="text-slate-400">نطاق العمل</p><p class="mt-1 font-semibold">جميع مناطق المملكة</p></div></div><button class="mt-6 w-full rounded-xl bg-gov-800 py-3.5 text-xs font-bold text-white">طلب التواصل مع الشركة</button></div><div class="rounded-2xl border border-gold-200 bg-gold-50 p-6"><p class="text-xs font-bold text-gold-800">هل تعاملت مع هذه الشركة؟</p><p class="mt-2 text-[11px] leading-5 text-slate-500">شارك تقييمك للمساهمة في رفع جودة منظومة الأعمال الوطنية.</p><button class="mt-4 text-xs font-bold text-gov-800">إضافة تقييم ←</button></div></aside></div></section>
+    </div>
+
+
+  </main>
+
+  <div x-show="toast" x-cloak x-transition class="fixed bottom-6 right-1/2 z-[70] w-[calc(100%-2rem)] max-w-md translate-x-1/2 rounded-2xl border border-gold-300 bg-gov-950 px-5 py-4 text-center text-xs font-semibold text-white shadow-2xl" x-text="toast"></div>
+
+  <footer class="bg-gov-950 text-white"><div class="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8"><div class="lg:col-span-2"><div class="flex items-center gap-3"><span class="grid h-11 w-11 place-items-center rounded-xl border border-gold-300/50 text-gold-300"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="M3.3 7 12 12l8.7-5M12 22V12"/></svg></span><div><b>توريد</b><p class="mt-1 text-[9px] tracking-[.12em] text-slate-500">TAWREED PLATFORM</p></div></div><p class="mt-5 max-w-md text-xs font-light leading-7 text-slate-400">منصة وطنية ترفع كفاءة الوصول إلى الموردين والشركات السعودية المؤهلة، وتدعم بناء شراكات توريد موثوقة لمشروعات ذات أثر مستدام.</p></div><div><h3 class="text-sm font-bold text-gold-300">روابط سريعة</h3><div class="mt-5 space-y-3 text-xs text-slate-400"><button @click="go('directory')" class="block">دليل الشركات</button><button @click="go('plans')" class="block">باقات الاشتراك</button><button @click="go('news')" class="block">الأخبار</button><button @click="go('about')" class="block">عن المنصة</button><button @click="go('contact')" class="block">تواصل معنا</button></div></div><div><h3 class="text-sm font-bold text-gold-300">تواصل معنا</h3><div class="mt-5 space-y-3 text-xs text-slate-400"><p>الرياض، المملكة العربية السعودية</p><p dir="ltr" class="text-right">9200 123 45</p><p>care@tawreed.sa</p></div></div></div><div class="border-t border-white/10"><div class="mx-auto flex max-w-7xl flex-col justify-between gap-3 px-4 py-6 text-[10px] text-slate-500 sm:flex-row sm:px-6 lg:px-8"><p>© 2026 توريد. جميع الحقوق محفوظة.</p><div class="flex gap-5"><span>سياسة الخصوصية</span><span>الشروط والأحكام</span></div></div></div></footer>
+
+  <script>
+    document.addEventListener('alpine:init',()=>{Alpine.data('app',()=>({
+      route:'home',mobile:false,navStuck:false,heroSearch:'',query:'',newsQuery:'',selectedNewsCategory:'الكل',selectedNews:{},selectedSector:'الكل',selectedCity:'الكل',verified:true,annual:true,toast:'',toastTimer:null,
+      nav:[{id:'home',label:'\u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629'},{id:'directory',label:'\u062f\u0644\u064a\u0644 \u0627\u0644\u0634\u0631\u0643\u0627\u062a'},{id:'news',label:'\u0627\u0644\u0623\u062e\u0628\u0627\u0631'},{id:'about',label:'\u0639\u0646 \u0627\u0644\u0645\u0646\u0635\u0629'},{id:'contact',label:'\u062a\u0648\u0627\u0635\u0644 \u0645\u0639\u0646\u0627'},{id:'plans',label:'\u0628\u0627\u0642\u0627\u062a \u0627\u0644\u0627\u0634\u062a\u0631\u0627\u0643'}],
+      specialties:[{name:'المقاولات العامة',icon:'▦',count:486},{name:'المكاتب الهندسية',icon:'⌁',count:312},{name:'تقنية المعلومات',icon:'◫',count:274},{name:'التوريد والتجهيز',icon:'◇',count:398},{name:'التشغيل والصيانة',icon:'⚙',count:221},{name:'الاستشارات',icon:'◎',count:179}],
+      news:[
+        {slug:'registration-open',category:'إعلانات',date:'26 يونيو 2026',title:'فتح باب التسجيل للموردين في قطاعات البنية التحتية الرقمية',summary:'أعلنت توريد عن فتح التسجيل للشركات المتخصصة في مشاريع البنية التحتية الرقمية ضمن دليل الموردين المؤهلين.',body:['تستهدف هذه المرحلة الشركات القادرة على تقديم خدمات البنية التحتية الرقمية، التكامل، الأمن السيبراني، وتشغيل المنصات.','تتيح المنصة للشركات إنشاء ملف مهني يعرض الخدمات والشهادات وسجل الأعمال لتسهيل الوصول من الجهات الباحثة عن موردين مؤهلين.','يمكن للشركات الراغبة في الانضمام مراجعة الباقات وإرسال طلب التسجيل من خلال صفحة التواصل.']},
+        {slug:'127-approved',category:'تحديثات المنصة',date:'18 يونيو 2026',title:'اعتماد ١٢٧ شركة جديدة خلال الربع الحالي',summary:'ارتفع عدد الشركات المعتمدة في توريد بعد مراجعة ملفات قطاعات التوريد والتجهيز والتشغيل والصيانة.',body:['شملت الدفعة الجديدة شركات من الرياض وجدة والدمام والخبر ضمن تخصصات متعددة.','يساعد هذا التوسع الجهات على مقارنة خيارات أوسع عند البحث عن مورد مناسب.','تستمر المنصة في تحديث بيانات الشركات لضمان وضوح المعلومات الأساسية.']},
+        {slug:'reliability-index',category:'تقارير',date:'10 يونيو 2026',title:'إطلاق مؤشر موثوقية الشركاء الوطنيين',summary:'أطلقت توريد مؤشرًا يساعد على قراءة جاهزية الموردين من خلال اكتمال البيانات وسجل الأعمال والتقييمات.',body:['يعتمد المؤشر على مجموعة إشارات تشمل اكتمال الملف، وضوح الخدمات، الشهادات، ونطاق العمل الجغرافي.','الهدف من المؤشر دعم الفرز الأولي وليس استبدال إجراءات التأهيل الرسمية لدى الجهات.','سيتم تطوير المؤشر تدريجيًا مع إضافة مصادر بيانات وتحديثات جديدة.']},
+        {slug:'supply-partnerships',category:'شراكات',date:'2 يونيو 2026',title:'شراكات جديدة لتوسيع حضور موردي التشغيل والتجهيز',summary:'وقعت توريد تفاهمات تشغيلية لدعم حضور الموردين في قطاعات التجهيز وإدارة المرافق وسلاسل الإمداد.',body:['تركز الشراكات على رفع جودة البيانات وتسهيل عرض قدرات الموردين أمام الجهات ذات العلاقة.','ستظهر آثار هذه الشراكات في تحديثات الدليل خلال الفترة القادمة.','تدعو توريد الشركات ذات الخبرة إلى تحديث ملفاتها لضمان ظهور معلومات دقيقة.']}
+      ],
+      companies:[
+        {name:'مجموعة البنيان المتحدة',mark:'بنيان',sector:'المقاولات العامة',city:'الرياض',rating:'4.9',logoClass:'bg-gov-100 text-gov-800',desc:'حلول متكاملة للبناء والبنية التحتية والمشروعات الكبرى.',longDesc:'مجموعة وطنية رائدة في تنفيذ مشاريع البناء والبنية التحتية، تمتلك خبرة واسعة في إدارة المشاريع الحكومية الكبرى وفق أعلى معايير الجودة والسلامة. نعمل بفريق متعدد التخصصات وتقنيات تنفيذ حديثة تضمن الكفاءة والاستدامة.',services:['المقاولات العامة','البنية التحتية','إدارة المشاريع','الأعمال الكهروميكانيكية']},
+        {name:'مدار للاستشارات الهندسية',mark:'مدار',sector:'المكاتب الهندسية',city:'جدة',rating:'4.8',logoClass:'bg-blue-100 text-blue-800',desc:'تصميم وإشراف هندسي يوازن بين الابتكار وكفاءة التنفيذ.',longDesc:'مكتب استشاري سعودي يقدم خدمات التصميم والإشراف وإدارة المشاريع للقطاعين الحكومي والخاص، ويضم نخبة من المهندسين والخبراء المعتمدين في مختلف التخصصات.',services:['التصميم المعماري','الإشراف الهندسي','إدارة المشاريع','دراسات الجدوى']},
+        {name:'سُبل التقنية للحلول الرقمية',mark:'سُبل',sector:'تقنية المعلومات',city:'الرياض',rating:'4.9',logoClass:'bg-violet-100 text-violet-800',desc:'منصات رقمية آمنة وحلول تحول رقمي للقطاع الحكومي.',longDesc:'شركة تقنية وطنية متخصصة في بناء المنصات الحكومية الآمنة وحلول البيانات والتكامل والتحول الرقمي، وفق متطلبات الأمن السيبراني الوطنية.',services:['التحول الرقمي','الأمن السيبراني','تكامل الأنظمة','تحليل البيانات']},
+        {name:'روافد الإمداد الوطنية',mark:'روافد',sector:'التوريد والتجهيز',city:'الدمام',rating:'4.7',logoClass:'bg-amber-100 text-amber-800',desc:'سلاسل إمداد موثوقة وتجهيز متكامل للمرافق والمنشآت.',longDesc:'شركة سعودية متخصصة في خدمات التوريد والتجهيز وإدارة سلاسل الإمداد للمنشآت والمشروعات الحكومية في جميع مناطق المملكة.',services:['التوريد العام','تجهيز المنشآت','إدارة المخزون','الخدمات اللوجستية']},
+        {name:'إتقان للتشغيل والصيانة',mark:'إتقان',sector:'التشغيل والصيانة',city:'الخبر',rating:'4.6',logoClass:'bg-cyan-100 text-cyan-800',desc:'تشغيل مرافق احترافي وصيانة تنبؤية للأصول الحيوية.',longDesc:'مزود وطني لخدمات إدارة وتشغيل المرافق والصيانة الوقائية والتنبؤية، بخبرات تغطي المباني الحكومية والأصول الحيوية.',services:['إدارة المرافق','الصيانة الوقائية','إدارة الأصول','خدمات الطاقة']},
+        {name:'أثر للاستشارات الإدارية',mark:'أثر',sector:'الاستشارات',city:'الرياض',rating:'4.8',logoClass:'bg-rose-100 text-rose-800',desc:'استشارات استراتيجية وتميز مؤسسي لتحقيق أثر مستدام.',longDesc:'بيت خبرة وطني يقدم حلول الاستراتيجية والتحول والتميز المؤسسي للجهات الحكومية والمنظمات الكبرى بمنهجيات عملية قابلة للقياس.',services:['التخطيط الاستراتيجي','التميز المؤسسي','إدارة التغيير','قياس الأداء']}
+      ],
+      selectedCompany:{},
+      init(){const params=new URLSearchParams(location.search);this.route=this.routeFromPath();this.query=params.get('q')||'';this.selectedSector=params.get('sector')||'\u0627\u0644\u0643\u0644';this.selectedCity=params.get('city')||'\u0627\u0644\u0643\u0644';const company=params.get('company')||localStorage.getItem('selectedCompany')||'';this.selectedCompany=this.companies.find(c=>c.name===company)||this.companies[0];const slug=params.get('slug')||this.news[0].slug;this.selectedNews=this.news.find(n=>n.slug===slug)||this.news[0];this.updateStickyNav();window.addEventListener('scroll',()=>this.updateStickyNav(),{passive:true});window.addEventListener('resize',()=>this.updateStickyNav())},updateStickyNav(){const nav=document.getElementById('site-sticky-nav');this.navStuck=window.scrollY>=((nav?.offsetTop||0)-1)},
+      routeFromPath(){const file=location.pathname.split('/').pop()||'index.html';return {'index.html':'home','directory.html':'directory','profile.html':'profile','news.html':'news','news-detail.html':'news','about.html':'about','contact.html':'contact','plans.html':'plans'}[file]||'home'},
+      syncRoute(){this.route=this.routeFromPath();this.mobile=false},
+      go(r){if(r==='categories'){location.href='index.html#companies';return}const paths={home:'index.html',directory:'directory.html',profile:'profile.html',news:'news.html',about:'about.html',contact:'contact.html',plans:'plans.html'};location.href=paths[r]||'index.html'},
+      openCompany(c){this.selectedCompany=c;localStorage.setItem('selectedCompany',c.name);location.href=`profile.html?company=${encodeURIComponent(c.name)}`},
+      openNews(item){this.selectedNews=item;location.href=`news-detail.html?slug=${encodeURIComponent(item.slug)}`},
+      searchFromHero(){const q=this.heroSearch.trim();location.href=`directory.html${q?`?q=${encodeURIComponent(q)}`:''}`},
+      selectSpecialty(s){this.selectedSector=s;location.href=`directory.html?sector=${encodeURIComponent(s)}`},
+      showToast(message){this.toast=message;clearTimeout(this.toastTimer);this.toastTimer=setTimeout(()=>this.toast='',3200)},
+      get filteredCompanies(){return this.companies.filter(c=>(this.selectedSector==='\u0627\u0644\u0643\u0644'||c.sector===this.selectedSector)&&(this.selectedCity==='\u0627\u0644\u0643\u0644'||c.city===this.selectedCity)&&(!this.query||(`${c.name} ${c.sector} ${c.desc}`).includes(this.query))) },
+      get newsCategories(){return ['الكل',...new Set(this.news.map(n=>n.category))]},
+      get filteredNews(){return this.news.filter(n=>(this.selectedNewsCategory==='الكل'||n.category===this.selectedNewsCategory)&&(!this.newsQuery||(n.title+' '+n.summary+' '+n.category).includes(this.newsQuery)))},
+      get relatedNews(){return this.news.filter(n=>n.slug!==this.selectedNews.slug).slice(0,3)}
+    }))})
+  </script>
+  <template id="plans-template"></template>
+  <script>
+    document.addEventListener('alpine:init',()=>{Alpine.data('plansSection',()=>({}));Alpine.bind('plans-section',()=>({}))})
+  </script>
+  <script>
+    customElements.define('plans-section',class extends HTMLElement{connectedCallback(){let compact=this.getAttribute(':compact')==='true';this.innerHTML=`<section class="${compact?'bg-white py-24':'py-16'}"><div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">${compact?'<div class="mb-10 text-center"><p class="text-xs font-bold text-gold-600">عضويتك تصنع الفرق</p><h2 class="mt-3 text-3xl font-bold text-gov-950">اختر مستوى حضورك</h2></div>':''}<div class="grid gap-6 lg:grid-cols-3"><div class="card-lift rounded-3xl border border-slate-200 bg-white p-7"><span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-[11px] font-bold text-slate-600">الباقة الفضية</span><h3 class="mt-6 text-2xl font-bold text-gov-950">حضور أساسي</h3><p class="mt-2 text-xs text-slate-500">لبناء ملف مهني موثوق على المنصة</p><div class="my-6 border-y py-6"><b class="text-3xl text-gov-900">4,900</b><span class="text-xs text-slate-400"> ر.س / سنويًا</span></div><ul class="space-y-4 text-xs text-slate-600"><li>✓ ملف شركة موثّق ومتكامل</li><li>✓ عرض الخدمات والشهادات</li><li>✓ استقبال طلبات التواصل</li><li>✓ دعم فني أساسي</li></ul><button onclick="window.dispatchEvent(new CustomEvent('notify',{detail:'تم اختيار الباقة الفضية — سنبدأ إعداد حسابك'}))" class="mt-8 w-full rounded-xl border border-gov-800 py-3.5 text-xs font-bold text-gov-800">ابدأ الآن</button></div><div class="card-lift relative rounded-3xl border-2 border-gold-400 bg-gov-950 p-7 text-white shadow-2xl shadow-gov-900/20 lg:-translate-y-3"><span class="absolute left-6 top-0 -translate-y-1/2 rounded-full bg-gold-400 px-4 py-1.5 text-[10px] font-bold text-white">الأكثر اختيارًا</span><span class="inline-flex rounded-full bg-gold-400/15 px-3 py-1 text-[11px] font-bold text-gold-300">الباقة الذهبية</span><h3 class="mt-6 text-2xl font-bold">حضور متقدم</h3><p class="mt-2 text-xs text-slate-300">لزيادة الظهور وبناء فرص نوعية</p><div class="my-6 border-y border-white/10 py-6"><b class="text-3xl text-gold-300">9,900</b><span class="text-xs text-slate-400"> ر.س / سنويًا</span></div><ul class="space-y-4 text-xs text-slate-200"><li>✓ جميع مزايا الباقة الفضية</li><li>✓ أولوية الظهور في نتائج البحث</li><li>✓ إضافة معرض المشاريع</li><li>✓ تقارير المشاهدة والاهتمام</li><li>✓ شارة شريك ذهبي</li></ul><button onclick="window.dispatchEvent(new CustomEvent('notify',{detail:'تم اختيار الباقة الذهبية — سنبدأ إعداد حسابك'}))" class="mt-8 w-full rounded-xl bg-gold-500 py-3.5 text-xs font-bold text-white">اختر الذهبية</button></div><div class="card-lift rounded-3xl border border-slate-200 bg-white p-7"><span class="inline-flex rounded-full bg-gov-100 px-3 py-1 text-[11px] font-bold text-gov-700">الباقة الماسية</span><h3 class="mt-6 text-2xl font-bold text-gov-950">ريادة القطاع</h3><p class="mt-2 text-xs text-slate-500">لأقصى انتشار وحضور مؤسسي</p><div class="my-6 border-y py-6"><b class="text-3xl text-gov-900">19,900</b><span class="text-xs text-slate-400"> ر.س / سنويًا</span></div><ul class="space-y-4 text-xs text-slate-600"><li>✓ جميع مزايا الباقة الذهبية</li><li>✓ صفحة مميزة بهوية الشركة</li><li>✓ حملات ظهور موجهة</li><li>✓ مدير حساب مخصص</li><li>✓ تقارير وتحليلات متقدمة</li></ul><button onclick="window.dispatchEvent(new CustomEvent('notify',{detail:'تم اختيار الباقة الماسية — سيتواصل معك مدير حساب مخصص'}))" class="mt-8 w-full rounded-xl bg-gov-800 py-3.5 text-xs font-bold text-white">اختر الماسية</button></div></div>${compact?'<div class="mt-9 text-center"><button onclick="location.href=&quot;plans.html&quot;" class="text-xs font-bold text-gov-800">مقارنة تفاصيل الباقات ←</button></div>':''}</div></section>`}})
+  </script>
+</body>
+</html>
+
