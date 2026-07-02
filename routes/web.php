@@ -9,4 +9,4 @@ Route::view('/plans', 'pages.plans')->name('plans');
 Route::view('/companies', 'companies.index')->name('companies.index');
 Route::view('/companies/sample', 'companies.show')->name('companies.show');
 Route::view('/news', 'news.index')->name('news.index');
-Route::view('/news/sample', 'news.show')->name('news.show');
+Route::view('/news/{slug}', 'news.show')->name('news.show');

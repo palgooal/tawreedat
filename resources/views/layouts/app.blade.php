@@ -17,7 +17,7 @@
 
     @stack('styles')
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased" x-data="app()" @notify.window="showToast($event.detail)">
+<body class="bg-slate-50 text-slate-800 antialiased" x-data="{{ $alpineComponent ?? 'app' }}()" @notify.window="showToast($event.detail)">
 
     @include('layouts.partials.header')
 

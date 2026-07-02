@@ -55,6 +55,12 @@
         border-radius: 2px;
     }
 
+    /* Alpine.js: hide [x-cloak] elements until Alpine has initialized,
+       preventing a flash of unstyled/uninitialized content. */
+    [x-cloak] {
+        display: none !important;
+    }
+
     @media (prefers-reduced-motion: reduce) {
         *,
         *::before,
