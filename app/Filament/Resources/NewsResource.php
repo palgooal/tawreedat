@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\NewsResource\Pages;
 use App\Models\News;
 use BackedEnum;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -22,6 +23,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use UnitEnum;
 
@@ -39,6 +41,33 @@ class NewsResource extends Resource
 
     protected static ?string $pluralModelLabel = 'الأخبار';
 
+    public static function canViewAny(): bool
+    {
+        $user = auth()->user();
+
+        return (bool) ($user?->can('view content') || $user?->can('manage news'));
+    }
+
+    public static function canCreate(): bool
+    {
+        return (bool) auth()->user()?->can('manage news');
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return (bool) auth()->user()?->can('manage news');
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return (bool) auth()->user()?->can('manage news');
+    }
+
+    public static function canDeleteAny(): bool
+    {
+        return (bool) auth()->user()?->can('manage news');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -53,7 +82,7 @@ class NewsResource extends Resource
                             ->live(onBlur: true)
                             ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
                                 if ($operation === 'create') {
-                                    $set('slug', Str::slug($state ?? ''));
+                                    $set('slug', Str::slug($state ?? '', '-', null));
                                 }
                             })
                             ->columnSpanFull(),
@@ -62,9 +91,12 @@ class NewsResource extends Resource
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),
-                        TextInput::make('category')
+                        Select::make('news_category_id')
                             ->label('التصنيف')
-                            ->maxLength(255),
+                            ->relationship('categoryRelation', 'name')
+                            ->searchable()
+                            ->preload()
+                            ->required(),
                         Select::make('status')
                             ->label('الحالة')
                             ->options([
@@ -81,6 +113,7 @@ class NewsResource extends Resource
                         FileUpload::make('image')
                             ->label('الصورة')
                             ->image()
+                            ->disk('public')
                             ->directory('news/images')
                             ->visibility('public')
                             ->columnSpanFull(),
@@ -106,7 +139,7 @@ class NewsResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->limit(50),
-                TextColumn::make('category')
+                TextColumn::make('categoryRelation.name')
                     ->label('التصنيف')
                     ->searchable()
                     ->sortable(),
@@ -142,6 +175,14 @@ class NewsResource extends Resource
                     ]),
             ])
             ->recordActions([
+                Action::make('view')
+                    ->label('معاينة')
+                    ->icon('heroicon-o-eye')
+                    ->color('gray')
+                    ->url(fn (News $record): string => $record->publicUrl())
+                    ->openUrlInNewTab()
+                    ->visible(fn (News $record): bool => $record->isPubliclyVisible())
+                    ->tooltip('فتح الخبر في الموقع'),
                 EditAction::make(),
             ])
             ->toolbarActions([

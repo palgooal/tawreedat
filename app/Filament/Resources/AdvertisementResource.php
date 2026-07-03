@@ -22,6 +22,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class AdvertisementResource extends Resource
@@ -37,6 +38,33 @@ class AdvertisementResource extends Resource
     protected static ?string $modelLabel = 'إعلان';
 
     protected static ?string $pluralModelLabel = 'الإعلانات';
+
+    public static function canViewAny(): bool
+    {
+        $user = auth()->user();
+
+        return (bool) ($user?->can('view ads') || $user?->can('manage ads'));
+    }
+
+    public static function canCreate(): bool
+    {
+        return (bool) auth()->user()?->can('manage ads');
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return (bool) auth()->user()?->can('manage ads');
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return (bool) auth()->user()?->can('manage ads');
+    }
+
+    public static function canDeleteAny(): bool
+    {
+        return (bool) auth()->user()?->can('manage ads');
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -72,6 +100,7 @@ class AdvertisementResource extends Resource
                         FileUpload::make('image')
                             ->label('الصورة')
                             ->image()
+                            ->disk('public')
                             ->directory('advertisements')
                             ->visibility('public')
                             ->columnSpanFull(),

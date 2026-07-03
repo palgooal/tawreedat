@@ -33,7 +33,38 @@
             </div>
             <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-10">
                 <div>
-                    <form @submit.prevent="submitContactForm()" class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+                    <form method="POST" action="{{ route('contact.store') }}" class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+                        @csrf
+
+                        {{-- Honeypot: real visitors never see or fill this field. Any
+                             submission with it filled in is treated as spam - see
+                             ContactController@store. Positioned off-screen (not
+                             display:none) since some bots specifically skip
+                             display:none/hidden fields; aria-hidden + tabindex=-1
+                             keep it out of the way for assistive tech and keyboard
+                             navigation for real users. No label and a nonsense
+                             field name/id (not "website") deliberately avoid
+                             browser autofill heuristics - a labeled "website"
+                             field was previously getting silently autofilled by
+                             browsers with a saved address/company profile,
+                             causing false-positive spam detection on real
+                             submissions. autocomplete="new-password" is used
+                             (rather than "off") because browsers largely ignore
+                             autocomplete="off" for autofill purposes but do
+                             respect "new-password" as a signal not to fill in a
+                             stored value. --}}
+                        <div class="sr-only" aria-hidden="true">
+                            <input type="text" id="hp_check" name="hp_check" tabindex="-1" autocomplete="new-password">
+                        </div>
+
+                        @if (session('success'))
+                            <div role="status" aria-live="polite"
+                                class="mb-6 flex items-start gap-3 rounded-2xl border border-gov-200 bg-gov-50 p-4 text-sm font-semibold leading-7 text-gov-800">
+                                <span class="mt-0.5 text-gold-600" aria-hidden="true">✓</span>
+                                <span>{{ session('success') }}</span>
+                            </div>
+                        @endif
+
                         <div>
                             <h2 class="text-2xl font-bold text-gov-950">نموذج التواصل</h2>
                             <p class="mt-3 text-sm leading-7 text-slate-600">أرسل التفاصيل الأساسية وسيتولى الفريق المختص مراجعة الطلب وتوجيهه.</p>
@@ -43,40 +74,75 @@
                         <div class="mt-8 grid gap-5 sm:grid-cols-2">
                             <div>
                                 <label for="full-name" class="text-xs font-bold text-gov-950">الاسم الكامل <span class="text-gold-600" aria-hidden="true">*</span></label>
-                                <input id="full-name" name="full_name" autocomplete="name" required class="mt-2 h-12 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none transition focus:border-gold-400" placeholder="الاسم الثلاثي">
+                                <input id="full-name" name="name" value="{{ old('name') }}" autocomplete="name" required
+                                    aria-invalid="@error('name') true @else false @enderror" @error('name') aria-describedby="name-error" @enderror
+                                    class="mt-2 h-12 w-full rounded-xl border px-4 text-sm outline-none transition focus:border-gold-400 @error('name') border-red-300 @else border-slate-200 @enderror"
+                                    placeholder="الاسم الثلاثي">
+                                @error('name')
+                                    <p id="name-error" class="mt-1.5 text-xs font-semibold text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div>
                                 <label for="email" class="text-xs font-bold text-gov-950">البريد الإلكتروني <span class="text-gold-600" aria-hidden="true">*</span></label>
-                                <input id="email" name="email" type="email" autocomplete="email" required dir="ltr" class="mt-2 h-12 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none transition focus:border-gold-400" placeholder="name@example.com">
+                                <input id="email" name="email" type="email" value="{{ old('email') }}" autocomplete="email" required dir="ltr"
+                                    aria-invalid="@error('email') true @else false @enderror" @error('email') aria-describedby="email-error" @enderror
+                                    class="mt-2 h-12 w-full rounded-xl border px-4 text-sm outline-none transition focus:border-gold-400 @error('email') border-red-300 @else border-slate-200 @enderror"
+                                    placeholder="name@example.com">
+                                @error('email')
+                                    <p id="email-error" class="mt-1.5 text-xs font-semibold text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div>
                                 <label for="phone" class="text-xs font-bold text-gov-950">رقم الجوال</label>
-                                <input id="phone" name="phone" type="tel" autocomplete="tel" dir="ltr" class="mt-2 h-12 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none transition focus:border-gold-400" placeholder="05xxxxxxxx">
+                                <input id="phone" name="phone" type="tel" value="{{ old('phone') }}" autocomplete="tel" dir="ltr"
+                                    aria-invalid="@error('phone') true @else false @enderror" @error('phone') aria-describedby="phone-error" @enderror
+                                    class="mt-2 h-12 w-full rounded-xl border px-4 text-sm outline-none transition focus:border-gold-400 @error('phone') border-red-300 @else border-slate-200 @enderror"
+                                    placeholder="05xxxxxxxx">
+                                @error('phone')
+                                    <p id="phone-error" class="mt-1.5 text-xs font-semibold text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div>
                                 <label for="request-type" class="text-xs font-bold text-gov-950">نوع الطلب <span class="text-gold-600" aria-hidden="true">*</span></label>
-                                <select id="request-type" name="request_type" required class="mt-2 h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none transition focus:border-gold-400">
-                                    <option value="">اختر نوع الطلب</option>
-                                    <option>تسجيل شركة أو مورد</option>
-                                    <option>استفسار جهة تبحث عن موردين</option>
-                                    <option>إعلانات ورعايات</option>
-                                    <option>شراكات</option>
-                                    <option>دعم فني</option>
+                                <select id="request-type" name="inquiry_type" required
+                                    aria-invalid="@error('inquiry_type') true @else false @enderror" @error('inquiry_type') aria-describedby="inquiry-type-error" @enderror
+                                    class="mt-2 h-12 w-full rounded-xl border bg-white px-4 text-sm outline-none transition focus:border-gold-400 @error('inquiry_type') border-red-300 @else border-slate-200 @enderror">
+                                    <option value="" @selected(old('inquiry_type') === null)>اختر نوع الطلب</option>
+                                    <option @selected(old('inquiry_type') === 'تسجيل شركة أو مورد')>تسجيل شركة أو مورد</option>
+                                    <option @selected(old('inquiry_type') === 'استفسار جهة تبحث عن موردين')>استفسار جهة تبحث عن موردين</option>
+                                    <option @selected(old('inquiry_type') === 'إعلانات ورعايات')>إعلانات ورعايات</option>
+                                    <option @selected(old('inquiry_type') === 'شراكات')>شراكات</option>
+                                    <option @selected(old('inquiry_type') === 'دعم فني')>دعم فني</option>
                                 </select>
+                                @error('inquiry_type')
+                                    <p id="inquiry-type-error" class="mt-1.5 text-xs font-semibold text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="sm:col-span-2">
                                 <label for="organization" class="text-xs font-bold text-gov-950">اسم الشركة / الجهة</label>
-                                <input id="organization" name="organization" autocomplete="organization" class="mt-2 h-12 w-full rounded-xl border border-slate-200 px-4 text-sm outline-none transition focus:border-gold-400" placeholder="اسم المنشأة أو الجهة">
+                                <input id="organization" name="company" value="{{ old('company') }}" autocomplete="organization"
+                                    aria-invalid="@error('company') true @else false @enderror" @error('company') aria-describedby="company-error" @enderror
+                                    class="mt-2 h-12 w-full rounded-xl border px-4 text-sm outline-none transition focus:border-gold-400 @error('company') border-red-300 @else border-slate-200 @enderror"
+                                    placeholder="اسم المنشأة أو الجهة">
+                                @error('company')
+                                    <p id="company-error" class="mt-1.5 text-xs font-semibold text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div class="sm:col-span-2">
                                 <label for="message" class="text-xs font-bold text-gov-950">الرسالة <span class="text-gold-600" aria-hidden="true">*</span></label>
-                                <textarea id="message" name="message" required class="mt-2 min-h-36 w-full rounded-xl border border-slate-200 p-4 text-sm leading-7 outline-none transition focus:border-gold-400" placeholder="اكتب تفاصيل الطلب أو الاستفسار"></textarea>
+                                <textarea id="message" name="message" required
+                                    aria-invalid="@error('message') true @else false @enderror" @error('message') aria-describedby="message-error" @enderror
+                                    class="mt-2 min-h-36 w-full rounded-xl border p-4 text-sm leading-7 outline-none transition focus:border-gold-400 @error('message') border-red-300 @else border-slate-200 @enderror"
+                                    placeholder="اكتب تفاصيل الطلب أو الاستفسار">{{ old('message') }}</textarea>
+                                @error('message')
+                                    <p id="message-error" class="mt-1.5 text-xs font-semibold text-red-600">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
 
                         <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                             <button type="submit" class="inline-flex h-12 items-center justify-center rounded-xl bg-gov-800 px-6 text-sm font-bold text-white transition hover:bg-gov-700">إرسال الطلب</button>
-                            <p class="text-xs leading-6 text-slate-500">هذا النموذج تجريبي حالياً وسيتم ربطه بالنظام لاحقاً.</p>
+                            <p class="text-xs leading-6 text-slate-500">سيتم الرد على طلبك خلال يوم عمل واحد.</p>
                         </div>
                     </form>
                 </div>
@@ -113,16 +179,12 @@
                     <p class="mt-2 text-sm text-slate-600">ابدأ بإنشاء حضور مهني يساعد الجهات والمقاولين على الوصول إليك بوضوح.</p>
                 </div>
                 <div class="flex flex-wrap gap-3">
-                    <a href="{{ route('plans') }}" class="inline-flex h-11 items-center justify-center rounded-xl bg-gov-800 px-5 text-sm font-bold text-white transition hover:bg-gov-700">سجل شركتك</a>
+                    <a href="{{ route('company-registration.create') }}" class="inline-flex h-11 items-center justify-center rounded-xl bg-gov-800 px-5 text-sm font-bold text-white transition hover:bg-gov-700">سجل شركتك</a>
                     <a href="{{ route('companies.index') }}" class="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 px-5 text-sm font-bold text-gov-800 transition hover:border-gold-300">استعرض الشركات</a>
                 </div>
             </div>
         </div>
     </section>
-
-    <div x-show="toast" x-cloak x-transition role="status" aria-live="polite" class="fixed bottom-6 right-1/2 z-[70] w-[calc(100%-2rem)] max-w-md translate-x-1/2 rounded-2xl border border-gold-300 bg-gov-950 px-5 py-4 text-center text-xs font-semibold text-white shadow-sm">
-        تم استلام طلبك، وسيتم ربط النموذج بالنظام لاحقاً
-    </div>
 
 @endsection
 
@@ -150,9 +212,6 @@
                 { id: 'contact', label: 'تواصل معنا' }
             ],
 
-            // Page-specific state
-            toast: false,
-
             init() {
                 this.updateStickyNav();
                 window.addEventListener('scroll', () => this.updateStickyNav(), { passive: true });
@@ -179,10 +238,6 @@
             },
             selectCategoryAndGo(category) {
                 location.href = `${companiesUrl}?sector=${encodeURIComponent(category)}`;
-            },
-            submitContactForm() {
-                this.toast = true;
-                setTimeout(() => this.toast = false, 2600);
             }
         }));
     });

@@ -57,11 +57,11 @@
 
             <!-- CTA / Mobile Menu -->
             <div class="flex items-center justify-between gap-3 lg:justify-end">
-                <button @click="go('plans')"
+                <a href="{{ route('company-registration.create') }}"
                     class="inline-flex items-center gap-2 rounded-2xl border border-gold-400 bg-[linear-gradient(90deg,#012c26,#014236)] px-5 py-3 text-sm font-bold text-white shadow-xl shadow-gov-900/15 transition hover:-translate-y-0.5 hover:shadow-2xl">
                     <span class="grid h-5 w-5 place-items-center rounded-full bg-gold-400 text-[13px] text-gov-950">+</span>
                     سجّل شركتك
-                </button>
+                </a>
 
                 <button class="hidden h-11 w-11 place-items-center rounded-xl border border-slate-200 lg:hidden"
                     @click="mobile=!mobile" aria-label="القائمة" aria-controls="mobile-menu" :aria-expanded="mobile.toString()">
@@ -109,7 +109,7 @@
             </template>
         </div>
 
-        <a href="{{ route('contact') }}"
+        <a href="{{ route('company-registration.create') }}"
             class="hidden h-10 items-center justify-center gap-2 justify-self-end rounded-xl border border-gold-400 bg-[linear-gradient(90deg,#012c26,#014236)] px-4 text-xs font-bold text-white shadow-sm shadow-gov-900/10 transition duration-200 hover:-translate-y-0.5 hover:shadow-md lg:inline-flex"
             :class="navStuck ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-1 opacity-0'"
             :tabindex="navStuck ? null : -1"

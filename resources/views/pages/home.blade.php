@@ -1,4 +1,7 @@
-@php($title = 'توريد | دليل شركات البناء ومواد البناء')
+{{-- SEO title/description intentionally not overridden here: the homepage
+     uses the global defaults from الإعدادات → إعدادات الموقع (see
+     layouts/app.blade.php), which already fall back to sensible copy even
+     before the settings seeder/admin form has ever run. --}}
 @extends('layouts.app')
 
 @push('styles')
@@ -162,7 +165,7 @@
                                     <h3 class="font-extrabold text-gov-950">تصنيفات البناء</h3>
                                     <p class="mt-1 text-[11px] text-slate-500">اختر التصنيف المناسب</p>
                                 </div>
-                                <span class="rounded-full bg-gold-100 px-3 py-1 text-[10px] font-bold text-gold-700">6</span>
+                                <span class="rounded-full bg-gold-100 px-3 py-1 text-[10px] font-bold text-gold-700" x-text="categories.length"></span>
                             </div>
                         </div>
 
@@ -191,6 +194,10 @@
                                         x-text="category.count"></span>
                                 </button>
                             </template>
+
+                            <p x-show="categories.length === 0" class="px-3 py-4 text-center text-[11px] text-slate-400">
+                                لا توجد تصنيفات مضافة بعد.
+                            </p>
                         </div>
                     </div>
                 </aside>
@@ -245,8 +252,20 @@
                     <div class="mt-6 grid grid-cols-1 items-stretch gap-5 md:grid-cols-2 xl:grid-cols-3">
                         <template x-for="(company, index) in filteredCompanies.slice(0,9)" :key="company.name">
                             <article
-                                class="reveal-up group flex min-h-[332px] flex-col rounded-3xl border border-slate-200 bg-white p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-gov-200 hover:shadow-[0_12px_28px_rgba(7,30,23,0.10)]"
+                                class="reveal-up group relative flex min-h-[332px] flex-col rounded-3xl border border-slate-200 bg-white p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-gov-200 hover:shadow-[0_12px_28px_rgba(7,30,23,0.10)]"
                                 :style="`animation-delay:${index * 70}ms`">
+                                <span x-show="company.isFeatured"
+                                    class="absolute end-4 top-4 inline-flex items-center gap-1 rounded-full bg-gold-500 px-2.5 py-1 text-[10px] font-bold text-white shadow">
+                                    مميزة
+                                </span>
+
+                                <span x-show="company.isVerified" title="شركة موثقة"
+                                    class="absolute start-4 top-4 inline-flex h-6 w-6 items-center justify-center rounded-full bg-gov-50 text-gov-700 shadow-sm ring-1 ring-gov-100">
+                                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                                        <path d="M9 12.5 11 14.5 15.5 9.5" />
+                                    </svg>
+                                </span>
+
                                 <div
                                     class="mx-auto flex h-[92px] w-[92px] items-center justify-center rounded-3xl border border-slate-200 bg-white p-4 transition duration-300 group-hover:border-gov-100">
                                     <img :src="company.logo || '{{ asset('assets/images/company-placeholder.png') }}'" :alt="company.name"
@@ -354,7 +373,8 @@
             <!-- Main Ad -->
             <div
                 class="relative overflow-hidden rounded-[36px] bg-gov-950 shadow-2xl shadow-gov-900/20 ring-1 ring-gov-900/10">
-                <img src="{{ asset('assets/images/ad-section-bg.jpg') }}" alt="" width="1600" height="900" loading="lazy" decoding="async"
+                <img src="{{ $adHome?->image ? \Illuminate\Support\Facades\Storage::disk('public')->url($adHome->image) : asset('assets/images/ad-section-bg.jpg') }}"
+                    alt="" width="1600" height="900" loading="lazy" decoding="async"
                     class="absolute inset-0 h-full w-full object-cover opacity-65">
                 <div
                     class="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,50,42,.88),rgba(0,58,48,.76),rgba(0,50,42,.88))]">
@@ -378,7 +398,7 @@
                         <p class="mx-auto mt-4 max-w-2xl text-sm leading-8 text-slate-100 sm:text-base lg:mx-0">
                             ظهور مباشر أمام الباحثين عن شركات البناء والموردين داخل المملكة.
                         </p>
-                        <a href="{{ route('contact') }}"
+                        <a href="{{ $adHome?->link ?: route('contact') }}"
                             class="shine-cta mt-8 inline-flex h-14 items-center justify-center rounded-2xl bg-gold-500 px-10 text-base font-bold text-white shadow-lg shadow-black/10 transition hover:-translate-y-0.5 hover:bg-gold-600">
                             احجز إعلانك الآن
                         </a>
@@ -390,7 +410,8 @@
             <div class="mt-8 grid gap-5 lg:grid-cols-3">
                 <article
                     class="reveal-up group relative flex min-h-[300px] flex-col justify-end overflow-hidden rounded-3xl bg-gov-950 p-7 text-white">
-                    <img src="{{ asset('assets/images/ad-section-bg.jpg') }}" alt="" width="1600" height="900" loading="lazy" decoding="async"
+                    <img src="{{ $adHeader?->image ? \Illuminate\Support\Facades\Storage::disk('public')->url($adHeader->image) : asset('assets/images/ad-section-bg.jpg') }}"
+                        alt="" width="1600" height="900" loading="lazy" decoding="async"
                         class="absolute inset-0 h-full w-full object-cover opacity-55 transition duration-300 group-hover:scale-105">
                     <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,50,42,.25),rgba(0,50,42,.9))]"></div>
                     <div class="relative">
@@ -399,7 +420,7 @@
                             رئيسية</span>
                         <h3 class="mt-5 text-2xl font-extrabold leading-9">ظهور بارز في الصفحة الرئيسية</h3>
                         <p class="mt-3 text-sm leading-7 text-slate-100">بنر واسع مناسب لإطلاق العروض وتعزيز حضور العلامة.</p>
-                        <a href="{{ route('contact') }}"
+                        <a href="{{ $adHeader?->link ?: route('contact') }}"
                             class="shine-cta mt-7 inline-flex h-11 items-center rounded-xl bg-gold-500 px-5 text-xs font-bold text-white transition hover:bg-gold-600">احجز
                             الآن</a>
                     </div>
@@ -407,7 +428,8 @@
 
                 <article
                     class="reveal-up group relative flex min-h-[300px] flex-col justify-end overflow-hidden rounded-3xl bg-gov-950 p-7 text-white [animation-delay:80ms]">
-                    <img src="{{ asset('assets/images/ad-card-1.jpg') }}" alt="" width="320" height="213" loading="lazy" decoding="async"
+                    <img src="{{ $adSidebar?->image ? \Illuminate\Support\Facades\Storage::disk('public')->url($adSidebar->image) : asset('assets/images/ad-card-1.jpg') }}"
+                        alt="" width="320" height="213" loading="lazy" decoding="async"
                         class="absolute inset-0 h-full w-full object-cover opacity-55 transition duration-300 group-hover:scale-105">
                     <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,50,42,.22),rgba(0,50,42,.9))]"></div>
                     <div class="relative">
@@ -416,7 +438,7 @@
                             متوسطة</span>
                         <h3 class="mt-5 text-2xl font-extrabold leading-9">وصول مستمر لجمهور مستهدف</h3>
                         <p class="mt-3 text-sm leading-7 text-slate-100">مناسبة لشركات مواد البناء والمقاولين والتشطيبات.</p>
-                        <a href="{{ route('contact') }}"
+                        <a href="{{ $adSidebar?->link ?: route('contact') }}"
                             class="shine-cta mt-7 inline-flex h-11 items-center rounded-xl bg-gold-500 px-5 text-xs font-bold text-white transition hover:bg-gold-600">احجز
                             الآن</a>
                     </div>
@@ -541,32 +563,10 @@
                 { id: 'about', label: 'من نحن' },
                 { id: 'contact', label: 'تواصل معنا' }
             ],
-            cities: ['الرياض', 'جدة', 'الدمام', 'الخبر', 'مكة', 'المدينة', 'أبها', 'القصيم'],
-            categories: [
-                { name: 'مواد بناء', icon: '▦', count: 86 },
-                { name: 'خرسانة وأسمنت', icon: '◼', count: 42 },
-                { name: 'حديد وصلب', icon: '▤', count: 39 },
-                { name: 'كهرباء وإنارة', icon: '✦', count: 45 },
-                { name: 'دهانات وتشطيبات', icon: '◒', count: 58 },
-                { name: 'معدات بناء', icon: '⚙', count: 27 }
-            ],
-            companies: [
-                { name: 'شركة أساس مواد البناء', logo: '{{ asset('assets/logos/asas.png') }}', category: 'مواد بناء', city: 'الرياض', desc: 'توريد مواد البناء الأساسية للمشاريع السكنية والتجارية.', website: 'https://example.com' },
-                { name: 'مصنع صبة للخرسانة الجاهزة', logo: '{{ asset('assets/logos/sabba.png') }}', category: 'خرسانة وأسمنت', city: 'جدة', desc: 'خرسانة جاهزة وحلول صب للمواقع والمقاولين.', website: 'https://example.com' },
-                { name: 'حديد العمران للتوريد', logo: '{{ asset('assets/logos/omran-steel.png') }}', category: 'حديد وصلب', city: 'الدمام', desc: 'توريد حديد تسليح ومنتجات صلب بكميات مختلفة.', website: 'https://example.com' },
-                { name: 'لمسة للتشطيبات والدهانات', logo: '{{ asset('assets/logos/lamsa.png') }}', category: 'دهانات وتشطيبات', city: 'الرياض', desc: 'دهانات ومواد تشطيب داخلية وخارجية للمباني.', website: 'https://example.com' },
-                { name: 'نوران للكهرباء والإنارة', logo: '{{ asset('assets/logos/noran.png') }}', category: 'كهرباء وإنارة', city: 'الخبر', desc: 'منتجات إنارة وكهرباء للمنازل والمشاريع التجارية.', website: 'https://example.com' },
-                { name: 'زجاج الخليج للألمنيوم', logo: '{{ asset('assets/logos/gulf-glass.png') }}', category: 'ألمنيوم وزجاج', city: 'جدة', desc: 'واجهات زجاجية وأعمال ألمنيوم للأبواب والنوافذ.', website: 'https://example.com' },
-                { name: 'مانع للعزل والكيماويات', logo: '{{ asset('assets/logos/manea.png') }}', category: 'عزل ومواد كيماوية', city: 'الرياض', desc: 'مواد عزل وكيماويات بناء للمواقع والتشطيبات.', website: 'https://example.com' },
-                { name: 'روافع لمعدات البناء', logo: '{{ asset('assets/logos/rawafea.png') }}', category: 'معدات بناء', city: 'الدمام', desc: 'معدات وأدوات بناء للمقاولين ومواقع العمل.', website: 'https://example.com' },
-                { name: 'مداد للمقاولات العامة', logo: '{{ asset('assets/logos/midad.png') }}', category: 'أعمال مقاولات عامة', city: 'القصيم', desc: 'تنفيذ وإدارة أعمال المقاولات العامة للمشاريع السكنية والتجارية.', website: 'https://example.com' }
-            ],
-            news: [
-                { slug: 'market-report', category: 'تقرير', title: 'تحديث أسعار بعض مواد البناء هذا الأسبوع', time: 'منذ 3 ساعات', image: '{{ asset('assets/images/news-materials.jpg') }}' },
-                { slug: 'new-projects', category: 'مشروع', title: 'طلب متزايد على موردي الخرسانة في المدن الكبرى', time: 'منذ 5 ساعات', image: '{{ asset('assets/images/news-crane.jpg') }}' },
-                { slug: 'materials-market', category: 'سوق', title: 'عروض جديدة من شركات الدهانات والتشطيبات', time: 'منذ يوم', image: '{{ asset('assets/images/news-site.jpg') }}' },
-                { slug: 'platform-update', category: 'منصة', title: 'إضافة شركات جديدة في تصنيفات الحديد والزجاج', time: 'منذ يومين', image: '{{ asset('assets/images/news-materials.jpg') }}' }
-            ],
+            cities: @json($dbCities),
+            categories: @json($dbCategories),
+            companies: @json($dbCompanies),
+            news: @json($dbNews),
             init() {
                 this.route = this.routeFromPath();
                 this.selectedNews = this.news[0];

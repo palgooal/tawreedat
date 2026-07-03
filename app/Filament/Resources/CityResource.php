@@ -49,7 +49,7 @@ class CityResource extends Resource
                             ->live(onBlur: true)
                             ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
                                 if ($operation === 'create') {
-                                    $set('slug', Str::slug($state ?? ''));
+                                    $set('slug', Str::slug($state ?? '', '-', null));
                                 }
                             }),
                         TextInput::make('slug')

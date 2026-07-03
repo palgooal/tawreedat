@@ -17,6 +17,7 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class ContactRequestResource extends Resource
@@ -32,6 +33,33 @@ class ContactRequestResource extends Resource
     protected static ?string $modelLabel = 'طلب تواصل';
 
     protected static ?string $pluralModelLabel = 'طلبات التواصل';
+
+    public static function canViewAny(): bool
+    {
+        $user = auth()->user();
+
+        return (bool) ($user?->can('view contact requests') || $user?->can('manage contact requests'));
+    }
+
+    public static function canCreate(): bool
+    {
+        return (bool) auth()->user()?->can('manage contact requests');
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return (bool) auth()->user()?->can('manage contact requests');
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return (bool) auth()->user()?->can('manage contact requests');
+    }
+
+    public static function canDeleteAny(): bool
+    {
+        return (bool) auth()->user()?->can('manage contact requests');
+    }
 
     public static function form(Schema $schema): Schema
     {

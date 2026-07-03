@@ -25,6 +25,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use UnitEnum;
 
@@ -42,6 +43,33 @@ class CompanyResource extends Resource
 
     protected static ?string $pluralModelLabel = 'الشركات';
 
+    public static function canViewAny(): bool
+    {
+        $user = auth()->user();
+
+        return (bool) ($user?->can('view companies') || $user?->can('manage companies'));
+    }
+
+    public static function canCreate(): bool
+    {
+        return (bool) auth()->user()?->can('manage companies');
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return (bool) auth()->user()?->can('manage companies');
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return (bool) auth()->user()?->can('manage companies');
+    }
+
+    public static function canDeleteAny(): bool
+    {
+        return (bool) auth()->user()?->can('manage companies');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -56,7 +84,7 @@ class CompanyResource extends Resource
                             ->live(onBlur: true)
                             ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
                                 if ($operation === 'create') {
-                                    $set('slug', Str::slug($state ?? ''));
+                                    $set('slug', Str::slug($state ?? '', '-', null));
                                 }
                             }),
                         TextInput::make('slug')
@@ -93,6 +121,7 @@ class CompanyResource extends Resource
                         FileUpload::make('logo')
                             ->label('الشعار')
                             ->image()
+                            ->disk('public')
                             ->directory('companies/logos')
                             ->visibility('public')
                             ->columnSpanFull(),

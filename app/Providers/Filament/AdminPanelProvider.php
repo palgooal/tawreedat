@@ -3,10 +3,13 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Dashboard;
+use App\Filament\Widgets\AnalyticsWidget;
+use App\Filament\Widgets\KpiOverviewWidget;
+use App\Filament\Widgets\LatestCompanyRegistrationRequestsWidget;
 use App\Filament\Widgets\LatestContactRequestsWidget;
-use App\Filament\Widgets\RecentCompaniesWidget;
-use App\Filament\Widgets\TawreedatStatsWidget;
-use App\Filament\Widgets\WelcomeWidget;
+use App\Filament\Widgets\LatestNewsWidget;
+use App\Filament\Widgets\QuickActionsWidget;
+use App\Filament\Widgets\SystemStatusWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -54,16 +57,20 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                WelcomeWidget::class,
-                TawreedatStatsWidget::class,
-                RecentCompaniesWidget::class,
+                KpiOverviewWidget::class,
+                QuickActionsWidget::class,
+                LatestNewsWidget::class,
                 LatestContactRequestsWidget::class,
+                LatestCompanyRegistrationRequestsWidget::class,
+                AnalyticsWidget::class,
+                SystemStatusWidget::class,
             ])
             ->navigationGroups([
                 'إدارة الشركات',
                 'المحتوى',
                 'الإعلانات',
                 'الطلبات',
+                'الإعدادات',
             ])
             ->middleware([
                 EncryptCookies::class,

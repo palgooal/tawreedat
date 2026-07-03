@@ -28,7 +28,7 @@ class City extends Model
     {
         static::saving(function (City $city) {
             if (blank($city->slug)) {
-                $city->slug = Str::slug($city->name);
+                $city->slug = Str::slug($city->name, '-', null);
             }
         });
     }

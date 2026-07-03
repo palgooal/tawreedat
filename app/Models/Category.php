@@ -29,7 +29,7 @@ class Category extends Model
     {
         static::saving(function (Category $category) {
             if (blank($category->slug)) {
-                $category->slug = Str::slug($category->name);
+                $category->slug = Str::slug($category->name, '-', null);
             }
         });
     }

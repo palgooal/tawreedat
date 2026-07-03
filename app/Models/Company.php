@@ -38,7 +38,7 @@ class Company extends Model
     {
         static::saving(function (Company $company) {
             if (blank($company->slug)) {
-                $company->slug = Str::slug($company->name);
+                $company->slug = Str::slug($company->name, '-', null);
             }
         });
     }
