@@ -1,0 +1,212 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+
+/**
+ * Tawreedat brand identity
+ * Dark green + gold, cream background, RTL Arabic panel.
+ */
+:root {
+    --tawreedat-green: #063f34;
+    --tawreedat-green-dark: #052e26;
+    --tawreedat-gold: #d4a017;
+    --tawreedat-cream: #fbfaf7;
+}
+
+/* Page background */
+.fi-body {
+    background-color: var(--tawreedat-cream);
+}
+
+html.dark .fi-body {
+    background-color: #0b1f1b;
+}
+
+/* Sidebar: dark green gradient */
+.fi-sidebar {
+    background: linear-gradient(180deg, var(--tawreedat-green) 0%, var(--tawreedat-green-dark) 100%);
+}
+
+.fi-sidebar-header:not(.fi-body-has-topbar *) {
+    background: transparent;
+}
+
+.fi-body-has-topbar .fi-sidebar-header {
+    background-color: var(--tawreedat-green);
+}
+
+.fi-sidebar-group-label {
+    color: rgba(251, 250, 247, 0.55);
+}
+
+.fi-sidebar-group-btn .fi-icon,
+.fi-sidebar-database-notifications-btn .fi-icon {
+    color: rgba(251, 250, 247, 0.6);
+}
+
+.fi-sidebar-item-label {
+    color: rgba(251, 250, 247, 0.85);
+}
+
+.fi-sidebar-item-btn > .fi-icon {
+    color: rgba(251, 250, 247, 0.6);
+}
+
+.fi-sidebar-item-has-url > .fi-sidebar-item-btn:hover,
+.fi-sidebar-item-has-url > .fi-sidebar-item-btn:focus-visible {
+    background-color: rgba(212, 160, 23, 0.14);
+}
+
+/* Sidebar: active item gets a green/gold highlight */
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    background: linear-gradient(90deg, rgba(212, 160, 23, 0.22), rgba(212, 160, 23, 0.04));
+    border-inline-start: 3px solid var(--tawreedat-gold);
+}
+
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-icon {
+    color: var(--tawreedat-gold);
+}
+
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn > .fi-sidebar-item-label {
+    color: var(--tawreedat-gold);
+    font-weight: 600;
+}
+
+/* Cards / sections: soft rounded, subtle shadow */
+.fi-section:not(.fi-aside) {
+    border-radius: 1rem;
+    box-shadow: 0 1px 2px rgba(6, 63, 52, 0.06), 0 4px 12px rgba(6, 63, 52, 0.05);
+}
+
+.fi-section.fi-aside > .fi-section-content-ctn {
+    border-radius: 1rem;
+}
+
+/* Stat cards (dashboard widgets) share the same premium card style */
+.fi-wi-stats-overview-stat {
+    border-radius: 1rem;
+    box-shadow: 0 1px 2px rgba(6, 63, 52, 0.06), 0 4px 12px rgba(6, 63, 52, 0.05);
+}
+
+/* Topbar: premium dark green bar */
+.fi-topbar {
+    background: linear-gradient(90deg, var(--tawreedat-green) 0%, var(--tawreedat-green-dark) 100%);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.fi-topbar .fi-icon,
+.fi-topbar .fi-icon-btn {
+    color: rgba(251, 250, 247, 0.85);
+}
+
+.fi-topbar .fi-icon-btn:hover,
+.fi-topbar .fi-icon-btn:focus-visible {
+    color: var(--tawreedat-gold);
+    background-color: rgba(212, 160, 23, 0.14);
+}
+
+/* Brand block (topbar logo slot + mobile sidebar header) */
+.tawreedat-brand {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+}
+
+.tawreedat-brand-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--tawreedat-cream);
+}
+
+.tawreedat-brand-subtitle {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--tawreedat-gold);
+}
+
+/* Mobile sidebar header should also carry the brand colors */
+.fi-body-has-topbar .fi-sidebar-header {
+    background-color: var(--tawreedat-green) !important;
+}
+
+/* User info block (name + role) next to the avatar */
+.tawreedat-user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    line-height: 1.15;
+    margin-inline-end: 0.25rem;
+}
+
+.tawreedat-user-info-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--tawreedat-cream);
+}
+
+.tawreedat-user-info-role {
+    font-size: 0.65rem;
+    color: var(--tawreedat-gold);
+}
+
+/* Locale indicator badge */
+.tawreedat-locale-badge {
+    display: none;
+    align-items: center;
+    padding: 0.15rem 0.6rem;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--tawreedat-cream);
+    background-color: rgba(212, 160, 23, 0.18);
+    border: 1px solid rgba(212, 160, 23, 0.35);
+    white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+    .tawreedat-locale-badge {
+        display: inline-flex;
+    }
+}
+
+/* Welcome banner: dark green gradient with gold accent */
+.tawreedat-welcome-banner {
+    background: linear-gradient(120deg, var(--tawreedat-green) 0%, var(--tawreedat-green-dark) 100%);
+    border-inline-start: 4px solid var(--tawreedat-gold);
+    position: relative;
+    overflow: hidden;
+}
+
+.tawreedat-welcome-banner::after {
+    content: '';
+    position: absolute;
+    inset-inline-end: -2rem;
+    top: -2rem;
+    width: 8rem;
+    height: 8rem;
+    border-radius: 9999px;
+    background: rgba(212, 160, 23, 0.15);
+    pointer-events: none;
+}
+
+/* Stat card icon chips */
+.fi-wi-stats-overview-stat .fi-wi-stats-overview-stat-label-ctn > .fi-icon {
+    padding: 0.4rem;
+    box-sizing: content-box;
+    border-radius: 9999px;
+}
+
+.tawreedat-stat-green .fi-wi-stats-overview-stat-label-ctn > .fi-icon {
+    background-color: rgba(6, 63, 52, 0.1);
+}
+
+.tawreedat-stat-gold .fi-wi-stats-overview-stat-label-ctn > .fi-icon {
+    background-color: rgba(212, 160, 23, 0.14);
+}
+
+/* Table widgets: consistent premium card radius/shadow */
+.fi-ta-ctn {
+    border-radius: 1rem;
+    box-shadow: 0 1px 2px rgba(6, 63, 52, 0.06), 0 4px 12px rgba(6, 63, 52, 0.05);
+}

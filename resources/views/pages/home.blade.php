@@ -607,7 +607,7 @@
                 location.href = `{{ route('companies.show') }}?company=${encodeURIComponent(company.name)}`;
             },
             openNews(item) {
-                location.href = `{{ route('news.show') }}?slug=${encodeURIComponent(item.slug)}`;
+                location.href = '{{ route('news.show', ['slug' => '__SLUG__']) }}'.replace('__SLUG__', encodeURIComponent(item.slug));
             },
             searchFromHero() {
                 const params = new URLSearchParams();
