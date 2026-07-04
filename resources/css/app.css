@@ -23,6 +23,13 @@
     --color-gov-700: #17643f;
     --color-gov-800: #144f34;
     --color-gov-900: #12412b;
+    /* gov-950 doubles as the deep anchor of the header/CTA gradient (see
+       .bg-brand-gradient / .bg-brand-gradient-cta below) and as the near-black
+       text tone for badges and headings — 7.4:1 on gold-400, 15:1 on white. */
+    --color-gov-950: #012c26;
+    /* Bright interior stop for the brand gradient only; not part of the
+       general UI ramp — pair it with gov-950, don't use it standalone. */
+    --color-gov-925: #014236;
 
     /* Brand — Gold (accent) */
     --color-gold-50: #fdf8ec;
@@ -96,5 +103,18 @@
             hover:bg-slate-50 active:bg-slate-100
             focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gov-600
             disabled:pointer-events-none disabled:opacity-50;
+    }
+
+    /* Brand gradient — single source of truth for the deep-green chrome used
+       on the top bar and primary CTAs. Previously duplicated as raw hex in
+       three places in header.blade.php; consolidated here so a rebrand only
+       touches one file. */
+    .bg-brand-gradient {
+        background-image: linear-gradient(90deg, var(--color-gov-950) 0%, var(--color-gov-925) 50%, var(--color-gov-950) 100%);
+    }
+
+    /* Two-stop variant used on the register CTA buttons (main header + sticky nav). */
+    .bg-brand-gradient-cta {
+        background-image: linear-gradient(90deg, var(--color-gov-950), var(--color-gov-925));
     }
 }
