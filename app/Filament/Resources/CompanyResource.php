@@ -81,7 +81,7 @@ class CompanyResource extends Resource
                             ->label('اسم الشركة')
                             ->required()
                             ->maxLength(255)
-                            ->live(onBlur: true)
+                            ->live(debounce: 500)
                             ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
                                 if ($operation === 'create') {
                                     $set('slug', Str::slug($state ?? '', '-', null));
@@ -89,19 +89,18 @@ class CompanyResource extends Resource
                             }),
                         TextInput::make('slug')
                             ->label('الرابط المختصر (Slug)')
+                            ->helperText('يُنشأ تلقائياً من اسم الشركة، ويمكن تعديله يدوياً')
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),
                         Select::make('city_id')
                             ->label('المدينة')
                             ->relationship('city', 'name')
-                            ->searchable()
-                            ->preload(),
+                            ->native(),
                         Select::make('category_id')
                             ->label('التصنيف')
                             ->relationship('category', 'name')
-                            ->searchable()
-                            ->preload(),
+                            ->native(),
                         TextInput::make('website')
                             ->label('الموقع الإلكتروني')
                             ->url()
@@ -157,6 +156,7 @@ class CompanyResource extends Resource
             ->columns([
                 ImageColumn::make('logo')
                     ->label('الشعار')
+                    ->disk('public')
                     ->circular(),
                 TextColumn::make('name')
                     ->label('اسم الشركة')

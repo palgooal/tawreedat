@@ -16,6 +16,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
@@ -72,58 +74,95 @@ class NewsResource extends Resource
     {
         return $schema
             ->components([
-                Section::make('بيانات الخبر')
-                    ->columns(2)
+                Grid::make(['default' => 1, 'lg' => 3])
+                    ->columnSpanFull()
                     ->schema([
-                        TextInput::make('title')
-                            ->label('العنوان')
-                            ->required()
-                            ->maxLength(255)
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
-                                if ($operation === 'create') {
-                                    $set('slug', Str::slug($state ?? '', '-', null));
-                                }
-                            })
-                            ->columnSpanFull(),
-                        TextInput::make('slug')
-                            ->label('الرابط المختصر (Slug)')
-                            ->required()
-                            ->maxLength(255)
-                            ->unique(ignoreRecord: true),
-                        Select::make('news_category_id')
-                            ->label('التصنيف')
-                            ->relationship('categoryRelation', 'name')
-                            ->searchable()
-                            ->preload()
-                            ->required(),
-                        Select::make('status')
-                            ->label('الحالة')
-                            ->options([
-                                'draft' => 'مسودة',
-                                'published' => 'منشور',
-                            ])
-                            ->default('draft')
-                            ->required(),
-                        DateTimePicker::make('published_at')
-                            ->label('تاريخ النشر'),
-                    ]),
-                Section::make('المحتوى')
-                    ->schema([
-                        FileUpload::make('image')
-                            ->label('الصورة')
-                            ->image()
-                            ->disk('public')
-                            ->directory('news/images')
-                            ->visibility('public')
-                            ->columnSpanFull(),
-                        Textarea::make('excerpt')
-                            ->label('مقتطف')
-                            ->rows(3)
-                            ->columnSpanFull(),
-                        RichEditor::make('content')
-                            ->label('المحتوى')
-                            ->columnSpanFull(),
+                        Group::make([
+                            Section::make('بيانات الخبر')
+                                ->description('العنوان والرابط المختصر ومقتطف مختصر يظهر في القوائم')
+                                ->icon('heroicon-o-document-text')
+                                ->schema([
+                                    TextInput::make('title')
+                                        ->label('العنوان')
+                                        ->required()
+                                        ->maxLength(255)
+                                        ->live(debounce: 500)
+                                        ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
+                                            if ($operation === 'create') {
+                                                $set('slug', Str::slug($state ?? '', '-', null));
+                                            }
+                                        })
+                                        ->columnSpanFull(),
+                                    TextInput::make('slug')
+                                        ->label('الرابط المختصر (Slug)')
+                                        ->helperText('يُنشأ تلقائياً من العنوان، ويمكن تعديله يدوياً')
+                                        ->required()
+                                        ->maxLength(255)
+                                        ->unique(ignoreRecord: true)
+                                        ->columnSpanFull(),
+                                    Textarea::make('excerpt')
+                                        ->label('مقتطف')
+                                        ->helperText('نص قصير يظهر في قائمة الأخبار ونتائج المشاركة (اختياري)')
+                                        ->maxLength(300)
+                                        ->rows(2)
+                                        ->columnSpanFull(),
+                                ]),
+                            Section::make('محتوى الخبر')
+                                ->description('نص الخبر كاملاً بكل تفاصيله')
+                                ->icon('heroicon-o-pencil-square')
+                                ->schema([
+                                    RichEditor::make('content')
+                                        ->label('المحتوى')
+                                        ->hiddenLabel()
+                                        ->extraInputAttributes([
+                                            'style' => 'min-height: 30rem',
+                                            'aria-label' => 'محتوى الخبر بالتفصيل',
+                                        ])
+                                        ->columnSpanFull(),
+                                ]),
+                        ])->columnSpan(['lg' => 2]),
+                        Group::make([
+                            Section::make('حالة النشر')
+                                ->icon('heroicon-o-globe-alt')
+                                ->schema([
+                                    Select::make('status')
+                                        ->label('الحالة')
+                                        ->options([
+                                            'draft' => 'مسودة',
+                                            'published' => 'منشور',
+                                        ])
+                                        ->default('draft')
+                                        ->required(),
+                                    DateTimePicker::make('published_at')
+                                        ->label('تاريخ النشر')
+                                        ->seconds(false)
+                                        ->default(now()),
+                                ]),
+                            Section::make('التصنيف')
+                                ->icon('heroicon-o-tag')
+                                ->schema([
+                                    Select::make('news_category_id')
+                                        ->label('التصنيف')
+                                        ->relationship('categoryRelation', 'name')
+                                        ->native()
+                                        ->required(),
+                                ]),
+                            Section::make('الصورة الرئيسية')
+                                ->icon('heroicon-o-photo')
+                                ->schema([
+                                    FileUpload::make('image')
+                                        ->label('الصورة الرئيسية للخبر')
+                                        ->image()
+                                        ->disk('public')
+                                        ->directory('news/images')
+                                        ->visibility('public')
+                                        ->imageEditor()
+                                        ->imagePreviewHeight('180')
+                                        ->maxSize(10240)
+                                        ->helperText('الحد الأقصى 10 ميجابايت (JPG, PNG, WEBP)')
+                                        ->columnSpanFull(),
+                                ]),
+                        ])->columnSpan(['lg' => 1]),
                     ]),
             ]);
     }
@@ -133,7 +172,8 @@ class NewsResource extends Resource
         return $table
             ->columns([
                 ImageColumn::make('image')
-                    ->label('الصورة'),
+                    ->label('الصورة')
+                    ->disk('public'),
                 TextColumn::make('title')
                     ->label('العنوان')
                     ->searchable()
@@ -190,7 +230,7 @@ class NewsResource extends Resource
                     DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('created_at', 'desc');
+            ->defaultSort('published_at', 'desc');
     }
 
     public static function getPages(): array

@@ -113,7 +113,8 @@ class AdvertisementResource extends Resource
         return $table
             ->columns([
                 ImageColumn::make('image')
-                    ->label('الصورة'),
+                    ->label('الصورة')
+                    ->disk('public'),
                 TextColumn::make('title')
                     ->label('العنوان')
                     ->searchable()

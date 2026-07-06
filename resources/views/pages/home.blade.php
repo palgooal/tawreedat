@@ -83,10 +83,10 @@
                                 </div>
                             </div>
 
-                            <button @click="go('directory')"
+                            <!-- <button @click="go('directory')"
                                 class="mx-auto mt-5 inline-flex h-12 items-center justify-center rounded-2xl border border-gold-400 px-8 text-sm font-bold text-gold-300 transition hover:bg-gold-500 hover:text-white">
                                 تصفح الشركات
-                            </button>
+                            </button> -->
 
                         </div>
                     </section>
