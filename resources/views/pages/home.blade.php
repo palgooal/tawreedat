@@ -83,10 +83,10 @@
                                 </div>
                             </div>
 
-                            <button @click="go('directory')"
+                            <!--<button @click="go('directory')"
                                 class="mx-auto mt-5 inline-flex h-12 items-center justify-center rounded-2xl border border-gold-400 px-8 text-sm font-bold text-gold-300 transition hover:bg-gold-500 hover:text-white">
                                 تصفح الشركات
-                            </button>
+                            </button>-->
 
                         </div>
                     </section>
@@ -478,7 +478,7 @@
     </section>
 
     <!-- Government & Sector Entities -->
-    <section class="bg-[#fbfcfb] py-12 sm:py-16">
+    <!--<section class="bg-[#fbfcfb] py-12 sm:py-16">
         <div class="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
 
             <div class="mx-auto max-w-3xl text-center">
@@ -505,7 +505,7 @@
                 </template>
             </div>
         </div>
-    </section>
+    </section>-->
 
     <div x-show="toast" x-cloak x-transition role="status" aria-live="polite"
         class="fixed bottom-6 right-1/2 z-[70] w-[calc(100%-2rem)] max-w-md translate-x-1/2 rounded-2xl border border-gold-300 bg-gov-950 px-5 py-4 text-center text-xs font-semibold text-white shadow-2xl"
