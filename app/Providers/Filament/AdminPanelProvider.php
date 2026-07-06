@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Dashboard;
+use App\Filament\Widgets\AdvertisingStatusWidget;
 use App\Filament\Widgets\AnalyticsWidget;
 use App\Filament\Widgets\KpiOverviewWidget;
 use App\Filament\Widgets\LatestCompanyRegistrationRequestsWidget;
@@ -63,6 +64,7 @@ class AdminPanelProvider extends PanelProvider
                 LatestContactRequestsWidget::class,
                 LatestCompanyRegistrationRequestsWidget::class,
                 AnalyticsWidget::class,
+                AdvertisingStatusWidget::class,
                 SystemStatusWidget::class,
             ])
             ->navigationGroups([

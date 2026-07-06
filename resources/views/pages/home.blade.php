@@ -83,10 +83,10 @@
                                 </div>
                             </div>
 
-                            <!-- <button @click="go('directory')"
+                            <button @click="go('directory')"
                                 class="mx-auto mt-5 inline-flex h-12 items-center justify-center rounded-2xl border border-gold-400 px-8 text-sm font-bold text-gold-300 transition hover:bg-gold-500 hover:text-white">
                                 تصفح الشركات
-                            </button> -->
+                            </button>
 
                         </div>
                     </section>
@@ -373,7 +373,7 @@
             <!-- Main Ad -->
             <div
                 class="relative overflow-hidden rounded-[36px] bg-gov-950 shadow-2xl shadow-gov-900/20 ring-1 ring-gov-900/10">
-                <img src="{{ $adHome?->image ? \Illuminate\Support\Facades\Storage::disk('public')->url($adHome->image) : asset('assets/images/ad-section-bg.jpg') }}"
+                <img src="{{ $homeBanner1?->image ? \Illuminate\Support\Facades\Storage::disk('public')->url($homeBanner1->image) : asset('assets/images/ad-section-bg.jpg') }}"
                     alt="" width="1600" height="900" loading="lazy" decoding="async"
                     class="absolute inset-0 h-full w-full object-cover opacity-65">
                 <div
@@ -398,7 +398,7 @@
                         <p class="mx-auto mt-4 max-w-2xl text-sm leading-8 text-slate-100 sm:text-base lg:mx-0">
                             ظهور مباشر أمام الباحثين عن شركات البناء والموردين داخل المملكة.
                         </p>
-                        <a href="{{ $adHome?->link ?: route('contact') }}"
+                        <a href="{{ $homeBanner1?->link ? route('ads.click', $homeBanner1) : route('contact') }}"
                             class="shine-cta mt-8 inline-flex h-14 items-center justify-center rounded-2xl bg-gold-500 px-10 text-base font-bold text-white shadow-lg shadow-black/10 transition hover:-translate-y-0.5 hover:bg-gold-600">
                             احجز إعلانك الآن
                         </a>
@@ -410,7 +410,7 @@
             <div class="mt-8 grid gap-5 lg:grid-cols-3">
                 <article
                     class="reveal-up group relative flex min-h-[300px] flex-col justify-end overflow-hidden rounded-3xl bg-gov-950 p-7 text-white">
-                    <img src="{{ $adHeader?->image ? \Illuminate\Support\Facades\Storage::disk('public')->url($adHeader->image) : asset('assets/images/ad-section-bg.jpg') }}"
+                    <img src="{{ $headerBanner?->image ? \Illuminate\Support\Facades\Storage::disk('public')->url($headerBanner->image) : asset('assets/images/ad-section-bg.jpg') }}"
                         alt="" width="1600" height="900" loading="lazy" decoding="async"
                         class="absolute inset-0 h-full w-full object-cover opacity-55 transition duration-300 group-hover:scale-105">
                     <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,50,42,.25),rgba(0,50,42,.9))]"></div>
@@ -420,7 +420,7 @@
                             رئيسية</span>
                         <h3 class="mt-5 text-2xl font-extrabold leading-9">ظهور بارز في الصفحة الرئيسية</h3>
                         <p class="mt-3 text-sm leading-7 text-slate-100">بنر واسع مناسب لإطلاق العروض وتعزيز حضور العلامة.</p>
-                        <a href="{{ $adHeader?->link ?: route('contact') }}"
+                        <a href="{{ $headerBanner?->link ? route('ads.click', $headerBanner) : route('contact') }}"
                             class="shine-cta mt-7 inline-flex h-11 items-center rounded-xl bg-gold-500 px-5 text-xs font-bold text-white transition hover:bg-gold-600">احجز
                             الآن</a>
                     </div>
@@ -428,7 +428,7 @@
 
                 <article
                     class="reveal-up group relative flex min-h-[300px] flex-col justify-end overflow-hidden rounded-3xl bg-gov-950 p-7 text-white [animation-delay:80ms]">
-                    <img src="{{ $adSidebar?->image ? \Illuminate\Support\Facades\Storage::disk('public')->url($adSidebar->image) : asset('assets/images/ad-card-1.jpg') }}"
+                    <img src="{{ $homeBanner2?->image ? \Illuminate\Support\Facades\Storage::disk('public')->url($homeBanner2->image) : asset('assets/images/ad-card-1.jpg') }}"
                         alt="" width="320" height="213" loading="lazy" decoding="async"
                         class="absolute inset-0 h-full w-full object-cover opacity-55 transition duration-300 group-hover:scale-105">
                     <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,50,42,.22),rgba(0,50,42,.9))]"></div>
@@ -438,7 +438,7 @@
                             متوسطة</span>
                         <h3 class="mt-5 text-2xl font-extrabold leading-9">وصول مستمر لجمهور مستهدف</h3>
                         <p class="mt-3 text-sm leading-7 text-slate-100">مناسبة لشركات مواد البناء والمقاولين والتشطيبات.</p>
-                        <a href="{{ $adSidebar?->link ?: route('contact') }}"
+                        <a href="{{ $homeBanner2?->link ? route('ads.click', $homeBanner2) : route('contact') }}"
                             class="shine-cta mt-7 inline-flex h-11 items-center rounded-xl bg-gold-500 px-5 text-xs font-bold text-white transition hover:bg-gold-600">احجز
                             الآن</a>
                     </div>
@@ -446,7 +446,7 @@
 
                 <article
                     class="reveal-up group relative flex min-h-[300px] flex-col justify-end overflow-hidden rounded-3xl bg-gov-950 p-7 text-white [animation-delay:160ms]">
-                    <img src="{{ asset('assets/images/ad-card-2.jpg') }}" alt="" width="320" height="480" loading="lazy" decoding="async"
+                    <img src="{{ $homeBanner3?->image ? \Illuminate\Support\Facades\Storage::disk('public')->url($homeBanner3->image) : asset('assets/images/ad-card-2.jpg') }}" alt="" width="320" height="480" loading="lazy" decoding="async"
                         class="absolute inset-0 h-full w-full object-cover opacity-55 transition duration-300 group-hover:scale-105">
                     <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,50,42,.22),rgba(0,50,42,.9))]"></div>
                     <div class="relative">
@@ -455,7 +455,7 @@
                             جانبية</span>
                         <h3 class="mt-5 text-2xl font-extrabold leading-9">حضور ثابت داخل صفحات الدليل</h3>
                         <p class="mt-3 text-sm leading-7 text-slate-100">خيار عملي للظهور بجانب التصنيفات وصفحات الشركات.</p>
-                        <a href="{{ route('contact') }}"
+                        <a href="{{ $homeBanner3?->link ? route('ads.click', $homeBanner3) : route('contact') }}"
                             class="shine-cta mt-7 inline-flex h-11 items-center rounded-xl bg-gold-500 px-5 text-xs font-bold text-white transition hover:bg-gold-600">احجز
                             الآن</a>
                     </div>
@@ -601,10 +601,6 @@
                     plans: '{{ route('plans') }}',
                 };
                 location.href = paths[r] || '{{ route('home') }}';
-            },
-            openCompany(company) {
-                localStorage.setItem('selectedCompany', company.name);
-                location.href = `{{ route('companies.show') }}?company=${encodeURIComponent(company.name)}`;
             },
             openNews(item) {
                 location.href = '{{ route('news.show', ['slug' => '__SLUG__']) }}'.replace('__SLUG__', encodeURIComponent(item.slug));

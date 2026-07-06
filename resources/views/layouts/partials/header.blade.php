@@ -61,15 +61,25 @@
             </div>
 
             <!-- Header Ad Image -->
-            <button type="button" @click="go('contact')"
-                class="block overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm transition hover:border-gold-300 hover:shadow-md lg:rounded-[28px]"
-                aria-label="مساحة إعلانية">
-                <img src="{{ asset('assets/images/header-ad-1-960.jpg') }}"
-                    srcset="{{ asset('assets/images/header-ad-1-640.jpg') }} 640w, {{ asset('assets/images/header-ad-1-960.jpg') }} 960w"
-                    sizes="(min-width: 1024px) 100vw, 100vw" width="960" height="154"
-                    alt="مساحة إعلانية في توريدات" decoding="async" fetchpriority="high"
-                    class="h-20 w-full object-cover sm:h-[90px]">
-            </button>
+            @if ($headerBanner?->link)
+                <a href="{{ route('ads.click', $headerBanner) }}"
+                    class="block overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm transition hover:border-gold-300 hover:shadow-md lg:rounded-[28px]"
+                    aria-label="{{ $headerBanner->title ?: 'مساحة إعلانية' }}">
+                    <img src="{{ $headerBanner->image ? \Illuminate\Support\Facades\Storage::disk('public')->url($headerBanner->image) : asset('assets/images/header-ad-1-960.jpg') }}"
+                        width="960" height="154" alt="{{ $headerBanner->title ?: 'مساحة إعلانية في توريدات' }}"
+                        decoding="async" fetchpriority="high" class="h-20 w-full object-cover sm:h-[90px]">
+                </a>
+            @else
+                <button type="button" @click="go('contact')"
+                    class="block overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm transition hover:border-gold-300 hover:shadow-md lg:rounded-[28px]"
+                    aria-label="{{ $headerBanner->title ?? 'مساحة إعلانية' }}">
+                    <img src="{{ $headerBanner?->image ? \Illuminate\Support\Facades\Storage::disk('public')->url($headerBanner->image) : asset('assets/images/header-ad-1-960.jpg') }}"
+                        srcset="{{ $headerBanner?->image ? '' : asset('assets/images/header-ad-1-640.jpg') . ' 640w, ' . asset('assets/images/header-ad-1-960.jpg') . ' 960w' }}"
+                        sizes="(min-width: 1024px) 100vw, 100vw" width="960" height="154"
+                        alt="{{ $headerBanner->title ?? 'مساحة إعلانية في توريدات' }}" decoding="async" fetchpriority="high"
+                        class="h-20 w-full object-cover sm:h-[90px]">
+                </button>
+            @endif
 
             <!-- CTA -->
             <div class="flex lg:justify-end">

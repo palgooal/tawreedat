@@ -1,6 +1,6 @@
 # Architectural Decisions — Tawreedat
 
-Last updated: 2026-07-04
+Last updated: 2026-07-06
 
 Chronological log of non-obvious technical decisions and why they were made. When a future change contradicts one of these, update the entry rather than deleting it — the "why" is often more valuable than the current state.
 
@@ -23,7 +23,7 @@ Chronological log of non-obvious technical decisions and why they were made. Whe
 - **Admin access control uses `spatie/laravel-permission` with 4 fixed roles and 13 fixed permissions, not a custom role builder.** A production-readiness audit flagged that every authenticated user previously had full admin access (no `canAccessPanel()` gate at all). The fix was staged in two steps: first an `is_admin` boolean as a minimal stopgap (any user, one flag, in-or-out of the whole panel), then this roles/permissions system once resource-level granularity was actually needed (Editor should only touch content, Support should only touch contact requests, etc.). Deliberately did **not** reach for a heavier package (e.g. `filament-shield`) or build a role-management UI — 4 roles and 13 permissions are hardcoded in `RolesAndPermissionsSeeder` rather than editable through Filament, because the brief was explicit about keeping this simple for MVP and not building full RBAC. If more than these 4 roles are ever needed, that's the point to reconsider this decision, not before.
 - **`is_admin` is transitional, not removed.** Once roles existed, `is_admin` could have been deleted outright. It wasn't, because doing so would silently lock out any account created between the `is_admin` migration and the roles/permissions migration landing, with no way to know in advance whether such an account exists. `canAccessPanel()` checks `is_admin OR hasAnyRole([...])` so both eras of account remain valid. `is_admin` is checked **only** for panel entry - it is never read by any Resource/Page's `canViewAny()`/`canCreate()`/`canEdit()`/`canDelete()`/`canAccess()`, all of which go through permissions (or, for `UserResource` specifically, the Super Admin role directly). Tracked in `docs/ROADMAP.md` as a Phase 2 cleanup: remove `is_admin` once every real admin account is confirmed to have a role.
 - **`UserResource` checks the Super Admin role directly instead of a `manage users` permission, even though that permission exists.** User/role management is the one resource in this panel where getting authorization wrong has the worst consequence (privilege escalation), so it was deliberately kept out of the generic, seeder-editable permission grid and hardcoded instead. The `manage users`/`view users` permissions still exist and are excluded from the `Admin` role's grant (see `RolesAndPermissionsSeeder`) so the permission model documents the intent even though `UserResource` doesn't actually consult it.
-- **Companies Directory (`/companies`) and Company Profile (`/companies/{slug}`) are deferred to Phase 2 — not part of v1 scope.** v1 of the Tawreedat platform is deliberately scoped to: introducing the platform, news and advertisements, attracting organic traffic, building brand identity/trust, and capturing contact/join requests — not full company-profile browsing. This is a product decision, not a technical blocker (the routes already exist; only the views/controllers are missing). Consequence: the homepage's hero "تصفح الشركات" button, hero search, and category-click links still resolve to `companies.index`, so those specific controls will error until Phase 2 ships — accepted as a known v1 loose end rather than reason to build the directory early. See `docs/ROADMAP.md` for the updated phase breakdown (News and Contact-form wiring were promoted into Phase 1 as a result, since both are explicitly part of the stated v1 focus).
+- **Companies Directory (`/companies`) and Company Profile (`/companies/{slug}`) are deferred to Phase 2 — not part of v1 scope.** v1 of the Tawreedat platform is deliberately scoped to: introducing the platform, news and advertisements, attracting organic traffic, building brand identity/trust, and capturing contact/join requests — not full company-profile browsing. This is a product decision, not a technical blocker (the routes already exist; only the views/controllers are missing). Consequence: the homepage's hero "تصفح الشركات" button, hero search, and category-click links still resolve to `companies.index`, so those specific controls will error until Phase 2 ships — accepted as a known v1 loose end rather than reason to build the directory early. See `docs/ROADMAP.md` for the updated phase breakdown (News and Contact-form wiring were promoted into Phase 1 as a result, since both are explicitly part of the stated v1 focus). **Superseded in part 2026-07-06:** the Companies Directory half of this decision was reversed — see the 2026-07-06 entries below. Company Profile remains deferred exactly as decided here.
 
 **Decision:** Use `spatie/laravel-permission` instead of a custom RBAC implementation.
 **Reason:**
@@ -95,3 +95,71 @@ Chronological log of non-obvious technical decisions and why they were made. Whe
 **Reason:**
   - Approve is the one action that writes to a different resource's table (`companies`), not just this queue. Someone who can process registration requests (e.g. Support) isn't automatically someone who should be able to create/edit live company listings — that's exactly what `manage companies` already gates for `CompanyResource`.
   - Concretely: Support keeps `view`/`manage registration requests` (see the permission-pair decision above) but was never granted `manage companies`, so Support can view, reject, and mark requests as contacted, but the "قبول" button is hidden for them. Only Super Admin and Admin, who already hold `manage companies`, can complete an approval. This was an explicit requirement in the brief ("Approval action requires: manage registration requests + manage companies if available").
+
+## 2026-07-06
+
+**Decision:** Replace the free-text `position` enum on `Advertisement` with a real `advertisement_slots` table and `advertisement_slot_id` foreign key, rather than just adding more string values to the old enum.
+**Reason:**
+  - The homepage alone needed 4 distinct ad placements (`headerBanner`/`homeBanner1`/`homeBanner2`/`homeBanner3`) plus 2 more on the news page (`newsSidebarBanner`/`newsFooterBanner`) — 6 total, versus the old enum's 4 loosely-defined values (`header`/`home`/`sidebar`/`footer`) that didn't cleanly map to "one row per placement" (two different existing ads both had `position = 'home'`, an ambiguity the old schema couldn't even express as a data error).
+  - A real table means each slot is independently manageable (name, description, recommended dimensions, active/inactive) from its own Filament resource, instead of a hardcoded string list buried in a `Select`'s options array.
+  - This was an explicit, detailed spec from the user, including the exact 6 slot keys/names and the exact old→new mapping — this decision documents the *why* behind following it, not an independent judgment call.
+
+**Decision:** Keep the legacy `position` column on `advertisements` rather than dropping it in this pass.
+**Reason:**
+  - Explicit instruction in the brief ("Do NOT remove the legacy `position` column yet"). It's marked `@deprecated` on `Advertisement::scopeForPosition()` and documented as superseded in `docs/DATABASE_SCHEMA.md`, but not removed — any external code, report, or manual query still reading `position` keeps working unchanged.
+  - No functional harm in keeping it — nothing in the new slot-based code reads or writes it anymore (the data migration only reads it once, to backfill `advertisement_slot_id`).
+
+**Decision:** `headerBanner` is deliberately resolved and reused as *both* the sitewide header banner and one of the homepage's four ad cards, rather than giving the homepage a 4th independent slot for that position.
+**Reason:**
+  - The user's own spec section 7 lists exactly 4 homepage variables (`headerBanner`, `homeBanner1`, `homeBanner2`, `homeBanner3`) while also specifying `header_banner` as a separate, sitewide slot used by the header partial on every page — the only way to reconcile "4 homepage cards" with "6 total slots, one of which is sitewide" is for the homepage to reuse the header's slot as one of its own cards, matching what the pre-existing homepage template already did before this refactor (its "hero" ad card was always the same ad as the header banner).
+  - Consequence handled explicitly: since `headerBanner` renders twice in a single homepage request (header partial + homepage card), only one of those two call sites increments the impression counter (see the double-counting fix below) — otherwise every homepage visit would silently double-count that one slot's views relative to the other five.
+
+**Decision:** Impression counting (`views++`) happens in `AppServiceProvider`'s view composers, not inside `AdvertisementManager::slot()` itself.
+**Reason:**
+  - `AdvertisementManager::slot()`'s result is cached for 5 minutes per slot. If the increment lived inside that cached closure, only the first request in each 5-minute window would ever count — every subsequent (cached) request would silently undercount real page views. Keeping the increment in the composer (which runs on every request, cache hit or not) means every real render is counted, while the slot *lookup* itself stays cheap.
+
+**Decision:** Ad links point at `route('ads.click', $advertisement)` (`GET /ad/{advertisement}`) instead of the ad's `link` field directly, with `AdClickController` incrementing `clicks` before redirecting.
+**Reason:**
+  - Click tracking has to happen server-side on a real request — there was no other reliable place to count a click without adding frontend JS/beacon tracking, which the brief didn't ask for and would have added complexity disproportionate to the goal.
+  - Falls back to `route('home')` if an ad's `link` is empty, so a misconfigured ad never produces a broken/blank redirect for a visitor who clicked a real banner image.
+
+**Decision:** `AdvertisementSlotResource` hardcodes `canDelete()`/`canDeleteAny()` to `false` — slots can be renamed/edited/deactivated but never deleted from the admin panel.
+**Reason:**
+  - Every slot's `key` (e.g. `header_banner`) is referenced by exact string throughout the codebase — `AdvertisementManager::knownSlotKeys()`, the view composers in `AppServiceProvider`, and the dashboard widget. Deleting a slot record through the UI would silently break a specific frontend ad placement (and orphan any `Advertisement` rows still pointing at it via `nullOnDelete()`) with no warning at the point of deletion. Making the slot list fixed-but-editable avoids that failure mode entirely; if a 7th slot is ever genuinely needed, it should be added as a migration (like the original 6), not through ad-hoc admin deletion/recreation.
+
+**Decision:** `Advertisement::scopeForSlot()` checks the slot's own `is_active` flag, not just the ad's.
+**Reason:**
+  - `AdvertisementSlotResource`'s form explicitly tells admins that deactivating a slot hides any ad in it ("عند التعطيل لن يظهر أي إعلان في هذه المساحة"). Without this check, `AdvertisementManager::slot()` would keep serving an active ad from a slot the admin just marked inactive, contradicting that helper text — fixed by adding `->where('is_active', true)` to the slot join inside `scopeForSlot()`.
+
+**Decision:** Did not implement ad rotation, a payment/billing system, or advertiser self-serve accounts in this refactor.
+**Reason:**
+  - Explicitly out of scope per the brief ("Do NOT: ... Build ad rotation. Build payment system. Build advertiser accounts."). The `priority` column exists specifically so a future rotation feature has something to sort/weight by without another migration, but no rotation logic itself was built — `AdvertisementManager::slot()` currently just picks the single highest-priority (then newest) eligible ad per slot, deterministically, on every call.
+
+**Decision:** Ship the Companies Directory (`/companies`) as a simple MVP now, while keeping Company Profile (`/companies/{slug}`) deferred to Phase 2.
+**Reason:**
+  - This was an explicit, scoped brief: build `/companies` only, using the existing `Company`/`City`/`Category` models, without building profile pages, owner accounts, or payments. The directory's cards were designed from the start to show contact info (phone/email/website) directly rather than linking anywhere, so it doesn't actually depend on Company Profile existing — the original 2026-07-03 decision to bundle both together into one deferred Phase 2 item wasn't a technical dependency, just a product-scope grouping that a later, more specific brief was free to split.
+  - Splitting them lets the two most visible "broken-looking" homepage entry points (hero CTA, hero search) start working immediately, without pulling in the larger, still-undecided scope of what a company profile page should even contain.
+
+**Decision:** City and category filters on `/companies` use the model's `slug` column, not its numeric id or raw name.
+**Reason:**
+  - Explicit in the brief (`?city=الرياض`, `?category=مواد-البناء`). Slugs are also already the stable, human-readable identifier this codebase uses everywhere else for filtering (see `NewsController`'s `category` param against `NewsCategory.slug`), so this keeps the convention consistent rather than introducing a second filtering scheme (by id) for one resource.
+  - An unrecognized slug intentionally still applies the `whereHas` filter (rather than being silently ignored), so a stale/typo'd slug in a bookmarked or shared URL yields an honest empty result set instead of quietly showing the unfiltered directory — same reasoning already applied to `NewsController@index`'s category filter.
+
+**Decision:** `CompanyController@index`'s city/category sidebar lists are filtered to only those with at least one currently-active company, rather than showing every active `City`/`Category` row regardless of count.
+**Reason:**
+  - Matches the existing, established convention from `NewsController@index`'s category sidebar — a filter link that's guaranteed to produce zero results is worse UX than not showing it at all. Counts shown next to each filter option always reflect the full active-company set (not the currently-applied filters), so the sidebar reads as a stable taxonomy rather than a list that reshuffles as someone filters.
+
+**Decision:** The directory's single contact CTA ("تواصل مع الشركة") prefers `tel:` over `mailto:`, and renders nothing if neither exists — it never falls back to a disabled/greyed-out button.
+**Reason:**
+  - Explicit in the brief's exact fallback order. A phone call is the faster, lower-friction contact method for this audience (construction-sector B2B), so it's preferred when both exist.
+  - A disabled button that goes nowhere is worse than no button — matches the same philosophy already applied elsewhere in this codebase (e.g. `QuickActionsWidget` hiding itself entirely rather than showing dead buttons; see the 2026-07-03 dashboard-widget entry above).
+
+**Decision:** Removed the homepage's `openCompany()` Alpine method instead of updating it to point somewhere else.
+**Reason:**
+  - It built a URL against `route('companies.show')` (the still-placeholder `/companies/sample` route) with a `?company=` query string that route doesn't even accept a parameter for — it was already broken by construction, not just outdated.
+  - It was never actually wired to a `@click` handler on any company card (confirmed by searching the template for call sites) — genuinely dead code, not a regression to "fix." Since the brief is explicit that company cards must not link to a missing profile page, deleting this was the correct fix rather than repointing it at `/companies` (which would have implied every card behaves like a single link to the directory itself — a confusing affordance nobody asked for).
+
+**Decision:** Un-commented the homepage's existing "تصفح الشركات" hero button instead of building a new one.
+**Reason:**
+  - The button was already fully coded and styled (correct classes, correct `@click="go('directory')"` wiring) but wrapped in an HTML comment — it simply never rendered. Since `go('directory')` already resolves to `route('companies.index')`, enabling it was a one-line change that satisfies "تصفح الشركات should link to route('companies.index')" without touching the homepage's visual design, copy, or layout in any other way.
+  - Left the second, similarly-commented "عرض جميع الشركات" button (in the companies section header) untouched — enabling it wasn't asked for and risked reading as an unrequested design change; the hero CTA alone was sufficient to satisfy the brief.

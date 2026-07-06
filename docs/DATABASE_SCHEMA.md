@@ -131,6 +131,38 @@ Only `status = 'active'` companies are shown on the public homepage.
 
 ---
 
+## AdvertisementSlot
+
+*(Added 2026-07-06 as part of the slot-based advertising refactor — see `docs/DECISIONS.md`.)*
+
+**Table:** `advertisement_slots`
+
+| Field | Type | Notes |
+|---|---|---|
+| `id` | id | |
+| `key` | string, unique | Stable machine key, e.g. `header_banner`. Never shown to admins — used in code (`AdvertisementManager::slot('header_banner')`) and by `Advertisement.advertisement_slot_id`. |
+| `name` | string | Arabic display name shown in the admin panel |
+| `description` | text, nullable | |
+| `width` | integer, nullable | Recommended banner width in px, for admin guidance only — not enforced |
+| `height` | integer, nullable | Recommended banner height in px, for admin guidance only — not enforced |
+| `is_active` | boolean | default `true`. Deactivating a slot does **not** hide ads already assigned to it — it only signals in the admin panel that the slot itself is retired. |
+| timestamps | | |
+
+**Seeded slots** (`AdvertisementSlotSeeder`, also inlined in the creating migration so it's seeded even without running seeders):
+
+| `key` | Arabic `name` | Used by |
+|---|---|---|
+| `header_banner` | بانر أعلى الموقع | Site-wide header (all pages) **and** reused as the homepage's main banner |
+| `home_banner_1` | إعلان الصفحة الرئيسية (1) | Homepage |
+| `home_banner_2` | إعلان الصفحة الرئيسية (2) | Homepage |
+| `home_banner_3` | إعلان الصفحة الرئيسية (3) | Homepage |
+| `news_sidebar` | الشريط الجانبي للأخبار | News article page sidebar |
+| `news_footer` | أسفل الخبر | Bottom of news article page |
+
+**Relationships:** `hasMany(Advertisement::class)`, exposed as `advertisements()`.
+
+---
+
 ## Advertisement
 
 **Table:** `advertisements`
@@ -140,25 +172,37 @@ Only `status = 'active'` companies are shown on the public homepage.
 | `id` | id | |
 | `title` | string | |
 | `image` | string, nullable | Path on the `public` disk |
-| `link` | string, nullable | Validated as a URL in the admin form |
-| `position` | string, nullable | See enum below |
+| `link` | string, nullable | Validated as a URL in the admin form. Frontend never links to this directly — see `ads.click` route below. |
+| `position` | string, nullable | **Deprecated 2026-07-06**, kept only for backward compatibility — see `docs/DECISIONS.md`. No longer editable from the admin form; superseded by `advertisement_slot_id`. |
+| `advertisement_slot_id` | foreignId, nullable | → `advertisement_slots.id`, `nullOnDelete()`. Added 2026-07-06. The slot this ad is assigned to — this is what the admin form and frontend actually use now. |
+| `priority` | integer | default `0`. Added 2026-07-06. When a slot has more than one active ad, the highest-priority one wins (ties broken by newest). |
+| `views` | integer | default `0`. Added 2026-07-06. Incremented once per page render that shows this ad (see `AppServiceProvider`'s view composers). |
+| `clicks` | integer | default `0`. Added 2026-07-06. Incremented by `AdClickController` when a visitor follows the ad's link. |
 | `starts_at` | timestamp, nullable | |
 | `ends_at` | timestamp, nullable | |
 | `is_active` | boolean | default `true` |
 | timestamps | | |
 
-**Position enum (admin `Select`/filter options):**
+**Legacy position enum** (superseded by slots, column retained only so old data keeps its original value):
 
-| Value | Arabic label | Used by homepage? |
-|---|---|---|
-| `header` | أعلى الصفحة | Yes — first ad card |
-| `sidebar` | الشريط الجانبي | Yes — second ad card |
-| `footer` | أسفل الصفحة | Not currently consumed by any view |
-| `home` | الصفحة الرئيسية | Yes — main banner ad |
+| Value | Arabic label |
+|---|---|
+| `header` | أعلى الصفحة |
+| `sidebar` | الشريط الجانبي |
+| `footer` | أسفل الصفحة |
+| `home` | الصفحة الرئيسية |
 
-The homepage only shows an ad for a given position if it is `is_active = true` **and** the current time falls within `[starts_at, ends_at]` (both bounds optional/nullable — a null bound means unbounded on that side). If no active ad exists for a slot, the homepage falls back to static placeholder artwork and a `route('contact')` link.
+**One-time data migration** (`map_advertisement_positions_to_slots`) backfilled `advertisement_slot_id` from the old `position` value: `header → header_banner`, `home → home_banner_1`, `footer → home_banner_3`, `sidebar → news_sidebar`. It only touched rows where `advertisement_slot_id` was still null, so it's safe to re-run and never clobbers a manually-assigned slot. The `position` column itself was **not** dropped and is not currently scheduled for removal.
 
-**Relationships:** none
+An ad is eligible to render in its slot only if `is_active = true` **and** the current time falls within `[starts_at, ends_at]` (both bounds optional/nullable — a null bound means unbounded on that side). Among eligible ads in the same slot, `AdvertisementManager::slot()` picks the highest `priority`, then the newest. If no active ad exists for a slot, the relevant view falls back to static placeholder artwork and a `route('contact')` link (homepage) or hides the block entirely (news sidebar/footer).
+
+**Click tracking:** every ad link on the frontend points at `route('ads.click', $advertisement)` (`GET /ad/{advertisement}`) instead of the ad's `link` directly. `AdClickController` increments `clicks` then redirects to `link` (or `route('home')` if `link` is empty).
+
+**Impression tracking:** handled in `AppServiceProvider`'s view composers, not inside `AdvertisementManager::slot()` — the manager's result is cached for 5 minutes, so incrementing there would undercount real page views. `headerBanner` is intentionally resolved twice (site-wide header partial + homepage banner) but only incremented once per request to avoid double-counting.
+
+**CTR:** `Advertisement::getCtrAttribute()` returns `round(clicks / views * 100, 2)`, or `null` (not `0`) when `views` is `0`, so the UI can show "—" instead of a misleading 0%.
+
+**Relationships:** `belongsTo(AdvertisementSlot::class)`, exposed as `slot()`.
 
 ---
 
@@ -244,7 +288,7 @@ City       1 ──< CompanyRegistrationRequest >── 1  Category
 Company    1 ──< CompanyRegistrationRequest  (company_id, nullable, nullOnDelete)
 User       1 ──< CompanyRegistrationRequest  (reviewed_by, nullable, nullOnDelete)
 NewsCategory 1 ──< News   (news_category_id, nullable, nullOnDelete)
-Advertisement        (no FKs)
+AdvertisementSlot 1 ──< Advertisement  (advertisement_slot_id, nullable, nullOnDelete)
 ContactRequest        (no FKs)
 Page                  (no FKs)
 ```

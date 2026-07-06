@@ -81,15 +81,21 @@ class AdvertisementResource extends Resource
                         TextInput::make('link')
                             ->label('الرابط')
                             ->url()
-                            ->maxLength(255),
-                        Select::make('position')
-                            ->label('الموضع')
-                            ->options([
-                                'header' => 'أعلى الصفحة',
-                                'sidebar' => 'الشريط الجانبي',
-                                'footer' => 'أسفل الصفحة',
-                                'home' => 'الصفحة الرئيسية',
-                            ]),
+                            ->maxLength(255)
+                            ->helperText('روابط الموقع تستخدم هذا الرابط عبر إعادة توجيه تُحصي النقرات تلقائياً.'),
+                        Select::make('advertisement_slot_id')
+                            ->label('المساحة الإعلانية')
+                            ->relationship('slot', 'name')
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->helperText('المكان الذي سيظهر فيه هذا الإعلان على الموقع.'),
+                        TextInput::make('priority')
+                            ->label('الأولوية')
+                            ->numeric()
+                            ->default(0)
+                            ->minValue(0)
+                            ->helperText('عند وجود أكثر من إعلان نشط لنفس المساحة، يُعرض الأعلى أولوية.'),
                         DateTimePicker::make('starts_at')
                             ->label('تاريخ البدء'),
                         DateTimePicker::make('ends_at')
@@ -119,10 +125,14 @@ class AdvertisementResource extends Resource
                     ->label('العنوان')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('position')
-                    ->label('الموضع')
+                TextColumn::make('slot.name')
+                    ->label('المساحة')
+                    ->badge()
                     ->searchable()
                     ->sortable(),
+                IconColumn::make('is_active')
+                    ->label('نشط')
+                    ->boolean(),
                 TextColumn::make('starts_at')
                     ->label('تاريخ البدء')
                     ->dateTime('Y-m-d')
@@ -131,21 +141,30 @@ class AdvertisementResource extends Resource
                     ->label('تاريخ الانتهاء')
                     ->dateTime('Y-m-d')
                     ->sortable(),
-                IconColumn::make('is_active')
-                    ->label('نشط')
-                    ->boolean(),
+                TextColumn::make('priority')
+                    ->label('الأولوية')
+                    ->sortable(),
+                TextColumn::make('views')
+                    ->label('المشاهدات')
+                    ->numeric()
+                    ->sortable()
+                    ->toggleable(),
+                TextColumn::make('clicks')
+                    ->label('النقرات')
+                    ->numeric()
+                    ->sortable()
+                    ->toggleable(),
+                TextColumn::make('ctr')
+                    ->label('CTR')
+                    ->state(fn (Advertisement $record): string => $record->ctr === null ? '—' : "{$record->ctr}%")
+                    ->toggleable(),
             ])
             ->filters([
                 TernaryFilter::make('is_active')
                     ->label('نشط'),
-                SelectFilter::make('position')
-                    ->label('الموضع')
-                    ->options([
-                        'header' => 'أعلى الصفحة',
-                        'sidebar' => 'الشريط الجانبي',
-                        'footer' => 'أسفل الصفحة',
-                        'home' => 'الصفحة الرئيسية',
-                    ]),
+                SelectFilter::make('advertisement_slot_id')
+                    ->label('المساحة')
+                    ->relationship('slot', 'name'),
             ])
             ->recordActions([
                 EditAction::make(),

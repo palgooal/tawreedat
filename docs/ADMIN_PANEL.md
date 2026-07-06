@@ -1,6 +1,6 @@
 # Admin Panel — Tawreedat
 
-Last updated: 2026-07-04
+Last updated: 2026-07-06
 
 ## Overview
 
@@ -15,7 +15,7 @@ Last updated: 2026-07-04
 
 ## Dashboard
 
-The default Filament dashboard was replaced with an executive control center (`App\Filament\Pages\Dashboard`, `app/Filament/Pages/Dashboard.php`) built from 7 purpose-built widgets in `app/Filament/Widgets/`. Registered explicitly, in display order, in `AdminPanelProvider::panel()->widgets()`:
+The default Filament dashboard was replaced with an executive control center (`App\Filament\Pages\Dashboard`, `app/Filament/Pages/Dashboard.php`) built from 8 purpose-built widgets in `app/Filament/Widgets/`. Registered explicitly, in display order, in `AdminPanelProvider::panel()->widgets()`:
 
 | Order | Widget | Type | Purpose |
 |---|---|---|---|
@@ -25,7 +25,8 @@ The default Filament dashboard was replaced with an executive control center (`A
 | 4 | `LatestContactRequestsWidget` | Table | 5 most recent contact requests |
 | 5 | `LatestCompanyRegistrationRequestsWidget` | Table | 5 most recent "سجّل شركتك" requests (added 2026-07-04) |
 | 6 | `AnalyticsWidget` | Stats overview | Simple period-based activity counts |
-| 7 | `SystemStatusWidget` | Custom | SEO/contact/security/environment health |
+| 7 | `AdvertisingStatusWidget` | Custom | Per-slot ad coverage + click/impression totals (added 2026-07-06) |
+| 8 | `SystemStatusWidget` | Custom | SEO/contact/security/environment health |
 
 The old ad-hoc widgets (`WelcomeWidget`, `TawreedatStatsWidget`, `RecentCompaniesWidget`) were removed rather than kept alongside the new set — running both would have duplicated several of the same numbers and worked against the "information density over decoration" goal for this dashboard. `Dashboard::getColumns()` is overridden to `['default' => 1, 'lg' => 2]` so the grid is a single column on small/medium screens and two columns on large screens, rather than the framework default of a flat 2 (which squeezed cards on mobile).
 
@@ -54,6 +55,15 @@ Simple stat cards, deliberately without charts: أخبار هذا الشهر (ne
 
 Shortcut buttons, each independently gated by the same permission its target action requires (so a visible button is never a dead end): إضافة خبر (`manage news`), إضافة صفحة (`manage pages`), إضافة تصنيف خبري (`manage news categories`), عرض طلبات التواصل (`view`/`manage contact requests`), طلبات تسجيل الشركات (`view`/`manage registration requests`, added 2026-07-04), إعدادات الموقع (`manage settings`), إدارة المستخدمين (Super Admin role only, mirroring `UserResource::canViewAny()`). The whole widget hides itself if a user has zero visible actions.
 
+### Advertising Status (`AdvertisingStatusWidget`, added 2026-07-06)
+
+Visible to **Super Admin and Admin only** (gated on `manage settings`, same as System Status). Queries `AdvertisementSlot`/`Advertisement` directly — nothing hardcoded:
+
+- Lists all 6 slots (بانر أعلى الموقع، إعلان الصفحة الرئيسية (1/2/3)، الشريط الجانبي للأخبار، أسفل الخبر) with a ✓ if at least one currently-active ad is assigned to it, or a warning badge ("لا يوجد إعلان نشط") if not.
+- **إعلانات نشطة** — count of ads currently passing `Advertisement::active()`.
+- **إجمالي المشاهدات** — `sum(views)` across all ads.
+- **إجمالي النقرات** — `sum(clicks)` across all ads.
+
 ### System Status (`SystemStatusWidget`)
 
 Visible to **Super Admin and Admin only** (gated on the `manage settings` permission — the same permission that governs Site Settings, since this widget surfaces comparable operational information). Every value is a genuine runtime check, not a hardcoded "green light":
@@ -67,12 +77,12 @@ Visible to **Super Admin and Admin only** (gated on the `manage settings` permis
 
 Every widget/card's visibility is **permission-driven**, not role-hardcoded — each one checks the same `Permissions` constants (`app/Support/Permissions.php`) that already gate the corresponding Resource, so it naturally tracks whatever `RolesAndPermissionsSeeder` currently grants each role without needing a second, separately-maintained role list on the dashboard. In practice, given the seeded roles, this produces exactly the intended matrix:
 
-| Role | KPI cards | Quick Actions | Latest News | Latest Contact Requests | Latest Registration Requests | Analytics | System Status |
-|---|---|---|---|---|---|---|---|
-| Super Admin | all 6 | all 7 buttons | ✓ | ✓ | ✓ | all 4 | ✓ |
-| Admin | all except "عدد المستخدمين الإداريين" | all except "إدارة المستخدمين" | ✓ | ✓ | ✓ | all except "المستخدمون الإداريون" | ✓ |
-| Editor | content cards only (news/categories/pages) | content buttons only | ✓ | hidden | hidden | content cards only | hidden |
-| Support | contact + registration-request cards | contact + registration-request buttons | hidden | ✓ | ✓ | contact card only | hidden |
+| Role | KPI cards | Quick Actions | Latest News | Latest Contact Requests | Latest Registration Requests | Analytics | Advertising Status | System Status |
+|---|---|---|---|---|---|---|---|---|
+| Super Admin | all 6 | all 7 buttons | ✓ | ✓ | ✓ | all 4 | ✓ | ✓ |
+| Admin | all except "عدد المستخدمين الإداريين" | all except "إدارة المستخدمين" | ✓ | ✓ | ✓ | all except "المستخدمون الإداريون" | ✓ | ✓ |
+| Editor | content cards only (news/categories/pages) | content buttons only | ✓ | hidden | hidden | content cards only | hidden | hidden |
+| Support | contact + registration-request cards | contact + registration-request buttons | hidden | ✓ | ✓ | contact card only | hidden | hidden |
 
 ## Topbar / shell customizations
 
@@ -99,6 +109,7 @@ Implemented entirely through supported Panel APIs — no vendor files edited.
 | المحتوى | `NewsResource` | خبر | الأخبار | الأخبار |
 | المحتوى | `NewsCategoryResource` | تصنيف خبري | التصنيفات الإخبارية | التصنيفات الإخبارية |
 | المحتوى | `PageResource` | صفحة | الصفحات | الصفحات |
+| الإعلانات | `AdvertisementSlotResource` (added 2026-07-06) | مساحة إعلانية | المساحات الإعلانية | المساحات الإعلانية |
 | الإعلانات | `AdvertisementResource` | إعلان | الإعلانات | الإعلانات |
 | الطلبات | `ContactRequestResource` | طلب تواصل | طلبات التواصل | طلبات التواصل |
 | الطلبات | `CompanyRegistrationRequestResource` (added 2026-07-04) | طلب تسجيل شركة | طلبات تسجيل الشركات | طلبات تسجيل الشركات |
@@ -203,6 +214,12 @@ Clicking "قبول" (`CompanyRegistrationRequestResource::approve()`) does the f
 4. Saves the `Company`, then updates the request: `company_id`, `status = 'approved'`, `reviewed_at`, `reviewed_by`.
 
 Because the homepage already queries `Company::where('status', 'active')` (see `docs/DATABASE_SCHEMA.md`), a newly-approved company appears there automatically — no separate "publish" step, and still no dedicated public company-profile page (Companies Directory remains deferred to Phase 2).
+
+## Advertisement slots (added 2026-07-06)
+
+`AdvertisementSlotResource` manages the 6 fixed ad placements (see `docs/DATABASE_SCHEMA.md` for the full list of keys/names). Deliberately **not deletable** — `canDelete()`/`canDeleteAny()` are hardcoded `false`, because every slot key is referenced by name throughout the codebase (`AdvertisementManager::knownSlotKeys()`, view composers in `AppServiceProvider`); deleting one would silently break a specific frontend placement rather than fail loudly. Slots can be renamed, redescribed, given recommended dimensions, or toggled inactive, but not removed.
+
+`AdvertisementResource`'s form assigns each ad to a slot via `Select::make('advertisement_slot_id')->relationship('slot', 'name')->searchable()->preload()` instead of the old free-text `position` field. The table's columns are Slot (badge), Status, Start date, End date, Priority, plus toggleable Views/Clicks/CTR columns for at-a-glance performance without leaving the list page.
 
 ## Status/option fields exposed in the admin UI
 

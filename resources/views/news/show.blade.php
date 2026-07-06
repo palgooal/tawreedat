@@ -102,11 +102,31 @@
                                     استعرض الشركات
                                 </a>
                             </div>
+
+                            @if ($newsFooterBanner?->image)
+                                <a href="{{ route('ads.click', $newsFooterBanner) }}"
+                                    class="mt-6 block overflow-hidden rounded-2xl border border-slate-200 shadow-sm transition hover:border-gold-300 hover:shadow-md"
+                                    aria-label="{{ $newsFooterBanner->title ?: 'مساحة إعلانية' }}">
+                                    <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($newsFooterBanner->image) }}"
+                                        width="728" height="200" alt="{{ $newsFooterBanner->title ?: 'مساحة إعلانية' }}"
+                                        loading="lazy" decoding="async" class="h-auto w-full object-cover">
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>
 
                 <aside class="space-y-5 lg:sticky lg:top-24" aria-label="محتوى مرتبط">
+                    @if ($newsSidebarBanner?->image)
+                        <a href="{{ route('ads.click', $newsSidebarBanner) }}"
+                            class="block overflow-hidden rounded-2xl border border-slate-200 shadow-sm transition hover:border-gold-300 hover:shadow-md"
+                            aria-label="{{ $newsSidebarBanner->title ?: 'مساحة إعلانية' }}">
+                            <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($newsSidebarBanner->image) }}"
+                                width="320" height="480" alt="{{ $newsSidebarBanner->title ?: 'مساحة إعلانية' }}"
+                                loading="lazy" decoding="async" class="h-auto w-full object-cover">
+                        </a>
+                    @endif
+
                     <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                         <h2 class="text-base font-extrabold text-gov-950">أخبار ذات صلة</h2>
                         <div class="mt-5 space-y-4">

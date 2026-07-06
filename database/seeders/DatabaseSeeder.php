@@ -51,5 +51,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TawreedatDemoSeeder::class);
         $this->call(NewsCategorySeeder::class);
         $this->call(PageSeeder::class);
+        $this->call(AdvertisementSlotSeeder::class);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Advertisement;
 use App\Models\Category;
 use App\Models\City;
 use App\Models\Company;
@@ -83,16 +82,10 @@ class HomeController extends Controller
             ])
             ->all();
 
-        $now = now();
-
-        $activeAds = Advertisement::query()
-            ->where('is_active', true)
-            ->where(fn ($query) => $query->whereNull('starts_at')->orWhere('starts_at', '<=', $now))
-            ->where(fn ($query) => $query->whereNull('ends_at')->orWhere('ends_at', '>=', $now))
-            ->latest()
-            ->get()
-            ->keyBy('position');
-
+        // Advertisement data (headerBanner, homeBanner1/2/3) is injected by
+        // the 'pages.home' view composer in AppServiceProvider, via
+        // App\Support\AdvertisementManager — not queried here, so this
+        // controller doesn't need to know about slots at all.
         return view('pages.home', [
             'dbCategories' => $categories,
             'dbCompanies' => $companies,
@@ -102,9 +95,6 @@ class HomeController extends Controller
             'companiesCount' => $companiesCount,
             'citiesCount' => $cities->count(),
             'verifiedCompaniesCount' => $verifiedCompaniesCount,
-            'adHome' => $activeAds->get('home'),
-            'adHeader' => $activeAds->get('header'),
-            'adSidebar' => $activeAds->get('sidebar'),
         ]);
     }
 }
