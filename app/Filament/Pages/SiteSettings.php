@@ -17,6 +17,7 @@ use Filament\Schemas\Components\Form;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\Alignment;
+use Illuminate\Support\Facades\Artisan;
 use UnitEnum;
 
 /**
@@ -88,6 +89,39 @@ class SiteSettings extends Page
         }
 
         $this->form->fill($values);
+    }
+
+    /**
+     * A one-click "مسح الكاش" button so a non-technical admin never has to
+     * open a terminal. Runs the same `cache:clear` artisan command the
+     * developer would type by hand — useful when a change (e.g. a newly
+     * added advertisement) doesn't show up on the public site within the
+     * usual cache window. Gated by the same `manage settings` permission as
+     * the rest of this page, since it's an operational/system action, not a
+     * content-editing one.
+     *
+     * @return array<Action>
+     */
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('clearCache')
+                ->label('مسح الكاش')
+                ->icon('heroicon-o-arrow-path')
+                ->color('gray')
+                ->requiresConfirmation()
+                ->modalHeading('مسح الكاش')
+                ->modalDescription('يمسح هذا الإجراء ذاكرة التخزين المؤقت للموقع فوراً. استخدمه إذا لم يظهر تغيير حديث (مثل إعلان جديد) خلال الوقت المتوقع.')
+                ->modalSubmitActionLabel('مسح الكاش الآن')
+                ->action(function (): void {
+                    Artisan::call('cache:clear');
+
+                    Notification::make()
+                        ->title('تم مسح الكاش بنجاح')
+                        ->success()
+                        ->send();
+                }),
+        ];
     }
 
     public function form(Schema $schema): Schema
