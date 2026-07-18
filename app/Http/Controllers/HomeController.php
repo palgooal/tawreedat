@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\City;
 use App\Models\Company;
 use App\Models\News;
+use App\Models\PartnerLogo;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -82,6 +83,19 @@ class HomeController extends Controller
             ])
             ->all();
 
+        // Admin-managed via Filament (المحتوى → شعارات الشركاء), replacing
+        // what used to be a hardcoded array in this view's Alpine data.
+        $partnerLogos = PartnerLogo::query()
+            ->active()
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get()
+            ->map(fn (PartnerLogo $partnerLogo) => [
+                'name' => $partnerLogo->name,
+                'logo' => $partnerLogo->logo ? Storage::disk('public')->url($partnerLogo->logo) : null,
+            ])
+            ->all();
+
         // Advertisement data (headerBanner, homeBanner1/2/3) is injected by
         // the 'pages.home' view composer in AppServiceProvider, via
         // App\Support\AdvertisementManager — not queried here, so this
@@ -91,6 +105,7 @@ class HomeController extends Controller
             'dbCompanies' => $companies,
             'dbCities' => $citiesNames,
             'dbNews' => $news,
+            'dbPartnerLogos' => $partnerLogos,
             'categoriesCount' => count($categories),
             'companiesCount' => $companiesCount,
             'citiesCount' => $cities->count(),

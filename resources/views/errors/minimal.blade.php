@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>{{ $title ?? 'حدث خطأ | توريدات' }}</title>
+    <title>{{ $title ?? 'حدث خطأ | توريد' }}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,7 +29,7 @@
                     </svg>
                 </span>
                 <span>
-                    <strong class="block text-lg font-extrabold leading-5 text-gov-950">توريدات</strong>
+                    <strong class="block text-lg font-extrabold leading-5 text-gov-950">توريد</strong>
                     <small class="block text-[10px] font-medium text-slate-500">دليل مصانع مواد البناء</small>
                 </span>
             </a>
@@ -49,7 +49,7 @@
     <footer class="border-t border-slate-200 bg-white py-6">
         <div
             class="mx-auto flex max-w-[1500px] flex-col items-center justify-between gap-3 px-4 text-center text-xs text-slate-500 sm:flex-row sm:px-6 sm:text-right lg:px-8">
-            <p>© {{ date('Y') }} توريدات. جميع الحقوق محفوظة.</p>
+            <p>© {{ date('Y') }} توريد. جميع الحقوق محفوظة.</p>
             <div class="flex gap-5">
                 <a href="{{ route('home') }}" class="transition hover:text-gov-800">الرئيسية</a>
                 <a href="{{ route('news.index') }}" class="transition hover:text-gov-800">الأخبار</a>

@@ -6,6 +6,205 @@
 
 @push('styles')
     <link rel="preload" as="image" href="{{ asset('assets/images/hero-background.webp') }}" type="image/webp" fetchpriority="high">
+    <style>
+        .entities-slider__viewport {
+            overflow: hidden;
+            /* Headroom for the hover tooltip below — padding is never clipped by
+               this element's own overflow, only content extending past the box
+               is, so the tooltip has room to render without needing to escape
+               the box (escaping it, via overflow-x-hidden, reliably froze the
+               page's renderer here during an earlier version of this section). */
+            padding-top: 48px;
+        }
+
+        .entities-slider__track {
+            display: flex;
+            transition: transform 500ms ease;
+        }
+
+        .entities-slider__page {
+            flex: 0 0 100%;
+            display: grid;
+            gap: 1.25rem;
+        }
+
+        .entities-slider__dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            padding: 0;
+            border: 0;
+            border-radius: 9999px;
+            background-color: #cbd5e1;
+            cursor: pointer;
+            transition: width 300ms ease, background-color 300ms ease;
+        }
+
+        .entities-slider__dot.is-active {
+            width: 1.5rem;
+            background-color: var(--color-gov-800, #144f34);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .entities-slider__track {
+                transition: none;
+            }
+        }
+
+        /* Card hover tooltip — plain CSS (not Tailwind utility classes). The
+           compiled app.css on this box has lagged behind template edits before
+           (new arbitrary-value utilities silently had no rule yet), so this is
+           guaranteed to render without depending on a fresh `npm run build`. */
+        .entities-slider__tooltip,
+        .entities-slider__tooltip-arrow {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            right: 0;
+            margin-inline: auto;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 200ms ease;
+        }
+
+        .entities-slider__tooltip {
+            margin-bottom: 0.5rem;
+            width: max-content;
+            /* Fixed cap, not a % of the card: at 2-per-page on mobile a card is
+               only ~150px wide, and a long entity name ("هيئة المحتوى المحلي
+               والمشتريات الحكومية") is ~300px+ at this font size — with
+               white-space:nowrap and a %-based cap that text overflowed the
+               tooltip's background visibly. Overflow+ellipsis is a safety net
+               for names longer than even this fixed cap. */
+            max-width: 220px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            border-radius: 0.375rem;
+            background-color: var(--color-gov-950, #012c26);
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #fff;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, .3);
+        }
+
+        .entities-slider__tooltip-arrow {
+            margin-bottom: 2px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid var(--color-gov-950, #012c26);
+        }
+
+        .entities-slider__card:hover .entities-slider__tooltip,
+        .entities-slider__card:hover .entities-slider__tooltip-arrow {
+            opacity: 1;
+        }
+
+        /* Partner Logos carousel — modeled on logocarousel.com/carousel's
+           "Custom Margin & GrayScale on hover Normal" demo (measured via
+           DevTools: 0.8px #d8d8d8 card border, 5px radius, 25px inner padding,
+           20px gap, 600ms slide transition). Two intentional differences from
+           that reference, per explicit product spec: (1) logos are grayscale
+           by default and return to color on hover — the reference demo is the
+           opposite (color by default, grayscale on hover); (2) images use
+           object-fit: contain, not the reference's fill, to avoid distortion. */
+        .logos-carousel__viewport {
+            overflow: hidden;
+            touch-action: pan-y;
+            cursor: grab;
+            /* Forced LTR here only: keeps the slide direction identical to the
+               reference (new logos enter from the right, exit left) without
+               touching the page's own RTL layout — flex order and transform
+               math both stay simple and match the reference 1:1. */
+            direction: ltr;
+        }
+
+        .logos-carousel__viewport.is-dragging {
+            cursor: grabbing;
+        }
+
+        .logos-carousel__track {
+            display: flex;
+            transition: transform 600ms ease;
+            will-change: transform;
+        }
+
+        .logos-carousel__track.is-instant {
+            transition: none;
+        }
+
+        .logos-carousel__card {
+            /* Width is set inline per-card from JS (measureLogosStep), not a
+               CSS percentage: the track (this card's flex container) has no
+               definite width of its own — it's exactly as wide as its cards
+               sum to, since it must overflow the viewport to hold the loop's
+               clones — so a percentage flex-basis here would resolve against
+               an indefinite size. The viewport's own (definite) width divided
+               by logosPerView is the only reliable source for this number. */
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            height: 107px;
+            margin-right: 20px;
+            padding: 25px;
+            border: 1px solid #d8d8d8;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        .logos-carousel__card img {
+            /* width/height:100% (not max-*) so the logo actually grows to
+               fill the padded box up to its edges — the img tag still
+               carries width/height attributes for CLS/aspect-ratio
+               purposes, but those are just an initial-load hint here, not
+               the rendered size; object-fit:contain does the real scaling
+               without distortion regardless of the source file's aspect
+               ratio. Previously this was max-width/max-height:100%, which
+               only caps an oversized image — it does nothing for a source
+               image smaller than the box, so real uploads (and the seeded
+               placeholder logos) rendered at a fixed 140x57px no matter how
+               much larger the card actually was. */
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: grayscale(100%);
+            transition: filter 300ms ease;
+            -webkit-user-drag: none;
+            user-select: none;
+        }
+
+        .logos-carousel__card:hover img,
+        .logos-carousel__card:focus-visible img {
+            filter: grayscale(0%);
+        }
+
+        .logos-carousel__dot {
+            width: 20px;
+            height: 5px;
+            padding: 0;
+            border: 0;
+            border-radius: 2px;
+            background-color: #b5b5b5;
+            opacity: .35;
+            cursor: pointer;
+            transition: opacity 300ms ease, background-color 300ms ease;
+        }
+
+        .logos-carousel__dot.is-active {
+            background-color: #16a08b;
+            opacity: 1;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .logos-carousel__track {
+                transition: none;
+            }
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -36,13 +235,13 @@
                         <div class="w-full max-w-5xl">
                             <div
                                 class="inline-flex items-center gap-3 rounded-full border border-gold-300/30 bg-white/10 px-4 py-2 text-xs font-bold text-gold-200 backdrop-blur-sm">
-                                <span>توريدات</span>
+                                <span>توريد</span>
                                 <span class="h-1 w-1 rounded-full bg-gold-300"></span>
                                 <span>دليل مصانع مواد البناء</span>
                             </div>
 
                             <h1 class="mt-7">
-                                <span class="block text-5xl font-extrabold leading-tight sm:text-6xl lg:text-7xl">توريدات</span>
+                                <span class="block text-5xl font-extrabold leading-tight sm:text-6xl lg:text-7xl">توريد</span>
                                 <span class="mt-4 block text-3xl font-bold leading-[1.35] sm:text-4xl lg:text-[44px]">
                                     <span class="text-gold-300">دليل مصانع مواد البناء</span><br>
                                     بالمملكة العربية السعودية
@@ -404,7 +603,7 @@
                                 مساحة إعلانية رئيسية
                             </span>
                             <h3 class="mt-5 text-3xl font-extrabold leading-[1.35] text-white sm:text-4xl lg:text-[42px]">
-                                اعرض شركتك في المكان الأبرز على منصة توريدات
+                                اعرض شركتك في المكان الأبرز على منصة توريد
                             </h3>
                             <p class="mx-auto mt-4 max-w-2xl text-sm leading-8 text-slate-100 sm:text-base lg:mx-0">
                                 ظهور مباشر أمام الباحثين عن شركات البناء والموردين داخل المملكة.
@@ -525,35 +724,178 @@
         </div>
     </section>
 
-    <!-- Government & Sector Entities -->
-    <!--<section class="bg-[#fbfcfb] py-12 sm:py-16">
+    <!-- Partner Logos -->
+    @if (count($dbPartnerLogos) > 0)
+    <section class="bg-[#fbfcfb] py-6 sm:py-16">
         <div class="mx-auto max-w-[1500px] px-4 sm:px-6 lg:px-8">
 
             <div class="mx-auto max-w-3xl text-center">
                 <span class="inline-flex rounded-full bg-gov-50 px-3 py-1 text-[11px] font-bold text-gov-800">
-                    جهات ذات صلة
+                    شركاؤنا
                 </span>
 
                 <h2 class="mt-4 text-3xl font-extrabold leading-10 text-gov-950">
-                    جهات وهيئات مرتبطة بقطاع البناء
+                    يثقون بنا
                 </h2>
 
                 <p class="mt-3 text-sm leading-7 text-slate-500">
-                    جهات حكومية وهيئات ومؤسسات مرجعية ذات علاقة بقطاع البناء والتوريد داخل المملكة.
+                    نخبة من الشركات والموردين المتعاملين ضمن منصة توريد.
                 </p>
             </div>
 
-            <div class="mt-10 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
-                <template x-for="(entity, index) in officialEntities" :key="`${entity.name}-${index}`">
-                    <div
-                        class="group flex h-[118px] items-center justify-center rounded-[28px] border border-slate-200 bg-white px-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-gov-200 hover:shadow-xl hover:shadow-gov-900/5">
-                        <img :src="entity.logo" :alt="entity.name" width="160" height="64" loading="lazy" decoding="async"
-                            class="max-h-[64px] max-w-[160px] object-contain transition duration-300 group-hover:scale-105">
+            {{-- Skin + motion reference: logocarousel.com/carousel "Custom
+                 Margin & GrayScale on hover Normal" (measured via DevTools —
+                 see the CSS comment above): thin #d8d8d8 1px border, 5px
+                 radius, 25px inner padding, 20px gap, 600ms transform
+                 transition, single-item auto-advance every 6s, dot pagination,
+                 drag/swipe. Logos are grayscale by default and reveal color on
+                 hover/focus — the opposite of the reference default, per an
+                 explicit product decision (see CSS comment for the other
+                 intentional difference, object-fit: contain). --}}
+            <div class="logos-carousel relative mt-8" role="region" aria-roledescription="carousel"
+                aria-label="شعارات الشركاء" x-data="{
+                    logosPerView: 5,
+                    logosClones: 5,
+                    logosIndex: 0,
+                    logosCardWidth: 200,
+                    logosStep: 220,
+                    logosInstant: false,
+                    logosTimer: null,
+                    logosBoundaryTimer: null,
+                    logosDragging: false,
+                    logosDragStartX: 0,
+                    logosDragBaseIndex: 0,
+                    logosDragOffsetPx: 0,
+                    get logosExtended() {
+                        const n = this.logosClones;
+                        return [
+                            ...partnerLogos.slice(-n).map((l, i) => ({ ...l, key: `pre-${i}` })),
+                            ...partnerLogos.map((l, i) => ({ ...l, key: `real-${i}` })),
+                            ...partnerLogos.slice(0, n).map((l, i) => ({ ...l, key: `post-${i}` })),
+                        ];
+                    },
+                    get logosActiveDot() {
+                        const len = partnerLogos.length;
+                        return ((this.logosIndex % len) + len) % len;
+                    },
+                    get logosTrackStyle() {
+                        const offset = -(this.logosClones + this.logosIndex) * this.logosStep + this.logosDragOffsetPx;
+                        return `transform: translateX(${offset}px)`;
+                    },
+                    setLogosPerView() {
+                        const w = window.innerWidth;
+                        this.logosPerView = w < 736 ? 2 : w < 980 ? 3 : w < 1200 ? 4 : 5;
+                        this.$nextTick(() => this.measureLogosStep());
+                    },
+                    measureLogosStep() {
+                        const vp = this.$refs.logosViewport;
+                        if (!vp) return;
+                        const gap = 20;
+                        const width = vp.getBoundingClientRect().width;
+                        this.logosCardWidth = (width - gap * (this.logosPerView - 1)) / this.logosPerView;
+                        this.logosStep = this.logosCardWidth + gap;
+                    },
+                    goToLogo(i) {
+                        this.logosIndex = i;
+                        this.restartLogosAutoplay();
+                    },
+                    restartLogosAutoplay() {
+                        clearInterval(this.logosTimer);
+                        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+                        if (partnerLogos.length <= 1) return;
+                        this.logosTimer = setInterval(() => {
+                            this.logosIndex++;
+                            this.scheduleLogosBoundaryCheck();
+                        }, 6000);
+                    },
+                    // A setTimeout matched to the track's 600ms CSS transition,
+                    // not a `transitionend` listener: in testing, transitionend
+                    // on this transform-only, will-change:transform track did
+                    // not reliably fire (the transform still visibly animated —
+                    // just no completion event), which left logosIndex counting
+                    // up forever past the real item range instead of wrapping.
+                    // A timer keyed to the known transition duration sidesteps
+                    // that unreliability entirely.
+                    scheduleLogosBoundaryCheck() {
+                        clearTimeout(this.logosBoundaryTimer);
+                        this.logosBoundaryTimer = setTimeout(() => {
+                            const len = partnerLogos.length;
+                            if (this.logosIndex >= len || this.logosIndex < 0) {
+                                const normalized = ((this.logosIndex % len) + len) % len;
+                                this.logosInstant = true;
+                                this.logosIndex = normalized;
+                                requestAnimationFrame(() => requestAnimationFrame(() => { this.logosInstant = false; }));
+                            }
+                        }, 650);
+                    },
+                    logosDragStart(e) {
+                        clearInterval(this.logosTimer);
+                        clearTimeout(this.logosBoundaryTimer);
+                        this.logosDragging = true;
+                        this.logosDragStartX = e.clientX;
+                        this.logosDragBaseIndex = this.logosIndex;
+                        this.measureLogosStep();
+                        // Pointer capture keeps the drag tracking even if the
+                        // pointer leaves the element mid-gesture; wrapped
+                        // defensively since some browsers/input types can
+                        // reject it for a pointerId that's already gone.
+                        try { e.currentTarget.setPointerCapture(e.pointerId); } catch (err) {}
+                    },
+                    logosDragMove(clientX) {
+                        if (!this.logosDragging) return;
+                        this.logosDragOffsetPx = clientX - this.logosDragStartX;
+                    },
+                    logosDragEnd() {
+                        if (!this.logosDragging) return;
+                        this.logosDragging = false;
+                        const deltaSteps = Math.round(this.logosDragOffsetPx / this.logosStep);
+                        this.logosIndex = this.logosDragBaseIndex - deltaSteps;
+                        this.logosDragOffsetPx = 0;
+                        this.scheduleLogosBoundaryCheck();
+                        this.restartLogosAutoplay();
+                    },
+                }" x-init="
+                    setLogosPerView();
+                    window.addEventListener('resize', () => setLogosPerView());
+                    restartLogosAutoplay();
+                " @focusin="clearInterval(logosTimer)" @focusout="restartLogosAutoplay()">
+
+                {{-- Screen-reader list: the visual track duplicates logos for the
+                     infinite-loop illusion and is hidden from assistive tech
+                     (aria-hidden below) — this is the one real, non-duplicated
+                     announcement of the partner list. --}}
+                <ul class="sr-only">
+                    <template x-for="logo in partnerLogos" :key="logo.name">
+                        <li x-text="logo.name"></li>
+                    </template>
+                </ul>
+
+                <div class="logos-carousel__viewport" x-ref="logosViewport" aria-hidden="true"
+                    :class="{ 'is-dragging': logosDragging }"
+                    @pointerdown="logosDragStart($event)"
+                    @pointermove="logosDragMove($event.clientX)" @pointerup="logosDragEnd()"
+                    @pointercancel="logosDragEnd()">
+                    <div class="logos-carousel__track" :class="{ 'is-instant': logosInstant }" :style="logosTrackStyle">
+                        <template x-for="item in logosExtended" :key="item.key">
+                            <div class="logos-carousel__card" :style="`width:${logosCardWidth}px`">
+                                <img :src="item.logo" :alt="item.name" width="140" height="57" loading="lazy"
+                                    decoding="async" draggable="false">
+                            </div>
+                        </template>
                     </div>
-                </template>
+                </div>
+
+                <div class="mt-6 flex items-center justify-center gap-2">
+                    <template x-for="(logo, i) in partnerLogos" :key="i">
+                        <button type="button" class="logos-carousel__dot" :class="{ 'is-active': logosActiveDot === i }"
+                            @click="goToLogo(i)" :aria-label="`الانتقال إلى ${logo.name}`"
+                            :aria-current="logosActiveDot === i ? 'true' : 'false'"></button>
+                    </template>
+                </div>
             </div>
         </div>
-    </section>-->
+    </section>
+    @endif
 
     <div x-show="toast" x-cloak x-transition role="status" aria-live="polite"
         class="fixed bottom-6 right-1/2 z-[70] w-[calc(100%-2rem)] max-w-md translate-x-1/2 rounded-2xl border border-gold-300 bg-gov-950 px-5 py-4 text-center text-xs font-semibold text-white shadow-2xl"
@@ -603,6 +945,10 @@
                     logo: '{{ asset('assets/entities/6.png') }}'
                 }
             ],
+            // Single source of truth for the "Partner Logos" carousel below —
+            // admin-managed via Filament (المحتوى → شعارات الشركاء) and
+            // queried in HomeController, not hardcoded here anymore.
+            partnerLogos: @json($dbPartnerLogos),
             nav: [
                 { id: 'home', label: 'الرئيسية' },
                 { id: 'directory', label: 'الشركات' },

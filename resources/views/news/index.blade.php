@@ -1,7 +1,7 @@
-@php($seoTitle = 'أخبار توريدات')
+@php($seoTitle = 'أخبار توريد')
 @php($seoDescription = \App\Models\SiteSetting::get(
     'default_seo_description',
-    'أخبار قطاع البناء وشركات البناء والموردين في المملكة العربية السعودية عبر توريدات.'
+    'أخبار قطاع البناء وشركات البناء والموردين في المملكة العربية السعودية عبر توريد.'
 ))
 @php($alpineComponent = 'newsPage')
 @extends('layouts.app')
@@ -181,7 +181,7 @@
                 </div>
 
                 <div class="overflow-hidden rounded-3xl bg-gov-950 p-6 text-white">
-                    <p class="text-xs font-bold text-gold-300">أعلن في توريدات</p>
+                    <p class="text-xs font-bold text-gold-300">أعلن في توريد</p>
                     <h3 class="mt-3 text-2xl font-extrabold leading-9">اعرض شركتك أمام الباحثين عن شركات البناء</h3>
                     <a href="{{ route('contact') }}"
                         class="mt-6 inline-flex h-12 items-center justify-center rounded-2xl bg-gold-500 px-6 text-xs font-bold text-white transition hover:bg-gold-600">

@@ -13,7 +13,7 @@
                     </svg>
                 </span>
                 <span>
-                    <strong class="block text-2xl font-extrabold">توريدات</strong>
+                    <strong class="block text-2xl font-extrabold">توريد</strong>
                     <small class="mt-1 block text-[10px] text-slate-400">دليل مصانع مواد البناء</small>
                 </span>
             </a>
@@ -75,7 +75,7 @@
     <div class="border-t border-white/10">
         <div
             class="mx-auto flex max-w-[1500px] flex-col justify-between gap-3 px-4 py-6 text-xs text-slate-400 sm:flex-row sm:px-6 lg:px-8">
-            <p>© 2026 توريدات. جميع الحقوق محفوظة.</p>
+            <p>© 2026 توريد. جميع الحقوق محفوظة.</p>
             <div class="flex gap-5">
                 <span aria-disabled="true">سياسة الخصوصية</span>
                 <span aria-disabled="true">الشروط والأحكام</span>

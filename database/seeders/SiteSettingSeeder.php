@@ -24,14 +24,14 @@ class SiteSettingSeeder extends Seeder
     public function run(): void
     {
         $defaults = [
-            'site_name' => ['value' => 'توريدات', 'group' => 'site', 'type' => 'string'],
+            'site_name' => ['value' => 'توريد', 'group' => 'site', 'type' => 'string'],
             'site_description' => [
-                'value' => 'دليل توريدات لشركات ومصانع مواد البناء والمقاولات في المملكة العربية السعودية.',
+                'value' => 'دليل توريد لشركات ومصانع مواد البناء والمقاولات في المملكة العربية السعودية.',
                 'group' => 'site',
                 'type' => 'string',
             ],
             'site_keywords' => [
-                'value' => 'توريدات، مواد بناء، شركات مقاولات، موردين مواد بناء، السعودية',
+                'value' => 'توريد مواد بناء، شركات مقاولات، موردين مواد بناء، السعودية',
                 'group' => 'site',
                 'type' => 'string',
             ],
@@ -40,7 +40,7 @@ class SiteSettingSeeder extends Seeder
             'contact_address' => ['value' => null, 'group' => 'site', 'type' => 'string'],
 
             'default_seo_title' => [
-                'value' => 'توريدات | منصة ربط الشركات والموردين',
+                'value' => 'توريد | منصة ربط الشركات والموردين',
                 'group' => 'seo',
                 'type' => 'string',
             ],

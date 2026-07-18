@@ -1,4 +1,4 @@
-@extends('errors.minimal', ['title' => 'انتهت صلاحية الصفحة | توريدات'])
+@extends('errors.minimal', ['title' => 'انتهت صلاحية الصفحة | توريد'])
 
 @section('content')
     <x-error-page code="419" heading="انتهت صلاحية الجلسة"

@@ -33,9 +33,9 @@ class NewCompanyRegistrationRequestNotification extends Notification
         $request = $this->companyRegistrationRequest;
 
         return (new MailMessage)
-            ->subject('طلب تسجيل شركة جديد في توريدات')
+            ->subject('طلب تسجيل شركة جديد في توريد')
             ->greeting('طلب تسجيل شركة جديد')
-            ->line('وصل طلب تسجيل شركة جديد عبر نموذج "سجّل شركتك" في منصة توريدات:')
+            ->line('وصل طلب تسجيل شركة جديد عبر نموذج "سجّل شركتك" في منصة توريد:')
             ->line('اسم الشركة: '.$request->company_name)
             ->line('اسم مسؤول التواصل: '.$request->contact_name)
             ->line('الجوال: '.$request->phone)

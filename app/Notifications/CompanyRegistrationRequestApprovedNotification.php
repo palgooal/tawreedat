@@ -34,7 +34,7 @@ class CompanyRegistrationRequestApprovedNotification extends Notification
         $request = $this->companyRegistrationRequest;
 
         return (new MailMessage)
-            ->subject('تمت الموافقة على طلب تسجيل شركة في توريدات')
+            ->subject('تمت الموافقة على طلب تسجيل شركة في توريد')
             ->greeting('تمت الموافقة على طلب')
             ->line('تمت الموافقة على طلب تسجيل الشركة التالية، وتم إنشاء/تحديث سجل الشركة تلقائياً:')
             ->line('اسم الشركة: '.$request->company_name)

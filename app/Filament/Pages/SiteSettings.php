@@ -61,7 +61,7 @@ class SiteSettings extends Page
      * @var array<string, array{group: string, type: string, default: mixed}>
      */
     private const FIELDS = [
-        'site_name' => ['group' => 'site', 'type' => 'string', 'default' => 'توريدات'],
+        'site_name' => ['group' => 'site', 'type' => 'string', 'default' => 'توريد'],
         'site_description' => ['group' => 'site', 'type' => 'string', 'default' => null],
         'site_keywords' => ['group' => 'site', 'type' => 'string', 'default' => null],
         'contact_email' => ['group' => 'site', 'type' => 'string', 'default' => null],

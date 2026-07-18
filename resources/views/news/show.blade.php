@@ -159,7 +159,7 @@
                     @endif
 
                     <section class="rounded-2xl border border-gold-200 bg-gold-50 p-5">
-                        <h2 class="text-base font-extrabold text-gov-950">تحديثات توريدات</h2>
+                        <h2 class="text-base font-extrabold text-gov-950">تحديثات توريد</h2>
                         <p class="mt-2 text-sm leading-7 text-slate-700">
                             احصل على إشعار عند نشر أخبار جديدة عن الموردين والأسواق ومشروعات البناء.
                         </p>

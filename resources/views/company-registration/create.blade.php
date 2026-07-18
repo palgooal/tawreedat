@@ -1,5 +1,5 @@
 @php($title = 'سجّل شركتك | توريد')
-@php($description = 'أرسل بيانات شركتك ليقوم فريق توريدات بمراجعتها والتواصل معك لاستكمال إجراءات الظهور داخل المنصة.')
+@php($description = 'أرسل بيانات شركتك ليقوم فريق توريد بمراجعتها والتواصل معك لاستكمال إجراءات الظهور داخل المنصة.')
 @extends('layouts.app', ['alpineComponent' => 'companyRegistrationPage'])
 
 @section('content')
@@ -18,8 +18,8 @@
                     <span class="text-white/40">/</span>
                     <span>سجّل شركتك</span>
                 </div>
-                <h1 class="mt-5 text-3xl font-extrabold leading-tight sm:text-5xl">سجّل شركتك في توريدات</h1>
-                <p class="mt-4 max-w-3xl text-sm leading-8 text-slate-100 sm:text-base">أرسل بيانات شركتك ليقوم فريق توريدات بمراجعتها والتواصل معك لاستكمال إجراءات الظهور داخل المنصة.</p>
+                <h1 class="mt-5 text-3xl font-extrabold leading-tight sm:text-5xl">سجّل شركتك في توريد</h1>
+                <p class="mt-4 max-w-3xl text-sm leading-8 text-slate-100 sm:text-base">أرسل بيانات شركتك ليقوم فريق توريد بمراجعتها والتواصل معك لاستكمال إجراءات الظهور داخل المنصة.</p>
             </div>
         </div>
     </section>
@@ -53,7 +53,7 @@
 
                         <div>
                             <h2 class="text-2xl font-bold text-gov-950">بيانات الشركة</h2>
-                            <p class="mt-3 text-sm leading-7 text-slate-600">أرسل التفاصيل الأساسية وسيتولى فريق توريدات مراجعة الطلب والتواصل معك.</p>
+                            <p class="mt-3 text-sm leading-7 text-slate-600">أرسل التفاصيل الأساسية وسيتولى فريق توريد مراجعة الطلب والتواصل معك.</p>
                             <p class="mt-2 text-xs font-semibold text-slate-600">الحقول المميزة بعلامة <span class="text-gold-600">*</span> مطلوبة.</p>
                         </div>
 
@@ -186,7 +186,7 @@
                             </li>
                             <li class="flex gap-3">
                                 <span class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-gov-50 text-xs font-bold text-gov-800">٢</span>
-                                <span>يراجعها فريق توريدات</span>
+                                <span>يراجعها فريق توريد</span>
                             </li>
                             <li class="flex gap-3">
                                 <span class="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-gov-50 text-xs font-bold text-gov-800">٣</span>

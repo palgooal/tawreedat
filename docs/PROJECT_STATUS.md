@@ -1,4 +1,4 @@
-# Project Status — Tawreedat (توريدات)
+# Project Status — Tawreedat (توريد)
 
 Last updated: 2026-07-06 (Companies Directory MVP added same day, after the advertising slot refactor)
 

@@ -1,5 +1,5 @@
-@php($seoTitle = 'دليل الشركات والموردين | توريدات')
-@php($seoDescription = 'استعرض الشركات والموردين المسجلين في منصة توريدات حسب المدينة والتصنيف وحالة التوثيق.')
+@php($seoTitle = 'دليل الشركات والموردين | توريد')
+@php($seoDescription = 'استعرض الشركات والموردين المسجلين في منصة توريد حسب المدينة والتصنيف وحالة التوثيق.')
 @extends('layouts.app', ['alpineComponent' => 'companiesPage'])
 
 @push('styles')
@@ -26,7 +26,7 @@
                 </div>
                 <h1 class="mt-5 text-3xl font-extrabold leading-tight sm:text-5xl">دليل الشركات والموردين</h1>
                 <p class="mt-4 max-w-3xl text-sm leading-8 text-slate-100 sm:text-base">
-                    استعرض الشركات والموردين المسجلين في توريدات حسب المدينة أو التصنيف أو حالة التوثيق.
+                    استعرض الشركات والموردين المسجلين في توريد حسب المدينة أو التصنيف أو حالة التوثيق.
                 </p>
             </div>
         </div>
@@ -267,7 +267,7 @@
 
                 <div class="overflow-hidden rounded-3xl bg-gov-950 p-6 text-white">
                     <p class="text-xs font-bold text-gold-300">هل تملك شركة أو منشأة؟</p>
-                    <h3 class="mt-3 text-xl font-extrabold leading-8">سجّل شركتك ضمن دليل توريدات</h3>
+                    <h3 class="mt-3 text-xl font-extrabold leading-8">سجّل شركتك ضمن دليل توريد</h3>
                     <a href="{{ route('company-registration.create') }}"
                         class="mt-6 inline-flex h-12 items-center justify-center rounded-2xl bg-gold-500 px-6 text-xs font-bold text-white transition hover:bg-gold-600">
                         سجّل شركتك

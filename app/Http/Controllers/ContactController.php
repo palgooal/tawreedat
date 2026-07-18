@@ -14,7 +14,7 @@ use Throwable;
 
 class ContactController extends Controller
 {
-    private const SUCCESS_MESSAGE = 'تم استلام طلبك بنجاح، وسيتواصل معك فريق توريدات قريباً.';
+    private const SUCCESS_MESSAGE = 'تم استلام طلبك بنجاح، وسيتواصل معك فريق توريد قريباً.';
 
     public function store(Request $request): RedirectResponse
     {

@@ -28,7 +28,7 @@ use Throwable;
  */
 class CompanyRegistrationRequestController extends Controller
 {
-    private const SUCCESS_MESSAGE = 'تم استلام طلب تسجيل شركتك بنجاح، وسيتواصل معك فريق توريدات قريباً.';
+    private const SUCCESS_MESSAGE = 'تم استلام طلب تسجيل شركتك بنجاح، وسيتواصل معك فريق توريد قريباً.';
 
     public function create(): View
     {

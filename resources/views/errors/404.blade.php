@@ -1,4 +1,4 @@
-@extends('errors.minimal', ['title' => 'الصفحة غير موجودة | توريدات'])
+@extends('errors.minimal', ['title' => 'الصفحة غير موجودة | توريد'])
 
 @section('content')
     <x-error-page code="404" heading="الصفحة غير موجودة"

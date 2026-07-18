@@ -32,9 +32,9 @@ class NewContactRequestNotification extends Notification
         $request = $this->contactRequest;
 
         return (new MailMessage)
-            ->subject('طلب تواصل جديد من منصة توريدات')
+            ->subject('طلب تواصل جديد من منصة توريد')
             ->greeting('طلب تواصل جديد')
-            ->line('وصل طلب تواصل جديد عبر نموذج التواصل في منصة توريدات:')
+            ->line('وصل طلب تواصل جديد عبر نموذج التواصل في منصة توريد:')
             ->line('الاسم: '.$request->name)
             ->line('البريد: '.$request->email)
             ->line('الهاتف: '.($request->phone ?: 'غير مُدخل'))

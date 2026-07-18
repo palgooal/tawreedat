@@ -1,4 +1,4 @@
-@extends('errors.minimal', ['title' => 'طلبات كثيرة جداً | توريدات'])
+@extends('errors.minimal', ['title' => 'طلبات كثيرة جداً | توريد'])
 
 @section('content')
     <x-error-page code="429" heading="طلبات كثيرة جداً"

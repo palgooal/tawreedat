@@ -19,7 +19,7 @@
                     <span>تواصل معنا</span>
                 </div>
                 <h1 class="mt-5 text-3xl font-extrabold leading-tight sm:text-5xl">تواصل معنا</h1>
-                <p class="mt-4 max-w-3xl text-sm leading-8 text-slate-100 sm:text-base">يسعدنا استقبال طلبات الشركات والموردين والجهات الباحثة عن موردين، وتوجيه كل طلب إلى المسار المناسب داخل منصة توريدات.</p>
+                <p class="mt-4 max-w-3xl text-sm leading-8 text-slate-100 sm:text-base">يسعدنا استقبال طلبات الشركات والموردين والجهات الباحثة عن موردين، وتوجيه كل طلب إلى المسار المناسب داخل منصة توريد.</p>
             </div>
         </div>
     </section>
@@ -175,7 +175,7 @@
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-8">
                 <div>
-                    <h2 class="text-2xl font-bold text-gov-950">هل ترغب في ظهور شركتك ضمن توريدات؟</h2>
+                    <h2 class="text-2xl font-bold text-gov-950">هل ترغب في ظهور شركتك ضمن توريد؟</h2>
                     <p class="mt-2 text-sm text-slate-600">ابدأ بإنشاء حضور مهني يساعد الجهات والمقاولين على الوصول إليك بوضوح.</p>
                 </div>
                 <div class="flex flex-wrap gap-3">

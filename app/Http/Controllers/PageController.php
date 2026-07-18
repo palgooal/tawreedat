@@ -54,7 +54,7 @@ class PageController extends Controller
     {
         return view('pages.show', [
             'page' => $page,
-            'seoTitle' => $page->seo_title ?: $page->title.' | توريدات',
+            'seoTitle' => $page->seo_title ?: $page->title.' | توريد',
             'seoDescription' => $page->seo_description ?: $page->excerpt,
         ]);
     }

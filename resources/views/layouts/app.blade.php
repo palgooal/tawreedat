@@ -9,7 +9,7 @@
     $seoDescription = $seoDescription ?? $description ?? null;
     $seoImage = $seoImage ?? null;
 
-    $siteName = \App\Models\SiteSetting::get('site_name', 'توريدات');
+    $siteName = \App\Models\SiteSetting::get('site_name', 'توريد');
     $siteKeywords = \App\Models\SiteSetting::get('site_keywords');
     $defaultSeoTitle = \App\Models\SiteSetting::get('default_seo_title', $siteName);
     $defaultSeoDescription = \App\Models\SiteSetting::get(

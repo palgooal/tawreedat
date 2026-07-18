@@ -44,7 +44,7 @@
                     </span>
 
                     <span>
-                        <strong class="block text-xl font-extrabold text-gov-950 sm:text-2xl">توريدات</strong>
+                        <strong class="block text-xl font-extrabold text-gov-950 sm:text-2xl">توريد</strong>
                         <small class="mt-1 block text-[11px] font-medium text-slate-500">دليل مصانع مواد البناء</small>
                     </span>
                 </button>
@@ -66,7 +66,7 @@
                     class="block overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm transition hover:border-gold-300 hover:shadow-md lg:rounded-[28px]"
                     aria-label="{{ $headerBanner->title ?: 'مساحة إعلانية' }}">
                     <img src="{{ $headerBanner->image ? \Illuminate\Support\Facades\Storage::disk('public')->url($headerBanner->image) : asset('assets/images/header-ad-1-960.jpg') }}"
-                        width="960" height="154" alt="{{ $headerBanner->title ?: 'مساحة إعلانية في توريدات' }}"
+                        width="960" height="154" alt="{{ $headerBanner->title ?: 'مساحة إعلانية في توريد' }}"
                         decoding="async" fetchpriority="high" class="h-20 w-full object-cover sm:h-[90px]">
                 </a>
             @else
@@ -76,7 +76,7 @@
                     <img src="{{ $headerBanner?->image ? \Illuminate\Support\Facades\Storage::disk('public')->url($headerBanner->image) : asset('assets/images/header-ad-1-960.jpg') }}"
                         srcset="{{ $headerBanner?->image ? '' : asset('assets/images/header-ad-1-640.jpg') . ' 640w, ' . asset('assets/images/header-ad-1-960.jpg') . ' 960w' }}"
                         sizes="(min-width: 1024px) 100vw, 100vw" width="960" height="154"
-                        alt="{{ $headerBanner->title ?? 'مساحة إعلانية في توريدات' }}" decoding="async"
+                        alt="{{ $headerBanner->title ?? 'مساحة إعلانية في توريد' }}" decoding="async"
                         fetchpriority="high" class="h-20 w-full object-cover sm:h-[90px]">
                 </button>
             @endif
@@ -114,7 +114,7 @@
                 </svg>
             </span>
             <span>
-                <strong class="block text-base font-extrabold leading-5 text-gov-950">توريدات</strong>
+                <strong class="block text-base font-extrabold leading-5 text-gov-950">توريد</strong>
                 <small class="block text-[10px] font-medium leading-4 text-slate-500">دليل مصانع مواد البناء</small>
             </span>
         </a>

@@ -1,4 +1,4 @@
-@extends('errors.minimal', ['title' => 'حدث خطأ غير متوقع | توريدات'])
+@extends('errors.minimal', ['title' => 'حدث خطأ غير متوقع | توريد'])
 
 @section('content')
     <x-error-page code="500" heading="حدث خطأ غير متوقع"
