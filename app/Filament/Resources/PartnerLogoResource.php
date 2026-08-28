@@ -56,6 +56,12 @@ class PartnerLogoResource extends Resource
                             ->required()
                             ->columnSpanFull()
                             ->helperText('المقاس الموصى به: 300×120px تقريبًا (نسبة عرض إلى ارتفاع حوالي 2.5:1)، بخلفية شفافة PNG أو SVG، بدون هامش فارغ داخل الصورة نفسها.'),
+                        TextInput::make('link')
+                            ->label('رابط الشريك (اختياري)')
+                            ->url()
+                            ->maxLength(255)
+                            ->columnSpanFull()
+                            ->helperText('اتركه فارغًا إذا لا تريد أن يكون الشعار قابلاً للنقر. عند تعبئته، سيفتح الرابط في تبويب جديد عند الضغط على الشعار بالصفحة الرئيسية.'),
                         TextInput::make('sort_order')
                             ->label('ترتيب الظهور')
                             ->numeric()
@@ -81,6 +87,11 @@ class PartnerLogoResource extends Resource
                     ->label('اسم الشريك')
                     ->searchable()
                     ->sortable(),
+                IconColumn::make('link')
+                    ->label('رابط')
+                    ->boolean()
+                    ->getStateUsing(fn (PartnerLogo $record): bool => filled($record->link))
+                    ->tooltip(fn (PartnerLogo $record): ?string => $record->link),
                 TextColumn::make('sort_order')
                     ->label('الترتيب')
                     ->sortable(),

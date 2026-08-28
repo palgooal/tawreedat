@@ -156,6 +156,17 @@
             background-color: #fff;
         }
 
+        /* When a logo has an admin-set link, the <img> is wrapped in an
+           <a> — this keeps that wrapper filling the same box the bare <img>
+           filled before, so wrapping/unwrapping never shifts the layout. */
+        .logos-carousel__card a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
         .logos-carousel__card img {
             /* width/height:100% (not max-*) so the logo actually grows to
                fill the padded box up to its edges — the img tag still
@@ -303,7 +314,7 @@
 
                         <div class="mt-4 space-y-2.5">
                             <template x-for="item in news.slice(0,3)" :key="item.slug">
-                                <button @click="openNews(item)"
+                                <a :href="'{{ route('news.show', ['slug' => '__SLUG__']) }}'.replace('__SLUG__', encodeURIComponent(item.slug))"
                                     class="grid w-full grid-cols-[92px_1fr] gap-4 rounded-2xl border border-transparent bg-white/55 p-2.5 text-right transition hover:border-gov-100 hover:bg-white/85">
                                     <img :src="item.image || '{{ asset('assets/images/news-placeholder.jpg') }}'" :alt="item.title" width="92" height="86"
                                         decoding="async"
@@ -315,14 +326,14 @@
                                         </h3>
                                         <p class="mt-2 text-[11px] font-medium text-slate-500" x-text="item.time"></p>
                                     </div>
-                                </button>
+                                </a>
                             </template>
                         </div>
 
-                        <button @click="go('news')"
-                            class="mt-5 h-12 w-full rounded-2xl border border-gov-200 bg-white/60 text-xs font-bold text-gov-800 transition hover:border-gov-300 hover:bg-white">
+                        <a href="{{ route('news.index') }}"
+                            class="mt-5 flex h-12 w-full items-center justify-center rounded-2xl border border-gov-200 bg-white/60 text-xs font-bold text-gov-800 transition hover:border-gov-300 hover:bg-white">
                             عرض جميع الأخبار →
-                        </button>
+                        </a>
                     </aside>
 
                 </div>
@@ -731,7 +742,7 @@
 
             <div class="mx-auto max-w-3xl text-center">
                 <span class="inline-flex rounded-full bg-gov-50 px-3 py-1 text-[11px] font-bold text-gov-800">
-                    شركاؤنا
+                     نحن طريقك الى
                 </span>
 
                 <h2 class="mt-4 text-3xl font-extrabold leading-10 text-gov-950">
@@ -866,7 +877,14 @@
                      announcement of the partner list. --}}
                 <ul class="sr-only">
                     <template x-for="logo in partnerLogos" :key="logo.name">
-                        <li x-text="logo.name"></li>
+                        <li>
+                            <template x-if="logo.link">
+                                <a :href="logo.link" target="_blank" rel="noopener noreferrer" x-text="logo.name"></a>
+                            </template>
+                            <template x-if="!logo.link">
+                                <span x-text="logo.name"></span>
+                            </template>
+                        </li>
                     </template>
                 </ul>
 
@@ -878,8 +896,16 @@
                     <div class="logos-carousel__track" :class="{ 'is-instant': logosInstant }" :style="logosTrackStyle">
                         <template x-for="item in logosExtended" :key="item.key">
                             <div class="logos-carousel__card" :style="`width:${logosCardWidth}px`">
-                                <img :src="item.logo" :alt="item.name" width="140" height="57" loading="lazy"
-                                    decoding="async" draggable="false">
+                                <template x-if="item.link">
+                                    <a :href="item.link" target="_blank" rel="noopener noreferrer" tabindex="-1">
+                                        <img :src="item.logo" :alt="item.name" width="140" height="57" loading="lazy"
+                                            decoding="async" draggable="false">
+                                    </a>
+                                </template>
+                                <template x-if="!item.link">
+                                    <img :src="item.logo" :alt="item.name" width="140" height="57" loading="lazy"
+                                        decoding="async" draggable="false">
+                                </template>
                             </div>
                         </template>
                     </div>
@@ -950,12 +976,12 @@
             // queried in HomeController, not hardcoded here anymore.
             partnerLogos: @json($dbPartnerLogos),
             nav: [
-                { id: 'home', label: 'الرئيسية' },
-                { id: 'directory', label: 'الشركات' },
-                { id: 'categories', label: 'التصنيفات' },
-                { id: 'news', label: 'الأخبار' },
-                { id: 'about', label: 'من نحن' },
-                { id: 'contact', label: 'تواصل معنا' }
+                { id: 'home', label: 'الرئيسية', href: '{{ route('home') }}' },
+                { id: 'directory', label: 'الشركات', href: '{{ route('companies.index') }}' },
+                { id: 'categories', label: 'التصنيفات', href: '{{ route('home') }}#companies' },
+                { id: 'news', label: 'الأخبار', href: '{{ route('news.index') }}' },
+                { id: 'about', label: 'من نحن', href: '{{ route('about') }}' },
+                { id: 'contact', label: 'تواصل معنا', href: '{{ route('contact') }}' }
             ],
             cities: @json($dbCities),
             categories: @json($dbCategories),

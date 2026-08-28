@@ -45,6 +45,10 @@
 @layer base {
     html {
         direction: rtl;
+        /* Smooth-scrolls same-page anchor jumps (e.g. القائمة → التصنيفات
+           linking to #companies on the homepage). Reduced-motion users get
+           'auto' back via the media query below. */
+        scroll-behavior: smooth;
     }
 
     body {

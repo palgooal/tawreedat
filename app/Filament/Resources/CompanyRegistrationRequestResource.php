@@ -117,7 +117,7 @@ class CompanyRegistrationRequestResource extends Resource
                             ->helperText(fn (?CompanyRegistrationRequest $record): ?string => $record?->city ? "النص الأصلي المُرسل: {$record->city}" : null),
                         Select::make('category_id')
                             ->label('التصنيف / مجال العمل')
-                            ->relationship('categoryRelation', 'name')
+                            ->relationship('categoryRelation', 'name', fn ($query) => $query->ordered())
                             ->searchable()
                             ->preload()
                             ->helperText(fn (?CompanyRegistrationRequest $record): ?string => $record?->category ? "النص الأصلي المُرسل: {$record->category}" : null),

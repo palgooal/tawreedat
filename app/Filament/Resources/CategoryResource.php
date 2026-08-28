@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Models\Category;
 use BackedEnum;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -64,6 +65,12 @@ class CategoryResource extends Resource
                         Toggle::make('is_active')
                             ->label('نشط')
                             ->default(true),
+                        TextInput::make('sort_order')
+                            ->label('ترتيب الظهور')
+                            ->numeric()
+                            ->default(0)
+                            ->minValue(0)
+                            ->helperText('الأصغر يظهر أولاً في الصفحة الرئيسية ودليل الشركات. يمكن أيضاً السحب والإفلات لإعادة الترتيب من قائمة التصنيفات.'),
                     ]),
             ]);
     }
@@ -75,6 +82,9 @@ class CategoryResource extends Resource
                 TextColumn::make('name')
                     ->label('اسم التصنيف')
                     ->searchable()
+                    ->sortable(),
+                TextColumn::make('sort_order')
+                    ->label('الترتيب')
                     ->sortable(),
                 TextColumn::make('type')
                     ->label('النوع')
@@ -107,7 +117,16 @@ class CategoryResource extends Resource
                     DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('name');
+            ->reorderable('sort_order')
+            // Icon-only by default (a small up/down-arrows button easy to miss
+            // among the filter/column-manager icons) - a visible label makes
+            // "drag to reorder" self-evident instead of a hidden toggle.
+            ->reorderRecordsTriggerAction(
+                fn (Action $action, bool $isReordering) => $action
+                    ->button()
+                    ->label($isReordering ? 'إنهاء الترتيب بالسحب' : 'ترتيب بالسحب والإفلات')
+            )
+            ->defaultSort('sort_order');
     }
 
     public static function getPages(): array

@@ -20,6 +20,36 @@
     $googleSiteVerification = \App\Models\SiteSetting::get('google_search_console_verification');
     $googleAnalyticsId = \App\Models\SiteSetting::get('google_analytics_id');
 
+    // Contact info and social links used by the shared header/footer
+    // partials (@included below, so they share this scope). Defaults match
+    // what was previously hardcoded in those partials, so nothing changes
+    // visually until an admin fills these in via الإعدادات → إعدادات الموقع.
+    $footerDescription = \App\Models\SiteSetting::get('site_description', 'دليل مصانع مواد البناء بالمملكة العربية السعودية.');
+    $contactPhone = \App\Models\SiteSetting::get('contact_phone', '920012345');
+    $contactEmail = \App\Models\SiteSetting::get('contact_email', 'info@tawreedat.sa');
+    $contactAddress = \App\Models\SiteSetting::get('contact_address', 'الرياض، المملكة العربية السعودية');
+    $facebookUrl = \App\Models\SiteSetting::get('facebook_url');
+    $xUrl = \App\Models\SiteSetting::get('x_url');
+    $linkedinUrl = \App\Models\SiteSetting::get('linkedin_url');
+    $instagramUrl = \App\Models\SiteSetting::get('instagram_url');
+
+    // Footer "تصنيفات شائعة" — the 5 categories with the most active
+    // companies (ties broken by the admin-set sort_order/name from
+    // Category::scopeOrdered()), rather than a hardcoded list that can
+    // drift from what actually exists in التصنيفات. Only categories with
+    // at least one active company are eligible, so a footer link never
+    // leads to a guaranteed-empty results page — same "no dead links"
+    // convention CompanyController's own sidebar counts follow.
+    $footerTopCategories = \App\Models\Category::query()
+        ->where('is_active', true)
+        ->withCount(['companies' => fn ($companyQuery) => $companyQuery->where('status', 'active')])
+        ->ordered()
+        ->get()
+        ->filter(fn ($category) => $category->companies_count > 0)
+        ->sortByDesc('companies_count')
+        ->take(5)
+        ->values();
+
     $resolvedSeoTitle = $seoTitle ?: $defaultSeoTitle;
     $resolvedSeoDescription = $seoDescription ?: $defaultSeoDescription;
     $resolvedSeoImage = $seoImage

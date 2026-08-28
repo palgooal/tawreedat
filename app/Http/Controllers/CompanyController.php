@@ -89,7 +89,7 @@ class CompanyController extends Controller
         $categories = Category::query()
             ->where('is_active', true)
             ->withCount(['companies' => fn ($inner) => $inner->where('status', 'active')])
-            ->orderBy('name')
+            ->ordered()
             ->get()
             ->filter(fn (Category $category) => $category->companies_count > 0)
             ->values();

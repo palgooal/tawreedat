@@ -34,7 +34,7 @@ class CompanyRegistrationRequestController extends Controller
     {
         return view('company-registration.create', [
             'cities' => City::query()->where('is_active', true)->orderBy('name')->get(),
-            'categories' => Category::query()->where('is_active', true)->orderBy('name')->get(),
+            'categories' => Category::query()->where('is_active', true)->ordered()->get(),
         ]);
     }
 

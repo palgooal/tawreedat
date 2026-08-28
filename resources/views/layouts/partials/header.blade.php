@@ -9,14 +9,15 @@
                     <span class="h-1.5 w-1.5 rounded-full bg-gold-300"></span>
                     المملكة العربية السعودية
                 </span>
-                <span class="hidden text-white/60 sm:inline">|</span>
-                <a href="tel:920012345" dir="ltr" class="hidden transition hover:text-gold-300 sm:inline">9200 123
-                    45</a>
+                @if ($contactPhone)
+                    <span class="hidden text-white/60 sm:inline">|</span>
+                    <a href="tel:{{ $contactPhone }}" dir="ltr" class="hidden transition hover:text-gold-300 sm:inline">{{ $contactPhone }}</a>
+                @endif
             </div>
 
             <div class="flex items-center gap-4">
-                <button type="button" @click="go('contact')"
-                    class="-m-2 p-2 font-bold transition hover:text-gold-300">تواصل معنا</button>
+                <a href="{{ route('contact') }}"
+                    class="-m-2 p-2 font-bold transition hover:text-gold-300">تواصل معنا</a>
                 <span class="text-white/60">|</span>
                 <span class="font-bold text-gold-300">العربية</span>
             </div>
@@ -30,7 +31,7 @@
 
             <!-- Logo + Mobile Menu Toggle -->
             <div class="flex items-center justify-between gap-3">
-                <button type="button" @click="go('home')" class="flex items-center gap-3 text-right sm:gap-4"
+                <a href="{{ route('home') }}" class="flex items-center gap-3 text-right sm:gap-4"
                     aria-label="العودة للرئيسية">
                     <span
                         class="relative grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-2xl bg-gov-800 text-white shadow-xl shadow-gov-900/20 sm:h-[58px] sm:w-[58px]">
@@ -47,7 +48,7 @@
                         <strong class="block text-xl font-extrabold text-gov-950 sm:text-2xl">توريد</strong>
                         <small class="mt-1 block text-[11px] font-medium text-slate-500">دليل مصانع مواد البناء</small>
                     </span>
-                </button>
+                </a>
 
                 <button type="button"
                     class="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-slate-200 lg:hidden"
@@ -70,7 +71,7 @@
                         decoding="async" fetchpriority="high" class="h-20 w-full object-cover sm:h-[90px]">
                 </a>
             @else
-                <button type="button" @click="go('contact')"
+                <a href="{{ route('contact') }}"
                     class="block overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm transition hover:border-gold-300 hover:shadow-md lg:rounded-[28px]"
                     aria-label="{{ $headerBanner->title ?? 'مساحة إعلانية' }}">
                     <img src="{{ $headerBanner?->image ? \Illuminate\Support\Facades\Storage::disk('public')->url($headerBanner->image) : asset('assets/images/header-ad-1-960.jpg') }}"
@@ -78,7 +79,7 @@
                         sizes="(min-width: 1024px) 100vw, 100vw" width="960" height="154"
                         alt="{{ $headerBanner->title ?? 'مساحة إعلانية في توريد' }}" decoding="async"
                         fetchpriority="high" class="h-20 w-full object-cover sm:h-[90px]">
-                </button>
+                </a>
             @endif
 
             <!-- CTA -->
@@ -121,10 +122,10 @@
 
         <div class="hidden items-center justify-center gap-10 lg:flex">
             <template x-for="item in nav" :key="item.id">
-                <button type="button" @click="go(item.id)"
+                <a :href="item.href"
                     class="relative px-1 py-2 text-[15px] font-semibold transition after:absolute after:bottom-0 after:right-1/2 after:h-[2px] after:w-0 after:translate-x-1/2 after:rounded-full after:bg-gold-500 after:transition-all"
                     :class="route === item.id ? 'text-gold-600 after:w-8' : 'text-slate-700 hover:text-gov-900'"
-                    :aria-current="route === item.id ? 'page' : null" x-text="item.label"></button>
+                    :aria-current="route === item.id ? 'page' : null" x-text="item.label"></a>
             </template>
         </div>
 
@@ -173,10 +174,10 @@
 
         <div class="flex-1 space-y-1.5 overflow-y-auto px-4 py-5">
             <template x-for="item in nav" :key="item.id">
-                <button type="button" @click="go(item.id);mobile=false"
+                <a :href="item.href" @click="mobile=false"
                     class="block w-full rounded-xl px-4 py-3 text-right text-sm font-semibold transition"
                     :class="route === item.id ? 'bg-gov-50 text-gov-800' : 'text-slate-600 hover:bg-slate-50'"
-                    :aria-current="route === item.id ? 'page' : null" x-text="item.label"></button>
+                    :aria-current="route === item.id ? 'page' : null" x-text="item.label"></a>
             </template>
         </div>
     </div>

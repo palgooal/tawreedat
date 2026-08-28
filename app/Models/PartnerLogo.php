@@ -13,6 +13,7 @@ class PartnerLogo extends Model
     protected $fillable = [
         'name',
         'logo',
+        'link',
         'is_active',
         'sort_order',
     ];

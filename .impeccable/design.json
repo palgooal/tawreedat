@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-27T00:00:00Z",
+  "title": "Design System: Tawreedat",
+  "extensions": {
+    "colorMeta": {
+      "official-green": {
+        "role": "primary",
+        "displayName": "Official Green",
+        "canonical": "#17643f",
+        "tonalRamp": ["#eefbf3", "#d5f5e1", "#ade8c8", "#7ad4a8", "#4ab884", "#2b9c68", "#1d7d52", "#17643f", "#144f34", "#12412b"]
+      },
+      "ink-green": {
+        "role": "primary-dark",
+        "displayName": "Ink Green",
+        "canonical": "#012c26",
+        "tonalRamp": ["#012c26", "#014236"]
+      },
+      "seal-gold": {
+        "role": "secondary",
+        "displayName": "Seal Gold",
+        "canonical": "#e6ac2e",
+        "tonalRamp": ["#fdf8ec", "#faedc4", "#f5db8d", "#eec455", "#e6ac2e", "#d99416", "#b8730f", "#925810"]
+      },
+      "paper": { "role": "neutral", "displayName": "Paper", "canonical": "#f8fafc" },
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#1e293b" },
+      "border-quiet": { "role": "neutral", "displayName": "Border Quiet", "canonical": "#e2e8f0" },
+      "border-input": { "role": "neutral", "displayName": "Border Input", "canonical": "#cbd5e1" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero wordmark and homepage H1 only, once per page." },
+      "headline": { "displayName": "Headline", "purpose": "Major homepage section titles." },
+      "title": { "displayName": "Title", "purpose": "Sub-section headings and card group titles." },
+      "body": { "displayName": "Body", "purpose": "Paragraph copy, descriptions, helper text." },
+      "label": { "displayName": "Label", "purpose": "Badges, nav items, filter chips, sr-only labels." }
+    },
+    "shadows": [
+      { "name": "resting", "value": "0 1px 2px rgba(0,0,0,0.05)", "purpose": "Default for cards, buttons, inputs, list items." },
+      { "name": "hero", "value": "0 25px 50px -12px rgba(0,0,0,0.25)", "purpose": "Hero background and main ad banner only." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Default transition easing (colors, opacity, sticky-nav fade)." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Solid Official Green CTA — the default action button across the site.",
+      "html": "<button class=\"ds-btn-primary\">تواصل مع الشركة</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #17643f; color: #ffffff; border: none; border-radius: 8px; padding: 10px 16px; font-size: 14px; font-weight: 500; transition: background 150ms ease; } .ds-btn-primary:hover { background: #144f34; } .ds-btn-primary:active { background: #12412b; } .ds-btn-primary:focus-visible { outline: 2px solid #1d7d52; outline-offset: 2px; } .ds-btn-primary:disabled { pointer-events: none; opacity: 0.5; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outlined white button, same state coverage as primary, for lower-emphasis actions.",
+      "html": "<button class=\"ds-btn-secondary\">مسح الفلاتر</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #ffffff; color: #334155; border: 1px solid #cbd5e1; border-radius: 8px; padding: 10px 16px; font-size: 14px; font-weight: 500; transition: background 150ms ease; } .ds-btn-secondary:hover { background: #f8fafc; } .ds-btn-secondary:active { background: #f1f5f9; } .ds-btn-secondary:focus-visible { outline: 2px solid #1d7d52; outline-offset: 2px; }"
+    },
+    {
+      "name": "Company Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Companies Directory listing card — logo, name, badges, contact CTA.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-badge\">موثّقة</div><h3 class=\"ds-card-title\">اسم الشركة</h3><p class=\"ds-card-body\">وصف مختصر للنشاط التجاري للشركة.</p></div>",
+      "css": ".ds-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); } .ds-card-badge { display: inline-flex; align-items: center; border-radius: 9999px; background: #fdf8ec; color: #d99416; font-size: 12px; font-weight: 600; padding: 2px 10px; margin-bottom: 8px; } .ds-card-title { font-size: 20px; font-weight: 800; color: #1e293b; margin-bottom: 4px; } .ds-card-body { font-size: 14px; line-height: 1.7; color: #1e293b; }"
+    },
+    {
+      "name": "Search Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Hero search field — paired with an sr-only label per the accessibility rule.",
+      "html": "<div class=\"ds-input\"><label for=\"ds-search\" class=\"ds-sr-only\">البحث باسم الشركة أو النشاط</label><input id=\"ds-search\" class=\"ds-input-field\" placeholder=\"ابحث باسم الشركة أو النشاط...\"></div>",
+      "css": ".ds-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; } .ds-input { display: flex; align-items: center; height: 56px; border-radius: 16px; border: 1px solid #e2e8f0; background: #ffffff; padding: 0 16px; } .ds-input-field { width: 100%; height: 100%; background: transparent; border: none; outline: none; text-align: right; font-size: 14px; color: #1e293b; } .ds-input:focus-within { outline: 2px solid #1d7d52; outline-offset: 2px; }"
+    },
+    {
+      "name": "Sticky Nav",
+      "kind": "nav",
+      "refersTo": "nav",
+      "description": "Single sticky nav with a compact brand/CTA fade-in on scroll; the only sticky element on the page.",
+      "html": "<nav class=\"ds-nav\"><span class=\"ds-nav-brand\">توريد</span><a class=\"ds-nav-link\" href=\"#\">الشركات</a><a class=\"ds-nav-link\" href=\"#\">الأخبار</a></nav>",
+      "css": ".ds-nav { position: sticky; top: 0; display: flex; align-items: center; gap: 24px; height: 64px; padding: 0 24px; background: rgba(255,255,255,0.95); backdrop-filter: blur(8px); border-bottom: 1px solid #e2e8f0; box-shadow: 0 1px 2px rgba(0,0,0,0.05); } .ds-nav-brand { font-weight: 800; color: #012c26; } .ds-nav-link { font-size: 12px; font-weight: 600; color: #1e293b; transition: color 150ms ease; } .ds-nav-link:hover { color: #17643f; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The National Registry",
+    "overview": "Tawreedat (توريد) reads like an official registry, not a startup landing page: a green-and-gold identity borrowed from government and institutional credibility, applied to a search-first industrial directory. Every surface should feel like it belongs to a national reference — precise, verifiable, calm — while staying warm enough that a factory owner or buyer wants to actually use it, not just trust it from a distance. Ink Green (near-black) carries the site's authority in the header and hero chrome; Official Green carries action; Seal Gold is rationed almost entirely to verified/featured credibility markers, so when it appears, it means something.\n\nThis system explicitly rejects three failure modes: the generic AI-SaaS look (cream/sand backgrounds, gradient text, hero-metric cards, uppercase eyebrow labels above every section), the dull bureaucratic government site (stiff, dated, lifeless despite the institutional palette), and the flashy consumer marketplace (OLX-style clutter, loud promotional treatments). Restraint is the discipline that keeps \"official\" from curdling into either extreme.",
+    "keyCharacteristics": [
+      "RTL-first Arabic layout — not a toggle, the only mode.",
+      "Deep green + gold read as institutional credibility, not corporate tech.",
+      "Gold is rare and earned — it marks verification, not decoration.",
+      "Mostly flat surfaces; elevation escalates only for hero-scale moments.",
+      "Search is the hero, not the pitch — the directory's job is to get buyers to a supplier fast."
+    ],
+    "rules": [
+      { "name": "The Rationed Gold Rule", "body": "Seal Gold appears only where verification or featured status is real. It never fills a background, a button, or a decorative accent; the moment gold shows up everywhere, it stops meaning anything.", "section": "colors" },
+      { "name": "The No-Cream Rule", "body": "The body background is Paper (#f8fafc), a true near-white — never a warm cream/sand/parchment tint. Warmth comes from the green-and-gold identity and Alexandria's letterforms, not from a tinted body background.", "section": "colors" },
+      { "name": "The One-Voice Rule", "body": "Alexandria is the only typeface, everywhere — public site and admin panel alike. Hierarchy is built with weight (400 → 600 → 800) and size, never with a second family.", "section": "typography" },
+      { "name": "The Earned-Shadow Rule", "body": "A card does not get more shadow because it wants to feel important. Only genuinely hero-scale, full-bleed surfaces graduate from shadow-sm to shadow-2xl; everything in between stays flat.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep the body background Paper (#f8fafc) — a true near-white, never a warm cream/sand tint.",
+      "Do ration Seal Gold to real verified/featured signals only; keep it off buttons, backgrounds, and general decoration.",
+      "Do cap ordinary cards, buttons, and inputs at rounded-2xl (16px); reserve rounded-3xl/24px+ for hero and ad-banner blocks only.",
+      "Do keep body text at Ink (#1e293b) or darker — verify 4.5:1 contrast on every background, including tinted ones.",
+      "Do use Alexandria at every weight/size instead of introducing a second typeface anywhere, including the admin panel.",
+      "Do respect prefers-reduced-motion globally and pair every icon-only input with a real sr-only label."
+    ],
+    "donts": [
+      "Don't use a generic AI-SaaS template look: no gradient text, no hero-metric-card clichés, no tiny uppercase tracked eyebrow label above every section.",
+      "Don't let the institutional palette read as a dull bureaucratic government site — official and professional is not an excuse for stiff, dated, or lifeless UI.",
+      "Don't design toward a flashy consumer marketplace: no OLX-style clutter, no loud promotional banners competing with the hero, no marketplace-style badge spam.",
+      "Don't use border-left/border-right colored stripes as a card or list-item accent.",
+      "Don't reach for shadow-2xl on ordinary cards — it's reserved for hero-scale, full-bleed surfaces only.",
+      "Don't build an LTR variant or treat RTL as optional — direction: rtl is the only mode this site has."
+    ]
+  }
+}

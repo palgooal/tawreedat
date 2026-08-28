@@ -77,12 +77,12 @@
             mobile: false,
             navStuck: false,
             nav: [
-                { id: 'home', label: 'الرئيسية' },
-                { id: 'directory', label: 'الشركات' },
-                { id: 'categories', label: 'التصنيفات' },
-                { id: 'news', label: 'الأخبار' },
-                { id: 'about', label: 'من نحن' },
-                { id: 'contact', label: 'تواصل معنا' }
+                { id: 'home', label: 'الرئيسية', href: '{{ route('home') }}' },
+                { id: 'directory', label: 'الشركات', href: '{{ route('companies.index') }}' },
+                { id: 'categories', label: 'التصنيفات', href: '{{ route('home') }}#companies' },
+                { id: 'news', label: 'الأخبار', href: '{{ route('news.index') }}' },
+                { id: 'about', label: 'من نحن', href: '{{ route('about') }}' },
+                { id: 'contact', label: 'تواصل معنا', href: '{{ route('contact') }}' }
             ],
 
             init() {

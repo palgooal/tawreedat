@@ -25,7 +25,7 @@ class HomeController extends Controller
         $categories = Category::query()
             ->where('is_active', true)
             ->withCount(['companies' => fn ($query) => $query->where('status', 'active')])
-            ->orderBy('name')
+            ->ordered()
             ->get()
             ->values()
             ->map(fn (Category $category, int $index) => [
@@ -93,6 +93,7 @@ class HomeController extends Controller
             ->map(fn (PartnerLogo $partnerLogo) => [
                 'name' => $partnerLogo->name,
                 'logo' => $partnerLogo->logo ? Storage::disk('public')->url($partnerLogo->logo) : null,
+                'link' => $partnerLogo->link,
             ])
             ->all();
 

@@ -99,7 +99,7 @@ class CompanyResource extends Resource
                             ->native(),
                         Select::make('category_id')
                             ->label('التصنيف')
-                            ->relationship('category', 'name')
+                            ->relationship('category', 'name', fn ($query) => $query->ordered())
                             ->native(),
                         TextInput::make('website')
                             ->label('الموقع الإلكتروني')

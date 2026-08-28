@@ -1,5 +1,12 @@
 @php($title = 'تواصل معنا | توريد')
 @php($description = 'تواصل مع فريق توريد للاستفسارات والدعم وطلبات انضمام الموردين والشركات.')
+{{-- Own lookup (not inherited from layouts.app's scope - see news/index.blade.php for
+     the same pattern) since @extends renders this content before the parent layout's
+     top @php block runs. Same settings/defaults the shared footer uses, so the two
+     stay consistent instead of drifting (this page used to hardcode a different,
+     stale email than the footer did). --}}
+@php($contactPhone = \App\Models\SiteSetting::get('contact_phone', '920012345'))
+@php($contactEmail = \App\Models\SiteSetting::get('contact_email', 'info@tawreedat.sa'))
 @extends('layouts.app', ['alpineComponent' => 'contactPage'])
 
 @section('content')
@@ -149,14 +156,18 @@
 
                 <aside class="space-y-5">
                     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-                        <a href="tel:920012345" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-gold-300">
-                            <p class="text-xs font-bold text-slate-500">الهاتف</p>
-                            <b class="mt-2 block text-lg text-gov-950" dir="ltr">9200 123 45</b>
-                        </a>
-                        <a href="mailto:care@tawreed.sa" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-gold-300">
-                            <p class="text-xs font-bold text-slate-500">البريد الإلكتروني</p>
-                            <b class="mt-2 block text-base text-gov-950">care@tawreed.sa</b>
-                        </a>
+                        @if ($contactPhone)
+                            <a href="tel:{{ $contactPhone }}" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-gold-300">
+                                <p class="text-xs font-bold text-slate-500">الهاتف</p>
+                                <b class="mt-2 block text-lg text-gov-950" dir="ltr">{{ $contactPhone }}</b>
+                            </a>
+                        @endif
+                        @if ($contactEmail)
+                            <a href="mailto:{{ $contactEmail }}" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-gold-300">
+                                <p class="text-xs font-bold text-slate-500">البريد الإلكتروني</p>
+                                <b class="mt-2 block text-base text-gov-950">{{ $contactEmail }}</b>
+                            </a>
+                        @endif
                         <a href="{{ route('contact') }}" aria-current="page" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-gold-300">
                             <p class="text-xs font-bold text-slate-500">تواصل معنا</p>
                             <b class="mt-2 block text-base text-gov-950">نموذج الطلبات والاستفسارات</b>
@@ -204,12 +215,12 @@
             mobile: false,
             navStuck: false,
             nav: [
-                { id: 'home', label: 'الرئيسية' },
-                { id: 'directory', label: 'الشركات' },
-                { id: 'categories', label: 'التصنيفات' },
-                { id: 'news', label: 'الأخبار' },
-                { id: 'about', label: 'من نحن' },
-                { id: 'contact', label: 'تواصل معنا' }
+                { id: 'home', label: 'الرئيسية', href: '{{ route('home') }}' },
+                { id: 'directory', label: 'الشركات', href: '{{ route('companies.index') }}' },
+                { id: 'categories', label: 'التصنيفات', href: '{{ route('home') }}#companies' },
+                { id: 'news', label: 'الأخبار', href: '{{ route('news.index') }}' },
+                { id: 'about', label: 'من نحن', href: '{{ route('about') }}' },
+                { id: 'contact', label: 'تواصل معنا', href: '{{ route('contact') }}' }
             ],
 
             init() {
