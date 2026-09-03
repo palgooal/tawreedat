@@ -205,8 +205,8 @@
 
                     <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                         <p class="text-xs font-bold text-slate-500">تحتاج مساعدة؟</p>
-                        <a href="tel:920012345" class="mt-2 block text-lg font-bold text-gov-950" dir="ltr">9200 123 45</a>
-                        <a href="mailto:care@tawreed.sa" class="mt-1 block text-sm text-slate-600 transition hover:text-gov-800">care@tawreed.sa</a>
+                        <a href="tel:920012345" class="mt-2 block text-lg font-bold text-gov-950" dir="ltr">0559119537</a>
+                        <a href="mailto:care@tawreed.sa" class="mt-1 block text-sm text-slate-600 transition hover:text-gov-800">info@tawreed.sa</a>
                     </div>
                 </aside>
             </div>
