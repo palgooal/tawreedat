@@ -778,6 +778,7 @@
                     logosTimer: null,
                     logosBoundaryTimer: null,
                     logosDragging: false,
+                    logosDidDrag: false,
                     logosDragStartX: 0,
                     logosDragBaseIndex: 0,
                     logosDragOffsetPx: 0,
@@ -844,21 +845,25 @@
                         }, 650);
                     },
                     logosDragStart(e) {
+                        if (!e.isPrimary || e.button !== 0) return;
                         clearInterval(this.logosTimer);
                         clearTimeout(this.logosBoundaryTimer);
                         this.logosDragging = true;
+                        this.logosDidDrag = false;
                         this.logosDragStartX = e.clientX;
                         this.logosDragBaseIndex = this.logosIndex;
                         this.measureLogosStep();
-                        // Pointer capture keeps the drag tracking even if the
-                        // pointer leaves the element mid-gesture; wrapped
-                        // defensively since some browsers/input types can
-                        // reject it for a pointerId that's already gone.
-                        try { e.currentTarget.setPointerCapture(e.pointerId); } catch (err) {}
                     },
-                    logosDragMove(clientX) {
+                    logosDragMove(e) {
                         if (!this.logosDragging) return;
-                        this.logosDragOffsetPx = clientX - this.logosDragStartX;
+                        const offset = e.clientX - this.logosDragStartX;
+                        // Preserve link clicks until an actual swipe begins.
+                        if (!this.logosDidDrag && Math.abs(offset) < 8) return;
+                        if (!this.logosDidDrag) {
+                            this.logosDidDrag = true;
+                            try { e.currentTarget.setPointerCapture(e.pointerId); } catch (err) {}
+                        }
+                        this.logosDragOffsetPx = offset;
                     },
                     logosDragEnd() {
                         if (!this.logosDragging) return;
@@ -895,8 +900,10 @@
                 <div class="logos-carousel__viewport" x-ref="logosViewport" aria-hidden="true"
                     :class="{ 'is-dragging': logosDragging }"
                     @pointerdown="logosDragStart($event)"
-                    @pointermove="logosDragMove($event.clientX)" @pointerup="logosDragEnd()"
-                    @pointercancel="logosDragEnd()">
+                    @pointermove="logosDragMove($event)" @pointerup.window="logosDragEnd()"
+                    @pointercancel="logosDragEnd()" @lostpointercapture="logosDragEnd()"
+                    @dragstart.prevent
+                    @click.capture="if (logosDidDrag) { $event.preventDefault(); $event.stopPropagation(); }">
                     <div class="logos-carousel__track" :class="{ 'is-instant': logosInstant }" :style="logosTrackStyle">
                         <template x-for="item in logosExtended" :key="item.key">
                             <div class="logos-carousel__card" :style="`width:${logosCardWidth}px`">
