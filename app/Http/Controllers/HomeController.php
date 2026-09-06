@@ -97,7 +97,7 @@ class HomeController extends Controller
             ])
             ->all();
 
-        // Advertisement data (headerBanner, homeBanner1/2/3) is injected by
+        // Advertisement data (headerBanner, homeBanner1/2/3/4) is injected by
         // the 'pages.home' view composer in AppServiceProvider, via
         // App\Support\AdvertisementManager — not queried here, so this
         // controller doesn't need to know about slots at all.

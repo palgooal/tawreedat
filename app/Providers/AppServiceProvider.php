@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Advertisement;
+use App\Models\AdvertisementSlot;
 use App\Support\AdvertisementManager;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -33,6 +34,11 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('pages.home', function ($view): void {
             $view->with([
+                // Read dimensions fresh so admin changes apply on the next render.
+                'homeAdvertisementSlots' => AdvertisementSlot::query()
+                    ->whereIn('key', ['home_banner_1', 'home_banner_2', 'home_banner_3', 'home_banner_4'])
+                    ->get(['key', 'width', 'height'])
+                    ->keyBy('key'),
                 // Reused from the same slot as the sitewide header banner
                 // (shown a second time as a homepage card) — impression
                 // already counted by the header partial's composer above,
@@ -41,6 +47,7 @@ class AppServiceProvider extends ServiceProvider
                 'homeBanner1' => $this->resolveAndRecordImpression('home_banner_1'),
                 'homeBanner2' => $this->resolveAndRecordImpression('home_banner_2'),
                 'homeBanner3' => $this->resolveAndRecordImpression('home_banner_3'),
+                'homeBanner4' => $this->resolveAndRecordImpression('home_banner_4'),
             ]);
         });
 

@@ -588,8 +588,9 @@
                         style="top: 16px; right: 16px; background-color: rgba(0,0,0,.4)"
                         class="absolute z-10 rounded-full px-3 py-1 text-[11px] font-bold text-white backdrop-blur-sm">إعلان</span>
                     <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($homeBanner1->image) }}"
-                        alt="{{ $homeBanner1->title }}" width="1600" height="400" loading="lazy" decoding="async"
-                        style="max-height: 400px" class="h-auto w-full object-cover">
+                        alt="{{ $homeBanner1->title }}" width="{{ $homeAdvertisementSlots->get('home_banner_1')?->width ?: 1600 }}" height="{{ $homeAdvertisementSlots->get('home_banner_1')?->height ?: 400 }}" loading="lazy" decoding="async"
+                         style="aspect-ratio: {{ $homeAdvertisementSlots->get('home_banner_1')?->width ?: 1600 }} / {{ $homeAdvertisementSlots->get('home_banner_1')?->height ?: 400 }}"
+                            class="block h-auto w-full object-contain">
                 </a>
             @else
                 <div
@@ -630,15 +631,16 @@
 
             <!-- Ad Cards -->
             <div class="mt-8 grid gap-5 lg:grid-cols-3">
-                @if ($headerBanner?->image)
-                    <a href="{{ route('ads.click', $headerBanner) }}"
-                        class="reveal-up group relative flex min-h-[300px] overflow-hidden rounded-3xl bg-gov-950">
+                @if ($homeBanner2?->image)
+                    <a href="{{ route('ads.click', $homeBanner2) }}"
+                        class="reveal-up group relative block self-start overflow-hidden rounded-3xl bg-gov-950">
                         <span
                             style="top: 12px; right: 12px; background-color: rgba(0,0,0,.4)"
                             class="absolute z-10 rounded-full px-2 py-1 text-[10px] font-bold text-white backdrop-blur-sm">إعلان</span>
-                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($headerBanner->image) }}"
-                            alt="{{ $headerBanner->title }}" width="1600" height="900" loading="lazy" decoding="async"
-                            class="h-full w-full object-cover transition duration-300 group-hover:scale-105">
+                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($homeBanner2->image) }}"
+                            alt="{{ $homeBanner2->title }}" width="{{ $homeAdvertisementSlots->get('home_banner_2')?->width ?: 320 }}" height="{{ $homeAdvertisementSlots->get('home_banner_2')?->height ?: 213 }}" loading="lazy" decoding="async"
+                            style="aspect-ratio: {{ $homeAdvertisementSlots->get('home_banner_2')?->width ?: 320 }} / {{ $homeAdvertisementSlots->get('home_banner_2')?->height ?: 213 }}"
+                            class="block h-auto w-full object-contain">
                     </a>
                 @else
                     <article
@@ -660,15 +662,16 @@
                     </article>
                 @endif
 
-                @if ($homeBanner2?->image)
-                    <a href="{{ route('ads.click', $homeBanner2) }}"
-                        class="reveal-up group relative flex min-h-[300px] overflow-hidden rounded-3xl bg-gov-950 [animation-delay:80ms]">
+                @if ($homeBanner3?->image)
+                    <a href="{{ route('ads.click', $homeBanner3) }}"
+                        class="reveal-up group relative block self-start overflow-hidden rounded-3xl bg-gov-950 [animation-delay:80ms]">
                         <span
                             style="top: 12px; right: 12px; background-color: rgba(0,0,0,.4)"
                             class="absolute z-10 rounded-full px-2 py-1 text-[10px] font-bold text-white backdrop-blur-sm">إعلان</span>
-                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($homeBanner2->image) }}"
-                            alt="{{ $homeBanner2->title }}" width="320" height="213" loading="lazy" decoding="async"
-                            class="h-full w-full object-cover transition duration-300 group-hover:scale-105">
+                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($homeBanner3->image) }}"
+                            alt="{{ $homeBanner3->title }}" width="{{ $homeAdvertisementSlots->get('home_banner_3')?->width ?: 320 }}" height="{{ $homeAdvertisementSlots->get('home_banner_3')?->height ?: 213 }}" loading="lazy" decoding="async"
+                            style="aspect-ratio: {{ $homeAdvertisementSlots->get('home_banner_3')?->width ?: 320 }} / {{ $homeAdvertisementSlots->get('home_banner_3')?->height ?: 213 }}"
+                            class="block h-auto w-full object-contain">
                     </a>
                 @else
                     <article
@@ -683,22 +686,23 @@
                                 متوسطة</span>
                             <h3 class="mt-5 text-2xl font-extrabold leading-9">وصول مستمر لجمهور مستهدف</h3>
                             <p class="mt-3 text-sm leading-7 text-slate-100">مناسبة لشركات مواد البناء والمقاولين والتشطيبات.</p>
-                            <a href="{{ $homeBanner2?->link ? route('ads.click', $homeBanner2) : route('contact') }}"
+                            <a href="{{ $homeBanner3?->link ? route('ads.click', $homeBanner3) : route('contact') }}"
                                 class="shine-cta mt-7 inline-flex h-11 items-center rounded-xl bg-gold-500 px-5 text-xs font-bold text-white transition hover:bg-gold-600">احجز
                                 الآن</a>
                         </div>
                     </article>
                 @endif
 
-                @if ($homeBanner3?->image)
-                    <a href="{{ route('ads.click', $homeBanner3) }}"
-                        class="reveal-up group relative flex min-h-[300px] overflow-hidden rounded-3xl bg-gov-950 [animation-delay:160ms]">
+                @if ($homeBanner4?->image)
+                    <a href="{{ route('ads.click', $homeBanner4) }}"
+                        class="reveal-up group relative block self-start overflow-hidden rounded-3xl bg-gov-950 [animation-delay:160ms]">
                         <span
                             style="top: 12px; right: 12px; background-color: rgba(0,0,0,.4)"
                             class="absolute z-10 rounded-full px-2 py-1 text-[10px] font-bold text-white backdrop-blur-sm">إعلان</span>
-                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($homeBanner3->image) }}"
-                            alt="{{ $homeBanner3->title }}" width="320" height="480" loading="lazy" decoding="async"
-                            class="h-full w-full object-cover transition duration-300 group-hover:scale-105">
+                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($homeBanner4->image) }}"
+                            alt="{{ $homeBanner4->title }}" width="{{ $homeAdvertisementSlots->get('home_banner_4')?->width ?: 320 }}" height="{{ $homeAdvertisementSlots->get('home_banner_4')?->height ?: 480 }}" loading="lazy" decoding="async"
+                            style="aspect-ratio: {{ $homeAdvertisementSlots->get('home_banner_4')?->width ?: 320 }} / {{ $homeAdvertisementSlots->get('home_banner_4')?->height ?: 480 }}"
+                            class="block h-auto w-full object-contain">
                     </a>
                 @else
                     <article
@@ -712,7 +716,7 @@
                                 جانبية</span>
                             <h3 class="mt-5 text-2xl font-extrabold leading-9">حضور ثابت داخل صفحات الدليل</h3>
                             <p class="mt-3 text-sm leading-7 text-slate-100">خيار عملي للظهور بجانب التصنيفات وصفحات الشركات.</p>
-                            <a href="{{ $homeBanner3?->link ? route('ads.click', $homeBanner3) : route('contact') }}"
+                            <a href="{{ $homeBanner4?->link ? route('ads.click', $homeBanner4) : route('contact') }}"
                                 class="shine-cta mt-7 inline-flex h-11 items-center rounded-xl bg-gold-500 px-5 text-xs font-bold text-white transition hover:bg-gold-600">احجز
                                 الآن</a>
                         </div>

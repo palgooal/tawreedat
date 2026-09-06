@@ -66,6 +66,7 @@ class AdvertisementManager
             'home_banner_1',
             'home_banner_2',
             'home_banner_3',
+            'home_banner_4',
             'news_sidebar',
             'news_footer',
         ];
