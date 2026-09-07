@@ -93,8 +93,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
 
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @stack('styles')
@@ -108,6 +106,16 @@
             gtag('config', '{{ $googleAnalyticsId }}');
         </script>
     @endif
+
+    {{-- Positioned AFTER @vite(...) above (not before, as it originally was)
+         so that resources/js/app.js — and anything it registers via
+         Alpine.data(...), e.g. the homepage's `app` component — always
+         finishes executing before this script's own auto Alpine.start()
+         call fires `alpine:init`. Classic `defer` and `type="module"`
+         scripts both execute in document order after parsing, so this
+         script's position here (after the Vite bundle) is what guarantees
+         correct registration timing, not just its `defer` attribute. --}}
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased" x-data="{{ $alpineComponent ?? 'app' }}()" @notify.window="showToast($event.detail)">
 

@@ -168,6 +168,17 @@ Elevation is restrained by default and dramatic only at hero scale. Ordinary car
 - **Typography:** Label-weight (600 semibold, small size) nav items; active/hover states shift toward Official Green.
 - **Mobile:** the same single sticky nav collapses to its compact state; no separate mobile-only header component.
 
+### Section Eyebrow
+A small line of context set above a major section's headline. This is a deliberate, named pattern in this system — not generic scaffolding repeated by habit.
+
+- **Purpose:** frames a major section before its `<h2>` and adds a layer of hierarchy without competing with it. Must say something the heading doesn't — it is never a restatement of the heading beneath it.
+- **Usage:** reserved for major homepage, editorial, and B2B-directory sections. Not mandatory above every heading — use it only where a genuinely distinct piece of framing exists; a section without one should go without rather than have a phrase manufactured just to match its neighbors.
+- **Copy rules:** a short phrase, not a sentence; distinct from the heading; professional and restrained, matching the "National Registry" voice; no promotional filler or generic phrases that carry no information.
+- **Visual rules:** set at Label scale (`text-xs`/`text-[11px]`, `font-bold`), always smaller than the headline it introduces. May be plain small text or a rounded pill on `bg-gov-50` — both are valid treatments as long as the text/background pairing clears WCAG 4.5:1 contrast. Color comes from the Official Green ramp (`text-gov-600`/`text-gov-800`, per contrast needs) — never Seal Gold (Rationed Gold Rule). No uppercase transform and no letter-spacing/tracking: the Arabic-first system has no case distinction, and adding a Latin-style uppercase/tracked treatment would turn this into the generic-AI-SaaS eyebrow the system explicitly rejects (see §6). Do not invent a new visual variant (new pill radius, new color, new size) per section — plain text and the `bg-gov-50` pill are the complete vocabulary.
+- **Cadence rule:** repetition across sections is acceptable when each instance does real work — this is not a mandatory scaffold element. Not every section needs one; rhythm should still vary with what the content calls for, so the page doesn't read as a template stamped out section after section.
+- **Anti-patterns:** eyebrow text identical or near-identical to the heading above it; empty marketing language with no informational content; using it purely as decoration or spacing filler; multiple pill shapes/sizes/colors invented without a system reason; an uppercase or letter-spaced Latin-style treatment.
+- **Current usage:** the three eyebrows already on the homepage — "قطاع البناء والتوريد" (Companies Directory), "فرص إعلانية" (مساحات إعلانية section), and "نحن طريقك الى" (closing CTA section) — are the intentional reference implementation of this pattern, not accidental duplicated scaffolding.
+
 ## 6. Do's and Don'ts
 
 ### Do:
@@ -179,7 +190,7 @@ Elevation is restrained by default and dramatic only at hero scale. Ordinary car
 - **Do** respect `prefers-reduced-motion` globally and pair every icon-only input with a real `sr-only` label.
 
 ### Don't:
-- **Don't** use a generic AI-SaaS template look: no gradient text, no hero-metric-card clichés, no tiny uppercase tracked eyebrow label above every section.
+- **Don't** use a generic AI-SaaS template look: no gradient text, no hero-metric-card clichés, no tiny uppercase tracked eyebrow label above every section (this targets the Latin-typography uppercase/letter-spaced cliché specifically — it does not describe the intentional Section Eyebrow pattern documented in §5, which uses neither uppercase nor tracking).
 - **Don't** let the institutional palette read as a dull bureaucratic government site — official and professional is not an excuse for stiff, dated, or lifeless UI.
 - **Don't** design toward a flashy consumer marketplace: no OLX-style clutter, no loud promotional banners competing with the hero, no marketplace-style badge spam.
 - **Don't** use `border-left`/`border-right` colored stripes as a card or list-item accent.

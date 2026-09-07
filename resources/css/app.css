@@ -23,13 +23,26 @@
     --color-gov-700: #17643f;
     --color-gov-800: #144f34;
     --color-gov-900: #12412b;
-    /* gov-950 doubles as the deep anchor of the header/CTA gradient (see
-       .bg-brand-gradient / .bg-brand-gradient-cta below) and as the near-black
-       text tone for badges and headings — 7.4:1 on gold-400, 15:1 on white. */
-    --color-gov-950: #012c26;
-    /* Bright interior stop for the brand gradient only; not part of the
-       general UI ramp — pair it with gov-950, don't use it standalone. */
-    --color-gov-925: #014236;
+    /* gov-950 / gov-925 are stored ONCE, as raw RGB channels — every other
+       representation derives from these two lines so there is a single
+       source of truth for a rebrand. --color-gov-950 / --color-gov-925
+       (the tokens Tailwind turns into bg-gov-950, text-gov-950, etc.) are
+       plain rgb() wrappers around the channels, and the five translucent
+       gradients/overlays across resources/views/pages/home.blade.php and
+       resources/css/app.css (.home-hero-bg) read the same channels
+       directly via rgba(var(--gov-950-rgb), alpha) — so
+       changing either channel line updates every opaque AND translucent
+       use of the color at once.
+       gov-950 doubles as the deep anchor of the header/CTA gradient (see
+       .bg-brand-gradient / .bg-brand-gradient-cta below) and as the near-
+       black text tone for badges and headings — 7.4:1 on gold-400, 15:1 on
+       white. gov-925 is the bright interior stop for the brand gradient
+       only; not part of the general UI ramp — pair it with gov-950, don't
+       use it standalone. */
+    --gov-950-rgb: 1, 44, 38;
+    --gov-925-rgb: 1, 66, 54;
+    --color-gov-950: rgb(var(--gov-950-rgb));
+    --color-gov-925: rgb(var(--gov-925-rgb));
 
     /* Brand — Gold (accent) */
     --color-gold-50: #fdf8ec;
@@ -93,6 +106,42 @@
         @apply rounded-2xl border border-slate-200 bg-white shadow-sm;
     }
 
+    /* Wraps the homepage's #companies-results grid + its pagination <nav>
+       (resources/views/pages/home.blade.php) so both are excluded from CSS
+       scroll anchoring together. Pagination is fully client-side (Alpine
+       swaps the <article> set and updates currentCompanyPage — see
+       setCompanyPage() in resources/js/pages/home.js), but the grid's
+       rendered height still varies between pages (a differently-sized
+       last page, or just taller company names/descriptions wrapping to
+       more lines), which shifts this <nav> up or down.
+
+       Left at the default `overflow-anchor: auto`, the browser was free to
+       pick its anchor node from *inside* this region (in practice, the
+       pagination button the user just clicked). An anchor inside the very
+       content that's resizing doesn't trigger any compensating scroll —
+       so window.scrollY stayed put, but the nav/button itself visibly
+       slid up or down by the height delta, which read as a page jump.
+       `overflow-anchor: none` excludes an element AND its whole subtree
+       from anchor selection, so with it set here the browser must anchor
+       on something outside this wrapper instead (whatever follows it).
+       That element's document position shifts by exactly the same delta
+       the wrapper's height changed by, so the browser's compensating
+       scroll (which now DOES fire, and does change window.scrollY) cancels
+       that shift — and since this <nav> sits at the very bottom of the
+       excluded wrapper, the same compensation keeps it visually anchored
+       in the viewport too. Applying it to #companies-results or the <nav>
+       alone would leave the other one still eligible as an anchor and
+       still shifting, so the shared wrapper is the narrowest scope that
+       actually stops both from moving. Verified in a live browser against
+       a reproduction of this exact structure (a real Alpine x-for
+       template + generated cards, wrapped the same way): without this
+       rule the nav's on-screen position jumped with every page-height
+       change; with it, the nav's position stayed pixel-identical across
+       page changes while window.scrollY itself absorbed the difference. */
+    .company-pagination-region {
+        overflow-anchor: none;
+    }
+
     .btn-primary {
         @apply inline-flex items-center justify-center gap-2 rounded-lg bg-gov-700 px-4 py-2.5
             text-sm font-medium text-white transition-colors duration-150
@@ -121,4 +170,233 @@
     .bg-brand-gradient-cta {
         background-image: linear-gradient(90deg, var(--color-gov-950), var(--color-gov-925));
     }
+
+    /* Hero section background. The gradient overlay is static (same gov RGB
+       tokens as .bg-brand-gradient above), but the background *image* URL
+       must keep going through Laravel's asset() helper for CDN/environment
+       awareness, so it can't be hardcoded here. The Blade markup on the
+       Hero element sets only the --hero-bg-url custom property inline
+       (`style="--hero-bg-url: url('...')"`); this rule supplies the full,
+       layered background-image. No var() fallback is provided: the Hero
+       always sets --hero-bg-url inline, and a hardcoded fallback URL would
+       risk going stale or ignoring CDN/environment config. */
+    .home-hero-bg {
+        background-image: linear-gradient(90deg, rgba(var(--gov-950-rgb), .96) 0%, rgba(var(--gov-925-rgb), .88) 45%, rgba(var(--gov-950-rgb), .94) 100%), var(--hero-bg-url);
+    }
 }
+
+@layer components {
+    /* Reveal-up entrance — powers `.reveal-up`, used on the homepage's
+       advertising cards only (company-results grid cards intentionally do
+       NOT use this class — see the note below). Per-card stagger is set
+       by Tailwind's `[animation-delay:_]` arbitrary utility, which wins
+       over this rule's `animation` shorthand because Tailwind v4 always
+       cascades its utilities layer above this components layer, so the
+       shared shape/duration/easing lives here while each element sets its
+       own delay. transform + opacity only, so nothing here shifts layout,
+       and `prefers-reduced-motion` is already handled globally above (that
+       rule forces animation-duration near-zero for every element), so
+       reduced-motion users land straight on the final, fully visible
+       state.
+
+       Company-results cards deliberately have no entrance animation: they
+       re-render on every pagination click (Alpine's x-for replaces the
+       `<article>` set when `paginatedCompanies` changes), and giving them
+       `.reveal-up` made every page change look like a section reload —
+       the whole grid would fade/slide in again. Removing the class (and
+       the #companies-results > .reveal-up:nth-child(...) stagger rules
+       that used to accompany it) makes pagination swap cards immediately
+       and quietly, matching the "no full-page-refresh feel" pagination is
+       meant to have. Their hover transitions (`transition-all`,
+       `duration-300`, `hover:-translate-y-1`, etc.) are plain Tailwind
+       utilities on the `<article>` itself, unrelated to this animation,
+       and are unaffected by this. */
+    @keyframes reveal-up {
+        from {
+            opacity: 0;
+            transform: translateY(14px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .reveal-up {
+        animation: reveal-up 550ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    /* Shine CTA — powers `.shine-cta`, used on the homepage's advertising
+       and contact buttons. A single restrained diagonal highlight sweeps
+       across on hover/focus and resets instantly on mouse-out (the
+       transition is only declared on the hover/focus rule, so leaving
+       snaps the overlay back with no reverse-sweep). `pointer-events: none`
+       plus stacking every real button child above the overlay keeps clicks
+       and label/icon readability unaffected. Reduced motion is covered by
+       the global rule above, which drives the sweep's transition-duration
+       to near-zero. */
+    .shine-cta {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .shine-cta>* {
+        position: relative;
+        z-index: 1;
+    }
+
+    .shine-cta::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, .35) 50%, transparent 60%);
+        transform: translateX(-120%) skewX(-20deg);
+        pointer-events: none;
+    }
+
+    .shine-cta:hover::after,
+    .shine-cta:focus-visible::after {
+        transform: translateX(120%) skewX(-20deg);
+        transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+}
+
+@layer components {
+    /* Partner Logos carousel — modeled on logocarousel.com/carousel's
+       "Custom Margin & GrayScale on hover Normal" demo (measured via
+       DevTools: 0.8px #d8d8d8 card border, 5px radius, 25px inner padding,
+       20px gap, 600ms slide transition). Two intentional differences from
+       that reference, per explicit product spec: (1) logos are grayscale
+       by default and return to color on hover — the reference demo is the
+       opposite (color by default, grayscale on hover); (2) images use
+       object-fit: contain, not the reference's fill, to avoid distortion.
+       Used on the homepage (resources/views/pages/home.blade.php). */
+    .logos-carousel__viewport {
+        overflow: hidden;
+        touch-action: pan-y;
+        cursor: grab;
+        /* Forced LTR here only: keeps the slide direction identical to the
+           reference (new logos enter from the right, exit left) without
+           touching the page's own RTL layout — flex order and transform
+           math both stay simple and match the reference 1:1. */
+        direction: ltr;
+    }
+
+    .logos-carousel__viewport.is-dragging {
+        cursor: grabbing;
+    }
+
+    .logos-carousel__track {
+        display: flex;
+        transition: transform 600ms ease;
+        will-change: transform;
+    }
+
+    .logos-carousel__track.is-instant {
+        transition: none;
+    }
+
+    .logos-carousel__card {
+        /* Width comes from --logos-card-width, a CSS custom property set
+           once on the track's own :style binding (see logosTrackStyle in
+           resources/js/components/partner-logos-carousel.js) and inherited
+           down to every card — not a CSS percentage: the track (this
+           card's flex container) has no definite width of its own — it's
+           exactly as wide as its cards sum to, since it must overflow the
+           viewport to hold the loop's clones — so a percentage flex-basis
+           here would resolve against an indefinite size. The viewport's
+           own (definite) width divided by logosPerView, computed in JS by
+           measureLogosStep(), is the only reliable source for this number. */
+        width: var(--logos-card-width, 200px);
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        height: 107px;
+        margin-right: 20px;
+        padding: 25px;
+        border: 1px solid var(--color-slate-200, #e2e8f0);
+        border-radius: 5px;
+        background-color: var(--color-white, #fff);
+    }
+
+    /* When a logo has an admin-set link, the <img> is wrapped in an
+       <a> — this keeps that wrapper filling the same box the bare <img>
+       filled before, so wrapping/unwrapping never shifts the layout. */
+    .logos-carousel__card a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    .logos-carousel__card img {
+        /* width/height:100% (not max-*) so the logo actually grows to
+           fill the padded box up to its edges — the img tag still
+           carries width/height attributes for CLS/aspect-ratio
+           purposes, but those are just an initial-load hint here, not
+           the rendered size; object-fit:contain does the real scaling
+           without distortion regardless of the source file's aspect
+           ratio. Previously this was max-width/max-height:100%, which
+           only caps an oversized image — it does nothing for a source
+           image smaller than the box, so real uploads (and the seeded
+           placeholder logos) rendered at a fixed 140x57px no matter how
+           much larger the card actually was. */
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        filter: grayscale(100%);
+        transition: filter 300ms ease;
+        -webkit-user-drag: none;
+        user-select: none;
+    }
+
+    .logos-carousel__card:hover img,
+    .logos-carousel__card:focus-visible img {
+        filter: grayscale(0%);
+    }
+
+    /* The button IS the ~44x44px touch target (WCAG/mobile guideline);
+       the small visible bar moves to ::after so enlarging the tappable
+       area doesn't enlarge what's actually drawn on screen. Real,
+       non-overlapping boxes side by side in the flex row (not negative
+       margins) -- each dot keeps a fully separate, unambiguous hit
+       area. Layout does grow versus the bare 20x5px button this
+       replaces; that's the direct, unavoidable cost of a genuine
+       44px target on a row with several dots. */
+    .logos-carousel__dot {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        border: 0;
+        background: none;
+        cursor: pointer;
+    }
+
+    .logos-carousel__dot::after {
+        content: '';
+        width: 20px;
+        height: 5px;
+        border-radius: 2px;
+        background-color: var(--color-slate-400, #94a3b8);
+        opacity: .35;
+        transition: opacity 300ms ease, background-color 300ms ease;
+    }
+
+    .logos-carousel__dot.is-active::after {
+        background-color: var(--color-gov-700, #17643f);
+        opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .logos-carousel__track {
+            transition: none;
+        }
+    }
+}
+

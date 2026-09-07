@@ -98,8 +98,22 @@ class CompanyController extends Controller
         $verifiedCompaniesCount = Company::query()->where('status', 'active')->where('is_verified', true)->count();
         $featuredCompaniesCount = Company::query()->where('status', 'active')->where('is_featured', true)->count();
 
-        return view('companies.index', [
+        // Number of invisible placeholder grid slots the results partial
+        // should render after the real cards, so a shorter last page (or
+        // any page with fewer than PER_PAGE matches) doesn't shrink the
+        // results grid and shift the pagination nav below it -- see
+        // resources/views/companies/partials/results.blade.php and the
+        // client-side height stabilization in resources/js/pages/companies.js.
+        // $companies->count() is the number of items on THIS page (not the
+        // total across all pages); guarded to 0 when there are no matching
+        // companies at all, since an empty state has no grid to pad.
+        $missingCompanySlots = $companies->total() > 0
+            ? max(self::PER_PAGE - $companies->count(), 0)
+            : 0;
+
+        $viewData = [
             'companies' => $companies,
+            'missingCompanySlots' => $missingCompanySlots,
             'cities' => $cities,
             'categories' => $categories,
             'totalActiveCompanies' => $totalActiveCompanies,
@@ -112,6 +126,25 @@ class CompanyController extends Controller
             'activeCategoryName' => $activeCategory?->name,
             'verifiedOnly' => $verifiedOnly,
             'featuredOnly' => $featuredOnly,
-        ]);
+        ];
+
+        // Pagination/filtering on this page is progressively enhanced:
+        // resources/js/pages/companies.js intercepts pagination-link and
+        // filter-form submissions and re-requests this same route via
+        // fetch(), which sends the X-Requested-With header Request::ajax()
+        // checks for. On an AJAX request we skip the full layout (header,
+        // hero, footer, sidebar) and return only the results partial that
+        // JS swaps into #companies-directory-results -- the exact same
+        // partial companies.index itself includes, so the two paths can
+        // never render different markup for the same filters/page. A
+        // normal browser navigation (no JS, or the fetch failing and
+        // falling back to a real link) never sends that header and always
+        // gets the full page, so nothing here removes the plain-links
+        // fallback the route already had.
+        if ($request->ajax()) {
+            return view('companies.partials.results', $viewData);
+        }
+
+        return view('companies.index', $viewData);
     }
 }
