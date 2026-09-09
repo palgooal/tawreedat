@@ -72,9 +72,9 @@ class SiteSettings extends Page
         'google_analytics_id' => ['group' => 'seo', 'type' => 'string', 'default' => null],
         'google_search_console_verification' => ['group' => 'seo', 'type' => 'string', 'default' => null],
         'default_og_image' => ['group' => 'og', 'type' => 'image', 'default' => null],
-        'facebook_url' => ['group' => 'social', 'type' => 'string', 'default' => null],
+        'tiktok_url' => ['group' => 'social', 'type' => 'string', 'default' => null],
         'x_url' => ['group' => 'social', 'type' => 'string', 'default' => null],
-        'linkedin_url' => ['group' => 'social', 'type' => 'string', 'default' => null],
+        'youtube_url' => ['group' => 'social', 'type' => 'string', 'default' => null],
         'instagram_url' => ['group' => 'social', 'type' => 'string', 'default' => null],
         'robots_indexing_enabled' => ['group' => 'robots', 'type' => 'boolean', 'default' => false],
         'robots_extra_rules' => ['group' => 'robots', 'type' => 'string', 'default' => null],
@@ -192,16 +192,16 @@ class SiteSettings extends Page
                 Section::make('روابط التواصل')
                     ->columns(2)
                     ->schema([
-                        TextInput::make('facebook_url')
-                            ->label('فيسبوك')
+                        TextInput::make('tiktok_url')
+                            ->label('تيك توك')
                             ->url()
                             ->maxLength(255),
                         TextInput::make('x_url')
                             ->label('X (تويتر)')
                             ->url()
                             ->maxLength(255),
-                        TextInput::make('linkedin_url')
-                            ->label('لينكدإن')
+                        TextInput::make('youtube_url')
+                            ->label('يوتيوب')
                             ->url()
                             ->maxLength(255),
                         TextInput::make('instagram_url')

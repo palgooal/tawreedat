@@ -58,7 +58,7 @@
                         <img src="{{ $news->image ? \Illuminate\Support\Facades\Storage::disk('public')->url($news->image) : asset('assets/images/hero-construction-1200.jpg') }}"
                             sizes="(min-width: 1024px) 920px, 100vw" alt="{{ $news->title }}"
                             width="960" height="640" loading="lazy" decoding="async"
-                            class="h-64 w-full object-cover sm:h-72">
+                            class="h-45 w-full object-cover sm:h-120">
                         <figcaption class="border-t border-slate-100 px-5 py-4 text-xs leading-6 text-slate-500">
                             {{ $news->categoryRelation?->name }}
                             @if ($news->categoryRelation) &middot; @endif

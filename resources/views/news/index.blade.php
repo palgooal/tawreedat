@@ -100,7 +100,7 @@
                                 class="touch-static overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:border-gov-200 hover:shadow-[0_6px_14px_rgba(7,30,23,0.06)]">
                                 <img src="{{ $item->image ? \Illuminate\Support\Facades\Storage::disk('public')->url($item->image) : asset('assets/images/news-placeholder.jpg') }}"
                                     alt="{{ $item->title }}" width="640" height="427"
-                                    loading="lazy" decoding="async" class="h-40 w-full object-cover">
+                                    loading="lazy" decoding="async" class="h-auto w-full object-contain sm:h-40">
                                 <div class="p-4">
                                     <span class="rounded-full bg-gov-50 px-3 py-1 text-[10px] font-bold text-gov-800">{{ $item->categoryRelation?->name }}</span>
                                     <h3 class="mt-4 line-clamp-2 text-base font-extrabold leading-6 text-gov-950">{{ $item->title }}</h3>

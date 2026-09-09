@@ -28,9 +28,9 @@
     $contactPhone = \App\Models\SiteSetting::get('contact_phone', '920012345');
     $contactEmail = \App\Models\SiteSetting::get('contact_email', 'info@tawreedat.sa');
     $contactAddress = \App\Models\SiteSetting::get('contact_address', 'الرياض، المملكة العربية السعودية');
-    $facebookUrl = \App\Models\SiteSetting::get('facebook_url');
+    $tiktokUrl = \App\Models\SiteSetting::get('tiktok_url');
     $xUrl = \App\Models\SiteSetting::get('x_url');
-    $linkedinUrl = \App\Models\SiteSetting::get('linkedin_url');
+    $youtubeUrl = \App\Models\SiteSetting::get('youtube_url');
     $instagramUrl = \App\Models\SiteSetting::get('instagram_url');
 
     // Footer "تصنيفات شائعة" — the 5 categories with the most active

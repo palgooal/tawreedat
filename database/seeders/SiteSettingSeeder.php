@@ -54,9 +54,9 @@ class SiteSettingSeeder extends Seeder
 
             'default_og_image' => ['value' => null, 'group' => 'og', 'type' => 'image'],
 
-            'facebook_url' => ['value' => null, 'group' => 'social', 'type' => 'string'],
+            'tiktok_url' => ['value' => null, 'group' => 'social', 'type' => 'string'],
             'x_url' => ['value' => null, 'group' => 'social', 'type' => 'string'],
-            'linkedin_url' => ['value' => null, 'group' => 'social', 'type' => 'string'],
+            'youtube_url' => ['value' => null, 'group' => 'social', 'type' => 'string'],
             'instagram_url' => ['value' => null, 'group' => 'social', 'type' => 'string'],
 
             // false = "0" so SiteSetting::get()'s boolean cast reads it correctly.
