@@ -115,7 +115,7 @@
                             <div>
                                 <label for="phone" class="text-xs font-bold text-gov-950">رقم الجوال</label>
                                 <input id="phone" name="phone" type="tel" value="{{ old('phone') }}"
-                                    autocomplete="tel" dir="ltr"
+                                    autocomplete="tel" dir="rtl"
                                     aria-invalid="@error('phone') true @else false @enderror"
                                     @error('phone') aria-describedby="phone-error" @enderror
                                     class="mt-2 h-12 w-full rounded-xl border px-4 text-sm outline-none transition focus:border-gold-400 @error('phone') border-red-300 @else border-slate-200 @enderror"
@@ -187,7 +187,7 @@
                             <a href="tel:{{ $contactPhone }}"
                                 class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-gold-300">
                                 <p class="text-xs font-bold text-slate-500">الهاتف</p>
-                                <b class="mt-2 block text-lg text-gov-950" dir="ltr">{{ $contactPhone }}</b>
+                                <b class="mt-2 block text-lg text-gov-950" dir="rtl">{{ $contactPhone }}</b>
                             </a>
                         @endif
                         @if ($contactEmail)
