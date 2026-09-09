@@ -37,11 +37,9 @@ class AdvertisementManager
     }
 
     /**
-     * Forget the cached result for a slot (or every slot when $slotKey is
-     * null). Call this from the Filament resource's save/delete hooks if
-     * "changes should show up within 5 minutes" isn't good enough for a
-     * given workflow — not wired up automatically to keep this class
-     * dependency-free.
+    * Forget the cached result for a slot (or every slot when $slotKey is
+    * null). Model events call this automatically after advertisement and
+    * slot changes, so admin edits appear on the next page request.
      */
     public static function forget(?string $slotKey = null): void
     {

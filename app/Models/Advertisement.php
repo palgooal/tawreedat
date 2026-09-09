@@ -6,10 +6,21 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Support\AdvertisementManager;
 
 class Advertisement extends Model
 {
     use HasFactory;
+
+    protected static function booted(): void
+    {
+        static::saved(function (): void {
+            AdvertisementManager::forget();
+        });
+        static::deleted(function (): void {
+            AdvertisementManager::forget();
+        });
+    }
 
     protected $fillable = [
         'title',
